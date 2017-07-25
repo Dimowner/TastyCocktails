@@ -15,11 +15,19 @@
   ~ limitations under the License.
   -->
 
-<resources>
-	<color name="colorPrimary">#ff1744</color>
-	<color name="colorPrimaryDark">#c11335</color>
-	<color name="colorAccent">#e9b825</color>
-
-	<color name="load_screen_gradient_dark">#b62541</color>
-	<color name="load_screen_gradient_light">#f11842</color>
-</resources>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+	<shape android:shape="rectangle" >
+		<gradient android:type="radial"
+					 android:gradientRadius="900"
+					 android:startColor="@color/load_screen_gradient_light"
+					 android:endColor="@color/load_screen_gradient_dark" />
+	</shape>
+</item>
+<item>
+	<bitmap
+		android:src="@drawable/loadscreen"
+		android:gravity="center"
+		android:tileMode="disabled"/>
+</item>
+</layer-list>
