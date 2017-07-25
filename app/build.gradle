@@ -1,0 +1,125 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+ext.versions = [
+		// Android
+		targetSdkVersion : 25,
+		minSdkVersion    : 16,
+		buildtools       : "25.0.3",
+		support          : "25.3.1",
+
+		// Components
+		constraintlayout : "1.0.2",
+
+		// UI
+		calligraphy      : "2.3.0",
+
+		// Utility
+		butterknife      : "8.6.0",
+
+		//Rx
+		rxJava			  : "2.0.1",
+
+		//RetroFit
+		retroFit			  : "2.3.0",
+
+		//Dagger2
+//		dagger2			  : "2.11",
+
+		//Glide
+		glide				  : "3.8.0",
+
+		//Architecture components
+		archComp			  : "1.0.0-alpha5",
+
+		//ButterKnife
+		butterKnife		  : "8.7.0",
+
+		//Timber
+		timber			  : "4.5.1",
+
+		logInterceptor	  : "3.8.1"
+]
+
+android {
+	compileSdkVersion versions.targetSdkVersion
+	buildToolsVersion versions.buildtools
+	defaultConfig {
+		applicationId "task.softermii.tastycocktails"
+		minSdkVersion versions.minSdkVersion
+		targetSdkVersion versions.targetSdkVersion
+		versionCode 1
+		versionName "1.0"
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+	}
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+
+	// Android
+	compile "com.android.support:support-v4:$versions.support"
+	compile "com.android.support:appcompat-v7:$versions.support"
+	compile "com.android.support:design:$versions.support"
+	compile "com.android.support:support-annotations:$versions.support"
+
+	// Android: Components
+	compile "com.android.support.constraint:constraint-layout:$versions.constraintlayout"
+	compile "com.android.support.constraint:constraint-layout-solver:$versions.constraintlayout"
+
+	//Facebook sdk
+	compile 'com.facebook.android:facebook-android-sdk:4.24.0'
+//	compile project(':facebook-android-sdk-4.24.0')
+
+	// Rx
+	compile "io.reactivex.rxjava2:rxjava:$versions.rxJava"
+	compile "io.reactivex.rxjava2:rxandroid:$versions.rxJava"
+
+	//RetroFit
+	compile "com.squareup.retrofit2:retrofit:$versions.retroFit"
+	compile "com.squareup.retrofit2:converter-gson:$versions.retroFit"
+	compile "com.squareup.retrofit2:adapter-rxjava2:$versions.retroFit"
+	compile "com.squareup.okhttp3:logging-interceptor:$versions.logInterceptor"
+
+//	//Dagger2
+//	compile "com.google.dagger:dagger:$versions.dagger2"
+//	annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger2"
+
+	//Glide
+	compile "com.github.bumptech.glide:glide:$versions.glide"
+
+	//Room
+	compile "android.arch.persistence.room:runtime:$versions.archComp"
+	compile "android.arch.persistence.room:rxjava2:$versions.archComp"
+	annotationProcessor "android.arch.persistence.room:compiler:$versions.archComp"
+
+	//Butter Knife
+	compile "com.jakewharton:butterknife:$versions.butterKnife"
+	annotationProcessor "com.jakewharton:butterknife-compiler:$versions.butterKnife"
+
+	//Timber
+	compile "com.jakewharton.timber:timber:$versions.timber"
+
+	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+		exclude group: 'com.android.support', module: 'support-annotations'
+	})
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.mockito:mockito-core:2.8.47'
+	// AssertJ
+	testCompile "org.assertj:assertj-core:3.0.0"
+}
