@@ -15,24 +15,8 @@
   ~ limitations under the License.
   -->
 
-<resources>
-
-	<dimen name="padding_huge">72dp</dimen>
-	<dimen name="padding_double">32dp</dimen>
-	<dimen name="padding_standard">16dp</dimen>
-	<dimen name="padding_small">8dp</dimen>
-	<dimen name="padding_tiny">4dp</dimen>
-
-	<dimen name="text_size_small">12sp</dimen>
-	<dimen name="text_size_medium">14sp</dimen>
-	<dimen name="text_size_xmedium">16sp</dimen>
-	<dimen name="text_size_large">18sp</dimen>
-	<dimen name="text_size_xlarge">20sp</dimen>
-
-	<dimen name="user_face_size">192dp</dimen>
-
-	<dimen name="nav_header_height">170dp</dimen>
-	<dimen name="navdrawer_width">260dp</dimen>
-	<dimen name="navdrawer_profile_image_size">60dp</dimen>
-
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+		 android:shape="rectangle">
+	<size android:height="1dp" />
+	<solid android:color="@color/blue_grey_50" />
+</shape>

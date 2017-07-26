@@ -22,4 +22,19 @@
 
 	<color name="load_screen_gradient_dark">#b62541</color>
 	<color name="load_screen_gradient_light">#f11842</color>
+
+	<color name="text_primary_dark">#de000000</color> <!-- 87% -->
+	<color name="text_secondary_dark">#8a000000</color> <!-- 54% -->
+	<color name="text_tertiary_dark">#61000000</color> <!-- 38% -->
+	<color name="text_primary_light">#ffffffff</color>
+	<color name="text_secondary_light">#b3ffffff</color> <!-- 70% -->
+	<color name="text_disabled_light">#4dffffff</color> <!-- 30% -->
+
+	<color name="blue_grey_50">#eceff1</color>
+	<color name="blue_grey_400">#78909c</color>
+	<color name="blue_grey_600">#546e7a</color>
+
+	<color name="light_cyan">#E6F5F3</color>
+	<color name="light_red">#ffe3e9</color>
+
 </resources>

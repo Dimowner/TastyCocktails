@@ -16,115 +16,36 @@
 
 package task.softermii.tastycocktails.cocktails;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginManager;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import task.softermii.tastycocktails.BaseActivity;
 import task.softermii.tastycocktails.R;
-import task.softermii.tastycocktails.login.LoginActivity;
 
-import static task.softermii.tastycocktails.util.AndroidUtils.dpToPx;
-
-public class CocktailsActivity extends AppCompatActivity {
-
-	private AccessTokenTracker accessTokenTracker;
-	private ProfileTracker profileTracker;
-
-	@BindView(R.id.txt_user_name) TextView userName;
-	@BindView(R.id.iv_user_face) ImageView userFace;
+/**
+ * Created on 26.07.2017.
+ * @author Dimowner
+ */
+public class CocktailsActivity extends BaseActivity {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(R.style.AppTheme);
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cocktails);
 
-		ButterKnife.bind(CocktailsActivity.this);
-
-		Button button = (Button) findViewById(R.id.btn_logout);
-		button.setOnClickListener(v -> LoginManager.getInstance().logOut());
-
-		Profile profile = Profile.getCurrentProfile();
-		if (profile != null) {
-			updateUserInfo(profile);
+		if (savedInstanceState == null) {
+			FragmentManager manager = getSupportFragmentManager();
+			CocktailsSearchFragment fragment = new CocktailsSearchFragment();
+			manager
+					.beginTransaction()
+					.add(R.id.fragment, fragment, "cocktails_fragment")
+					.commit();
 		}
-
-//		GraphRequest request = GraphRequest.newMeRequest(
-//				AccessToken.getCurrentAccessToken(),
-//				(object, response) -> {
-//					Log.v("LoginActivity", response.toString());
-//					try {
-//						// Application code
-//						String email = object.getString("email");
-//						String birthday = object.getString("birthday"); // 01/31/1980 format
-//						String name = object.getString("name");
-//						String gender = object.getString("gender");
-//						String p = object.getString("picture");
-//						Timber.v("e = " + email + " b = " + birthday + " n = " + name + " g = " + gender + " p = " + p);
-//					} catch (JSONException e) {
-//						Timber.e(e);
-//					}
-//				});
-//		Bundle parameters = new Bundle();
-//		parameters.putString("fields", "id,name,email,gender,birthday,picture");
-//		request.setParameters(parameters);
-//		request.executeAsync();
-	}
-
-	private void updateUserInfo(Profile profile) {
-		userName.setText(profile.getName());
-
-		Glide.with(CocktailsActivity.this)
-				.load(profile.getProfilePictureUri(dpToPx(200), dpToPx(200)).toString())
-				.apply(RequestOptions.circleCropTransform())
-				.into(userFace);
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		accessTokenTracker = new AccessTokenTracker() {
-			@Override
-			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-				if (currentAccessToken == null) {
-					startLoginActivity();
-				}
-			}
-		};
-		accessTokenTracker.startTracking();
-		profileTracker = new ProfileTracker() {
-			@Override
-			protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-				if (currentProfile != null) {
-					updateUserInfo(currentProfile);
-				}
-			}
-		};
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		accessTokenTracker.stopTracking();
-		profileTracker.stopTracking();
-	}
-
-	private void startLoginActivity() {
-		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-		startActivity(intent);
-		finish();
+	protected int getSelfNavDrawerItem() {
+		return NAVDRAWER_ITEM_COCKTAILS;
 	}
 }
