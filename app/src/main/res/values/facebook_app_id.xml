@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright 2017 Dmitriy Ponomarenko
   ~
@@ -15,14 +16,7 @@
   -->
 
 <resources>
-	<string name="app_name">Tasty Cocktails</string>
 
-	<string name="title_warning">Warning</string>
-
-	<string name="btn_ok">OK</string>
-	<string name="btn_cancel">Cancel</string>
-	<string name="btn_logout">Logout</string>
-
-	<string name="msg_error_on_login">Error on login</string>
+	<string name="facebook_app_id">1585644661508345</string>
 
 </resources>

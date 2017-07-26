@@ -11,9 +11,6 @@ ext.versions = [
 		// Components
 		constraintlayout : "1.0.2",
 
-		// UI
-		calligraphy      : "2.3.0",
-
 		// Utility
 		butterknife      : "8.6.0",
 
@@ -27,7 +24,7 @@ ext.versions = [
 //		dagger2			  : "2.11",
 
 		//Glide
-		glide				  : "3.8.0",
+		glide				  : "4.0.0-RC1",
 
 		//Architecture components
 		archComp			  : "1.0.0-alpha5",

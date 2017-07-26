@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright 2017 Dmitriy Ponomarenko
   ~
@@ -15,14 +16,12 @@
   -->
 
 <resources>
-	<string name="app_name">Tasty Cocktails</string>
 
-	<string name="title_warning">Warning</string>
+	<dimen name="padding_double">32dp</dimen>
+	<dimen name="padding_standard">16dp</dimen>
+	<dimen name="padding_small">8dp</dimen>
+	<dimen name="padding_tiny">4dp</dimen>
 
-	<string name="btn_ok">OK</string>
-	<string name="btn_cancel">Cancel</string>
-	<string name="btn_logout">Logout</string>
-
-	<string name="msg_error_on_login">Error on login</string>
+	<dimen name="user_face_size">192dp</dimen>
 
 </resources>

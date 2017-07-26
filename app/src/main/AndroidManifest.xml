@@ -22,25 +22,30 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 	<application
+			android:name=".TCApplication"
 			android:allowBackup="true"
 			android:icon="@mipmap/tasty_cocktail_logo"
 			android:label="@string/app_name"
 			android:roundIcon="@mipmap/tasty_cocktail_logo"
 			android:supportsRtl="true"
-			android:name=".TCApplication"
 			android:theme="@style/AppTheme">
 		<meta-data
 				android:name="com.facebook.sdk.ApplicationId"
 				android:value="@string/facebook_app_id"/>
 
-		<activity android:name="task.softermii.tastycocktails.MainActivity"
-					 android:theme="@style/AppTheme.BrandedLaunch">
+		<activity
+				android:name=".login.LoginActivity"
+				android:theme="@style/AppTheme.BrandedLaunch"
+				android:noHistory="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+
+		<activity android:name=".cocktails.CocktailsActivity"/>
+
 	</application>
 
 </manifest>
