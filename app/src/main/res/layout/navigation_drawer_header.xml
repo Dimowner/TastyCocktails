@@ -18,6 +18,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				  android:layout_width="match_parent"
 				  android:layout_height="@dimen/nav_header_height"
+				  xmlns:tools="http://schemas.android.com/tools"
 				  android:background="@drawable/default_cover"
 				  android:gravity="bottom"
 				  android:orientation="vertical"
@@ -29,14 +30,19 @@
 			android:layout_width="@dimen/navdrawer_profile_image_size"
 			android:layout_height="@dimen/navdrawer_profile_image_size"
 			android:layout_marginBottom="@dimen/padding_standard"
-			android:src="@drawable/account"/>
+			android:contentDescription="@string/content_description_user_face"
+			android:transitionName="@string/transition_user_face"
+			android:src="@drawable/account"
+			tools:ignore="UnusedAttribute"/>
 
 	<TextView
 			android:id="@+id/user_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="@dimen/text_size_large"
+			android:transitionName="@string/transition_user_name"
 			android:textColor="@color/text_primary_light"
-			android:textStyle="bold"/>
+			android:textStyle="bold"
+			tools:ignore="UnusedAttribute"/>
 
 </LinearLayout>

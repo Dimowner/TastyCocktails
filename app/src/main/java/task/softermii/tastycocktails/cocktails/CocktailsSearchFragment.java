@@ -17,31 +17,26 @@
 package task.softermii.tastycocktails.cocktails;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import java.util.List;
 
 import task.softermii.tastycocktails.R;
+
+import static task.softermii.tastycocktails.util.AndroidUtils.dpToPx;
 
 /**
  * Created on 26.07.2017.
@@ -50,8 +45,11 @@ import task.softermii.tastycocktails.R;
 public class CocktailsSearchFragment extends Fragment {
 
 	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
+	public static final String EXTRAS_KEY_NAME_TRANSITION_NAME = "txt_name_transition_name";
+	public static final String EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME = "txt_description_transition_name";
+	public static final String EXTRAS_KEY_IMAGE_TRANSITION_NAME = "txt_image_transition_name";
 
-//	private ConstraintLayout constraintLayout;
+	public static final int DEFAULT_ITEM_WIDTH = 120;//px
 
 	private RecyclerView mRecyclerView;
 
@@ -77,11 +75,12 @@ public class CocktailsSearchFragment extends Fragment {
 		mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(getContext(), dpToPx(DEFAULT_ITEM_WIDTH)));
 
-		DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-		divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.recycler_divider));
-		mRecyclerView.addItemDecoration(divider);
+//		DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+//		divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.recycler_divider));
+//		mRecyclerView.addItemDecoration(divider);
 
 		mAdapter = new CocktailsRecyclerAdapter();
 		mAdapter.setItemClickListener((view1, position) -> {
@@ -93,16 +92,35 @@ public class CocktailsSearchFragment extends Fragment {
 			intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_NAME, item.getName());
 			intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
 			intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
-			startActivity(intent);
+
+
+			View txtName = view1.findViewById(R.id.grid_item_name);
+			View txtDescription = view1.findViewById(R.id.grid_item_description);
+			View ivImage = view1.findViewById(R.id.grid_item_img);
+			intent.putExtra(EXTRAS_KEY_NAME_TRANSITION_NAME, ViewCompat.getTransitionName(txtName));
+			intent.putExtra(EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME, ViewCompat.getTransitionName(txtDescription));
+			intent.putExtra(EXTRAS_KEY_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(ivImage));
+
+			ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+					CocktailsSearchFragment.this.getActivity(),
+					Pair.create(txtName, ViewCompat.getTransitionName(txtName)),
+					Pair.create(txtDescription, ViewCompat.getTransitionName(txtDescription)),
+					Pair.create(ivImage, ViewCompat.getTransitionName(ivImage)));
+
+			startActivity(intent, options.toBundle());
+
 		});
 		List<ListItem> data = new ArrayList<>();
 		data.add(new ListItem(0, "name0", "description0", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
-		data.add(new ListItem(0, "name1", "description1", "http:\\/\\/www.thecocktaildb.com\\/images\\/media\\/drink\\/tqpvqp1472668328.jpg"));
-		data.add(new ListItem(0, "name2", "description2", "https://github.com/Dimowner/WorkoutLogger/blob/master/app/src/main/res/drawable/default_cover.png"));
-		data.add(new ListItem(0, "name3", "description3", "https://github.com/Dimowner/WorkoutLogger/blob/master/app/src/main/res/drawable/default_cover.png"));
-		data.add(new ListItem(0, "name4", "description4", "https://github.com/Dimowner/WorkoutLogger/blob/master/app/src/main/res/drawable/default_cover.png"));
-		data.add(new ListItem(0, "name5", "description5", "https://github.com/Dimowner/WorkoutLogger/blob/master/app/src/main/res/drawable/default_cover.png"));
-		data.add(new ListItem(0, "name6", "description6", "https://github.com/Dimowner/WorkoutLogger/blob/master/app/src/main/res/drawable/default_cover.png"));
+		data.add(new ListItem(1, "name1", "description1", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
+		data.add(new ListItem(2, "name2", "description2", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
+		data.add(new ListItem(3, "name3", "description3", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
+		data.add(new ListItem(4, "name4", "description4", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
+		data.add(new ListItem(5, "name5", "description5", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
+		data.add(new ListItem(6, "name6", "description6", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
+		data.add(new ListItem(7, "name7", "description7", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
+		data.add(new ListItem(8, "name8", "description8", "http://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg"));
+
 		mAdapter.setData(data);
 
 		mRecyclerView.setAdapter(mAdapter);

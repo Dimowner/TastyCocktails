@@ -40,4 +40,7 @@
 		<a href="http://#/">Application site</a>
 	]]></string>
 
+	<string name="content_description_user_face">User face</string>
+	<string name="transition_user_face">transition_user_face</string>
+	<string name="transition_user_name">transition_user_name</string>
 </resources>

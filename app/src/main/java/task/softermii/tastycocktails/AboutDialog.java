@@ -16,6 +16,7 @@
 
 package task.softermii.tastycocktails;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,7 +30,11 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.TextView;
+
+import task.softermii.tastycocktails.util.AndroidUtils;
 
 /**
  * Dialog shows information about application.
@@ -38,6 +43,7 @@ import android.widget.TextView;
 public class AboutDialog extends DialogFragment {
 
 	private static final String VERSION_UNAVAILABLE = "N/A";
+	private static final int REVEAL_DURATION = 600; //mils
 
 	public AboutDialog() {
 	}
@@ -65,13 +71,17 @@ public class AboutDialog extends DialogFragment {
 		aboutBodyView.setText(aboutBody);
 		aboutBodyView.setMovementMethod(new LinkMovementMethod());
 
-		return new AlertDialog.Builder(getActivity())
+		AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
 				.setTitle(R.string.nav_about)
 				.setView(aboutBodyView)
-				.setPositiveButton(R.string.btn_ok,
-						(dialog, whichButton) -> dialog.dismiss()
-				)
+				.setPositiveButton(R.string.btn_ok, (dialog, whichButton) -> dismiss())
 				.create();
+
+		if (alertDialog.getWindow() != null) {
+			View decorView = alertDialog.getWindow().getDecorView();
+			alertDialog.setOnShowListener(dialogInterface -> revealShow(decorView));
+		}
+		return alertDialog;
 	}
 
 	@Override
@@ -80,6 +90,25 @@ public class AboutDialog extends DialogFragment {
 		final Activity activity = getActivity();
 		if (activity instanceof DialogInterface.OnDismissListener) {
 			((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
+		}
+	}
+
+	//Reveal animation for dialog
+	private void revealShow(View view) {
+		if (AndroidUtils.isAndroid5()) {
+			int w = view.getWidth();
+			int h = view.getHeight();
+
+			int endRadius = (int) Math.hypot(w, h);
+
+			int cx = (int) view.getX() + w / 2;
+			int cy = (int) view.getY() + h / 2;
+
+			Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, endRadius);
+
+			view.setVisibility(View.VISIBLE);
+			revealAnimator.setDuration(REVEAL_DURATION);
+			revealAnimator.start();
 		}
 	}
 }

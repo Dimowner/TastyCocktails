@@ -19,11 +19,15 @@ package task.softermii.tastycocktails.cocktails;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.AbsSavedState;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,14 +47,16 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 
 	class ItemViewHolder extends RecyclerView.ViewHolder {
 		TextView name;
- 		TextView owner;
+ 		TextView description;
+		ImageView image;
  		View view;
 
 		ItemViewHolder(View itemView) {
 				super(itemView);
 				this.view = itemView;
-				this.name = (TextView) itemView.findViewById(R.id.list_item_name);
-				this.owner = (TextView) itemView.findViewById(R.id.list_item_description);
+				this.name = (TextView) itemView.findViewById(R.id.grid_item_name);
+				this.description = (TextView) itemView.findViewById(R.id.grid_item_description);
+				this.image = (ImageView) itemView.findViewById(R.id.grid_item_img);
 			}
  	}
 
@@ -61,19 +67,29 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 	@Override
 	public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.list_item, parent, false);
+				.inflate(R.layout.grid_item_image, parent, false);
 		return new ItemViewHolder(v);
 	}
 
 	@Override
 	public void onBindViewHolder(final ItemViewHolder holder, final int position) {
 		holder.name.setText(mShowingData.get(position).getName());
-		holder.owner.setText(mShowingData.get(position).getDescription());
+		holder.description.setText(mShowingData.get(position).getDescription());
+
+		Glide.with(holder.view.getContext())
+				.load(mShowingData.get(position).getAvatar_url())
+				.into(holder.image);
+
+
 		holder.view.setOnClickListener(v -> {
 			if (itemClickListener != null) {
 				itemClickListener.onItemClick(v, holder.getAdapterPosition());
 			}
 		});
+		//Set transition names
+		ViewCompat.setTransitionName(holder.name, mShowingData.get(position).getName());
+		ViewCompat.setTransitionName(holder.description, mShowingData.get(position).getName() + "description");
+		ViewCompat.setTransitionName(holder.image, mShowingData.get(position).getName() + "image");
 	}
 
 	@Override

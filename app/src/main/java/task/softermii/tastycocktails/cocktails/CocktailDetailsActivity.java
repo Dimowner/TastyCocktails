@@ -16,6 +16,7 @@
 
 package task.softermii.tastycocktails.cocktails;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,10 +26,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import task.softermii.tastycocktails.R;
+import task.softermii.tastycocktails.util.AndroidUtils;
 
 /**
  * Created on 26.07.2017.
@@ -42,10 +48,9 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 	public static final String EXTRAS_KEY_IMAGE_URL = "cocktail_image";
 
 	@BindView(R.id.toolbar) Toolbar toolbar;
-	@BindView(R.id.details_name) TextView txtRepoName;
-	@BindView(R.id.details_description) TextView txtRepoDescription;
-	@BindView(R.id.details_image) ImageView ivFace;
-
+	@BindView(R.id.details_name) TextView txtName;
+	@BindView(R.id.details_description) TextView txtDescription;
+	@BindView(R.id.details_image) ImageView ivImage;
 
 	private long mId;
 
@@ -53,7 +58,7 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cocktail_details);
-
+		supportPostponeEnterTransition();
 		ButterKnife.bind(this);
 
 		setSupportActionBar(toolbar);
@@ -62,23 +67,47 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 			getSupportActionBar().setTitle("");
 		}
 
-		Bundle args = getIntent().getExtras();
-		if (args.containsKey(EXTRAS_KEY_COCKTAIL_ID)) {
-			mId = args.getLong(EXTRAS_KEY_COCKTAIL_ID);
+		Bundle extras = getIntent().getExtras();
+		if (extras.containsKey(EXTRAS_KEY_COCKTAIL_ID)) {
+			mId = extras.getLong(EXTRAS_KEY_COCKTAIL_ID);
 		}
 
-		if (args.containsKey(EXTRAS_KEY_NAME)) {
-			txtRepoName.setText(args.getString(EXTRAS_KEY_NAME));
+		if (extras.containsKey(EXTRAS_KEY_NAME)) {
+			txtName.setText(extras.getString(EXTRAS_KEY_NAME));
 		}
-		if (args.containsKey(EXTRAS_KEY_DESCRIPTION)) {
-			txtRepoDescription.setText(args.getString(EXTRAS_KEY_DESCRIPTION));
+		if (extras.containsKey(EXTRAS_KEY_DESCRIPTION)) {
+			txtDescription.setText(extras.getString(EXTRAS_KEY_DESCRIPTION));
 		}
 
-		if (args.containsKey(EXTRAS_KEY_IMAGE_URL)) {
-			ivFace.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		if (extras.containsKey(EXTRAS_KEY_IMAGE_URL)) {
+			ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			Glide.with(getApplicationContext())
-					.load(args.getString(EXTRAS_KEY_IMAGE_URL))
-					.into(ivFace);
+					.load(extras.getString(EXTRAS_KEY_IMAGE_URL))
+					.listener(new RequestListener<Drawable>() {
+						@Override
+						public boolean onLoadFailed(@Nullable GlideException e, Object model,
+															 Target<Drawable> target, boolean isFirstResource) {
+							supportStartPostponedEnterTransition();
+							return false;
+						}
+
+						@Override
+						public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+																 DataSource dataSource, boolean isFirstResource) {
+							supportStartPostponedEnterTransition();
+							return false;
+						}
+					})
+					.into(ivImage);
+		}
+
+		if (AndroidUtils.isAndroid5()) {
+			String nameTransitionName = extras.getString(CocktailsSearchFragment.EXTRAS_KEY_NAME_TRANSITION_NAME);
+			txtName.setTransitionName(nameTransitionName);
+			String descrTransitionName = extras.getString(CocktailsSearchFragment.EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME);
+			txtDescription.setTransitionName(descrTransitionName);
+			String imageTransitionName = extras.getString(CocktailsSearchFragment.EXTRAS_KEY_IMAGE_TRANSITION_NAME);
+			ivImage.setTransitionName(imageTransitionName);
 		}
 	}
 
@@ -86,7 +115,11 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
+				if (AndroidUtils.isAndroid5()) {
+					finishAfterTransition();
+				} else {
+					finish();
+				}
 				break;
 		}
 		return super.onOptionsItemSelected(item);
