@@ -44,6 +44,9 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 
+import task.softermii.tastycocktails.cocktails.CocktailsActivity;
+import task.softermii.tastycocktails.random.RandomCocktailActivity;
+
 import static task.softermii.tastycocktails.util.AndroidUtils.dpToPx;
 
 /**
@@ -90,7 +93,6 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 		userName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
 		userIconView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.user_icon);
 
-
 		Profile profile = Profile.getCurrentProfile();
 		if (profile != null) {
 			loadUserFace(profile);
@@ -120,7 +122,6 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 				Pair.create(userName, ViewCompat.getTransitionName(userName))
 			);
 		startActivity(intent, options.toBundle());
-
 	}
 
 	@Override
@@ -225,21 +226,29 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 	private void goToNavDrawerItem(int itemID) {
 		switch (itemID) {
 			case NAVDRAWER_ITEM_COCKTAILS:
+				startActivity(new Intent(getApplicationContext(), CocktailsActivity.class));
+				finish();
 				break;
 			case NAVDRAWER_ITEM_RANDOM:
+				startActivity(new Intent(getApplicationContext(), RandomCocktailActivity.class));
+				finish();
 				break;
 			case NAVDRAWER_ITEM_ABOUT:
-				FragmentManager fm = getSupportFragmentManager();
-				FragmentTransaction ft = fm.beginTransaction();
-				Fragment prev = fm.findFragmentByTag("dialog_about");
-				if (prev != null) {
-					ft.remove(prev);
-				}
-				ft.addToBackStack(null);
-				AboutDialog dialog = new AboutDialog();
-				dialog.show(ft, "dialog_about");
+				showAboutDialog();
 				break;
 		}
+	}
+
+	private void showAboutDialog() {
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		Fragment prev = fm.findFragmentByTag("dialog_about");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+		AboutDialog dialog = new AboutDialog();
+		dialog.show(ft, "dialog_about");
 	}
 
 	@Override

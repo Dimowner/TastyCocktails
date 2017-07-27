@@ -16,13 +16,10 @@
 
 package task.softermii.tastycocktails.dagger.cocktails;
 
-import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
 import task.softermii.tastycocktails.cocktails.CocktailsPresenter;
 import task.softermii.tastycocktails.cocktails.CocktailsSearchContract;
-import task.softermii.tastycocktails.data.LocalRepository;
-import task.softermii.tastycocktails.data.RemoteRepository;
 import task.softermii.tastycocktails.data.Repository;
 
 /**
@@ -34,30 +31,7 @@ public class CocktailsModule {
 
 	@Provides
 	@CocktailsScope
-	LocalRepository provideLocalRepository(Context context) {
-		return new LocalRepository(context);
-	}
-
-	@Provides
-	@CocktailsScope
-	RemoteRepository provideRemoteRepository() {
-		return new RemoteRepository();
-	}
-
-	@Provides
-	@CocktailsScope
-	Repository provideRepository(Context context,
-												    LocalRepository localRepository,
-												    RemoteRepository remoteRepository) {
-		//Remote repo passes last query result into Local repo for saving.
-		remoteRepository.setOnLoadListener(localRepository::rewriteRepositories);
-
-		return new Repository(context, localRepository, remoteRepository);
-	}
-
-	@Provides
-	@CocktailsScope
-	CocktailsSearchContract.UserActionsListener provideIExercisesPresenter(Repository repository) {
+	CocktailsSearchContract.UserActionsListener provideCocktailsPresenter(Repository repository) {
 		return new CocktailsPresenter(repository);
 	}
 }

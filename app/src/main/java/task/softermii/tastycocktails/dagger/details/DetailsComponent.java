@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.dagger.application;
+package task.softermii.tastycocktails.dagger.details;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
-import task.softermii.tastycocktails.dagger.cocktails.CocktailsComponent;
-import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
-import task.softermii.tastycocktails.dagger.details.DetailsComponent;
-import task.softermii.tastycocktails.dagger.details.DetailsModule;
+import dagger.Subcomponent;
+import task.softermii.tastycocktails.details.DetailsFragment;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Component(modules = {AppModule.class})
-@Singleton
-public interface AppComponent {
+@Subcomponent(modules = {DetailsModule.class})
+@DetailsScope
+public interface DetailsComponent {
 
-	CocktailsComponent plus(CocktailsModule exerciseModule);
-	DetailsComponent plus(DetailsModule detailsModule);
+	void injectDetailsFragment(DetailsFragment fragment);
 }

@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.dagger.application;
+package task.softermii.tastycocktails.dagger.details;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
-import task.softermii.tastycocktails.dagger.cocktails.CocktailsComponent;
-import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
-import task.softermii.tastycocktails.dagger.details.DetailsComponent;
-import task.softermii.tastycocktails.dagger.details.DetailsModule;
+import dagger.Module;
+import dagger.Provides;
+import task.softermii.tastycocktails.data.Repository;
+import task.softermii.tastycocktails.details.DetailsContract;
+import task.softermii.tastycocktails.details.DetailsPresenter;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Component(modules = {AppModule.class})
-@Singleton
-public interface AppComponent {
+@Module
+public class DetailsModule {
 
-	CocktailsComponent plus(CocktailsModule exerciseModule);
-	DetailsComponent plus(DetailsModule detailsModule);
+	@Provides
+	@DetailsScope
+	DetailsContract.UserActionsListener provideDetailsPresenter(Repository repository) {
+		return new DetailsPresenter(repository);
+	}
 }

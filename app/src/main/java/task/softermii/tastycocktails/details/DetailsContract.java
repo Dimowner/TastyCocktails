@@ -14,24 +14,35 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.dagger.application;
+package task.softermii.tastycocktails.details;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
-import task.softermii.tastycocktails.dagger.cocktails.CocktailsComponent;
-import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
-import task.softermii.tastycocktails.dagger.details.DetailsComponent;
-import task.softermii.tastycocktails.dagger.details.DetailsModule;
+import android.support.annotation.NonNull;
+import task.softermii.tastycocktails.data.model.DetailsModel;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Component(modules = {AppModule.class})
-@Singleton
-public interface AppComponent {
+public interface DetailsContract {
 
-	CocktailsComponent plus(CocktailsModule exerciseModule);
-	DetailsComponent plus(DetailsModule detailsModule);
+	interface View {
+		void showProgress();
+
+		void hideProgress();
+
+		void showError(Throwable throwable);
+
+		void displayData(DetailsModel drink);
+	}
+
+	interface UserActionsListener {
+
+		void bindView(@NonNull View view);
+
+		void unbindView();
+
+		void loadDrinkById(long id);
+
+		void loadRandomDrink();
+	}
 }

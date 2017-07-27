@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.cocktails;
+package task.softermii.tastycocktails.random;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import task.softermii.tastycocktails.BaseActivity;
 import task.softermii.tastycocktails.R;
+import task.softermii.tastycocktails.details.DetailsFragment;
 
 /**
- * Created on 26.07.2017.
+ * Created on 27.07.2017.
  * @author Dimowner
  */
-public class CocktailsActivity extends BaseActivity {
+public class RandomCocktailActivity extends BaseActivity {
+
+	private DetailsFragment fragment;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,16 +41,30 @@ public class CocktailsActivity extends BaseActivity {
 
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
-			CocktailsSearchFragment fragment = new CocktailsSearchFragment();
+			fragment = new DetailsFragment();
 			manager
 					.beginTransaction()
-					.add(R.id.fragment, fragment, "cocktails_fragment")
+					.add(R.id.fragment, fragment, "details_fragment")
 					.commit();
 		}
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.random_cocktail_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_get_random) {
+			fragment.loadNewRandomDrink();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	protected int getSelfNavDrawerItem() {
-		return NAVDRAWER_ITEM_COCKTAILS;
+		return NAVDRAWER_ITEM_RANDOM;
 	}
 }

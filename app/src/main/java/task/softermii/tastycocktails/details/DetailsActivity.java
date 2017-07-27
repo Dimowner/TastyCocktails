@@ -14,38 +14,45 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.cocktails;
+package task.softermii.tastycocktails.details;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
-import task.softermii.tastycocktails.BaseActivity;
 import task.softermii.tastycocktails.R;
 
 /**
  * Created on 26.07.2017.
  * @author Dimowner
  */
-public class CocktailsActivity extends BaseActivity {
+public class DetailsActivity extends AppCompatActivity {
+
+	public static final String EXTRAS_KEY_COCKTAIL_ID = "cocktail_id";
+	public static final String EXTRAS_KEY_NAME = "cocktail_name";
+	public static final String EXTRAS_KEY_DESCRIPTION = "cocktail_description";
+	public static final String EXTRAS_KEY_IMAGE_URL = "cocktail_image";
+
+	private long mId;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.base_nav_activity);
+		setContentView(R.layout.activity_details);
 
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
-			CocktailsSearchFragment fragment = new CocktailsSearchFragment();
+
+			Bundle extras = getIntent().getExtras();
+			if (extras.containsKey(EXTRAS_KEY_COCKTAIL_ID)) {
+				mId = extras.getLong(EXTRAS_KEY_COCKTAIL_ID);
+			}
+			DetailsFragment fragment = DetailsFragment.newInstance(mId, getIntent().getExtras());
 			manager
 					.beginTransaction()
-					.add(R.id.fragment, fragment, "cocktails_fragment")
+					.add(R.id.fragment, fragment, "details_fragment")
 					.commit();
 		}
-	}
-
-	@Override
-	protected int getSelfNavDrawerItem() {
-		return NAVDRAWER_ITEM_COCKTAILS;
 	}
 }

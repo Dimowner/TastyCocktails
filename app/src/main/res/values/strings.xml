@@ -30,11 +30,11 @@
 	<string name="btn_cancel">Cancel</string>
 	<string name="btn_logout">Logout</string>
 	<string name="btn_search">Search</string>
+	<string name="btn_random">Random</string>
 
 	<string name="msg_error_on_login">Error on login</string>
-	<string name="common_error">Unexpected error was occurred</string>
+	<string name="msg_error_on_query">Error on query</string>
 
-	<string name="error_on_query">Error on query</string>
 	<string name="did_not_find_anything">Did not find anything</string>
 	<string name="retry">RETRY</string>
 

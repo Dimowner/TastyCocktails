@@ -23,6 +23,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import task.softermii.tastycocktails.data.LocalRepository;
+import task.softermii.tastycocktails.data.RemoteRepository;
+import task.softermii.tastycocktails.data.Repository;
 
 /**
  * Created on 27.0.2017.
@@ -35,6 +38,29 @@ public class AppModule {
 
 	public AppModule(@NonNull Context context) {
 		appContext = context;
+	}
+
+	@Provides
+	@Singleton
+	LocalRepository provideLocalRepository(Context context) {
+		return new LocalRepository(context);
+	}
+
+	@Provides
+	@Singleton
+	RemoteRepository provideRemoteRepository() {
+		return new RemoteRepository();
+	}
+
+	@Provides
+	@Singleton
+	Repository provideRepository(Context context,
+										  LocalRepository localRepository,
+										  RemoteRepository remoteRepository) {
+		//Remote repo passes last query result into Local repo for saving.
+		remoteRepository.setOnLoadListener(localRepository::rewriteRepositories);
+
+		return new Repository(context, localRepository, remoteRepository);
 	}
 
 	@Provides
