@@ -80,25 +80,30 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 		}
 
 		if (extras.containsKey(EXTRAS_KEY_IMAGE_URL)) {
-			ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			Glide.with(getApplicationContext())
-					.load(extras.getString(EXTRAS_KEY_IMAGE_URL))
-					.listener(new RequestListener<Drawable>() {
-						@Override
-						public boolean onLoadFailed(@Nullable GlideException e, Object model,
-															 Target<Drawable> target, boolean isFirstResource) {
-							supportStartPostponedEnterTransition();
-							return false;
-						}
+			String url = extras.getString(EXTRAS_KEY_IMAGE_URL);
+			if (url != null) {
+				ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				Glide.with(getApplicationContext())
+						.load(url)
+						.listener(new RequestListener<Drawable>() {
+							@Override
+							public boolean onLoadFailed(@Nullable GlideException e, Object model,
+																 Target<Drawable> target, boolean isFirstResource) {
+								supportStartPostponedEnterTransition();
+								return false;
+							}
 
-						@Override
-						public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-																 DataSource dataSource, boolean isFirstResource) {
-							supportStartPostponedEnterTransition();
-							return false;
-						}
-					})
-					.into(ivImage);
+							@Override
+							public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+																	 DataSource dataSource, boolean isFirstResource) {
+								supportStartPostponedEnterTransition();
+								return false;
+							}
+						})
+						.into(ivImage);
+			} else {
+				supportStartPostponedEnterTransition();
+			}
 		}
 
 		if (AndroidUtils.isAndroid5()) {

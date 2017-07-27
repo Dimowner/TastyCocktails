@@ -20,8 +20,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 
+import java.util.Arrays;
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import task.softermii.tastycocktails.BaseActivity;
 import task.softermii.tastycocktails.R;
+import task.softermii.tastycocktails.data.RemoteRepository;
+import task.softermii.tastycocktails.data.model.Drink;
+import timber.log.Timber;
 
 /**
  * Created on 26.07.2017.

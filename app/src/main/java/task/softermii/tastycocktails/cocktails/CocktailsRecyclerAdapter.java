@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,9 +55,9 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 		ItemViewHolder(View itemView) {
 				super(itemView);
 				this.view = itemView;
-				this.name = (TextView) itemView.findViewById(R.id.grid_item_name);
-				this.description = (TextView) itemView.findViewById(R.id.grid_item_description);
-				this.image = (ImageView) itemView.findViewById(R.id.grid_item_img);
+				this.name = (TextView) itemView.findViewById(R.id.list_item_name);
+				this.description = (TextView) itemView.findViewById(R.id.list_item_description);
+				this.image = (ImageView) itemView.findViewById(R.id.list_item_image);
 			}
  	}
 
@@ -67,7 +68,7 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 	@Override
 	public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.grid_item_image, parent, false);
+				.inflate(R.layout.list_item, parent, false);
 		return new ItemViewHolder(v);
 	}
 
@@ -76,10 +77,12 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 		holder.name.setText(mShowingData.get(position).getName());
 		holder.description.setText(mShowingData.get(position).getDescription());
 
-		Glide.with(holder.view.getContext())
-				.load(mShowingData.get(position).getAvatar_url())
-				.into(holder.image);
-
+		if (mShowingData.get(position).getAvatar_url() != null) {
+			Glide.with(holder.view.getContext())
+					.load(mShowingData.get(position).getAvatar_url())
+					.apply(RequestOptions.circleCropTransform())
+					.into(holder.image);
+		}
 
 		holder.view.setOnClickListener(v -> {
 			if (itemClickListener != null) {
@@ -175,5 +178,3 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 		void onItemClick(View view, int position);
 	}
 }
-
-

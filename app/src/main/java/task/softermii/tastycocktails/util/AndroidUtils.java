@@ -16,7 +16,10 @@
 
 package task.softermii.tastycocktails.util;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 
 /**
@@ -33,5 +36,16 @@ public class AndroidUtils {
 
 	public static boolean isAndroid5() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+	}
+
+	/**
+	 * Check connectivity to network
+	 * @param context app context
+	 * @return true if connected, otherwise - false
+	 */
+	public static boolean isConnectedToNetwork(Context context) {
+		NetworkInfo networkInfo = ((ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+		return (networkInfo != null && networkInfo.isConnected());
 	}
 }
