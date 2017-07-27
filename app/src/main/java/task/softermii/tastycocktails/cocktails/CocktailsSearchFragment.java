@@ -36,42 +36,45 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
+import android.widget.ProgressBar;
 
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import javax.inject.Inject;
+
 import task.softermii.tastycocktails.R;
-import task.softermii.tastycocktails.data.LocalRepository;
-import task.softermii.tastycocktails.data.RemoteRepository;
-import task.softermii.tastycocktails.data.Repository;
-import task.softermii.tastycocktails.data.model.Drink;
+import task.softermii.tastycocktails.TCApplication;
+import task.softermii.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
+import task.softermii.tastycocktails.cocktails.list.ListItem;
+import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
 import timber.log.Timber;
 
 /**
  * Created on 26.07.2017.
  * @author Dimowner
  */
-public class CocktailsSearchFragment extends Fragment {
+public class CocktailsSearchFragment extends Fragment implements CocktailsSearchContract.View {
 
 	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 	public static final String EXTRAS_KEY_NAME_TRANSITION_NAME = "txt_name_transition_name";
 	public static final String EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME = "txt_description_transition_name";
 	public static final String EXTRAS_KEY_IMAGE_TRANSITION_NAME = "txt_image_transition_name";
 
-	public static final int DEFAULT_ITEM_WIDTH = 120;//px
-
 	private RecyclerView mRecyclerView;
+	private ProgressBar mProgressBar;
 
 	private CocktailsRecyclerAdapter mAdapter;
 
+	@Inject
+	CocktailsSearchContract.UserActionsListener mPresenter;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setRetainInstance(true);
 		setHasOptionsMenu(true);
+
+		TCApplication.get(getContext()).applicationComponent()
+				.plus(new CocktailsModule()).injectCocktailsSearch(this);
 	}
 
 	@Nullable
@@ -84,6 +87,7 @@ public class CocktailsSearchFragment extends Fragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
 		mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 
@@ -95,33 +99,43 @@ public class CocktailsSearchFragment extends Fragment {
 
 		mAdapter = new CocktailsRecyclerAdapter();
 		mAdapter.setItemClickListener((view1, position) -> {
-			ListItem item = mAdapter.getItem(position);
-			Intent intent = new Intent(getContext(), CocktailDetailsActivity.class);
-			intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_COCKTAIL_ID, item.getId());
-			intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_NAME, item.getName());
-			intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
-			intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
-
-			//Transition
-			View txtName = view1.findViewById(R.id.list_item_name);
-			View txtDescription = view1.findViewById(R.id.list_item_description);
-			View ivImage = view1.findViewById(R.id.list_item_image);
-			intent.putExtra(EXTRAS_KEY_NAME_TRANSITION_NAME, ViewCompat.getTransitionName(txtName));
-			intent.putExtra(EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME, ViewCompat.getTransitionName(txtDescription));
-			intent.putExtra(EXTRAS_KEY_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(ivImage));
-
-			ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-					CocktailsSearchFragment.this.getActivity(),
-					Pair.create(txtName, ViewCompat.getTransitionName(txtName)),
-					Pair.create(txtDescription, ViewCompat.getTransitionName(txtDescription)),
-					Pair.create(ivImage, ViewCompat.getTransitionName(ivImage)));
-
-			startActivity(intent, options.toBundle());
-
+			startDetailsActivity(mAdapter.getItem(position), view1);
 		});
-		searchCocktails();
 
 		mRecyclerView.setAdapter(mAdapter);
+
+		mPresenter.bindView(this);
+		mPresenter.loadLastSearch();
+	}
+
+	private void startDetailsActivity(ListItem item, View view1) {
+		Intent intent = new Intent(getContext(), CocktailDetailsActivity.class);
+		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_COCKTAIL_ID, item.getId());
+		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_NAME, item.getName());
+		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
+		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
+
+		//Transition
+		View txtName = view1.findViewById(R.id.list_item_name);
+		View txtDescription = view1.findViewById(R.id.list_item_description);
+		View ivImage = view1.findViewById(R.id.list_item_image);
+		intent.putExtra(EXTRAS_KEY_NAME_TRANSITION_NAME, ViewCompat.getTransitionName(txtName));
+		intent.putExtra(EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME, ViewCompat.getTransitionName(txtDescription));
+		intent.putExtra(EXTRAS_KEY_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(ivImage));
+
+		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+				CocktailsSearchFragment.this.getActivity(),
+				Pair.create(txtName, ViewCompat.getTransitionName(txtName)),
+				Pair.create(txtDescription, ViewCompat.getTransitionName(txtDescription)),
+				Pair.create(ivImage, ViewCompat.getTransitionName(ivImage)));
+
+		startActivity(intent, options.toBundle());
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		mPresenter.unbindView();
 	}
 
 	@Override
@@ -132,78 +146,15 @@ public class CocktailsSearchFragment extends Fragment {
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				Timber.v("onQueryTextSubmit q = " + query);
-				LocalRepository localRepository = new LocalRepository(getContext());
-				RemoteRepository remoteRepository = new RemoteRepository();
-				remoteRepository.setOnLoadListener(localRepository::rewriteRepositories);
-
-				Repository repository = new Repository(getContext(), localRepository, remoteRepository);
-				repository.searchCocktailsByName(query)
-						.map(CocktailsSearchFragment.this::convertModel)
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(CocktailsSearchFragment.this::displayData, CocktailsSearchFragment.this::handleError);
+				mPresenter.startSearch(query);
 				return false;
 			}
 
 			@Override
 			public boolean onQueryTextChange(final String newText) {
-				Timber.v("onQueryTextChange t = " + newText);
 				return false;
 			}
 		});
-	}
-
-	private void searchCocktails() {
-		LocalRepository localRepository = new LocalRepository(getContext());
-		RemoteRepository remoteRepository = new RemoteRepository();
-		remoteRepository.setOnLoadListener(localRepository::rewriteRepositories);
-
-		Repository repository = new Repository(getContext(), localRepository, remoteRepository);
-		repository.getLastSearch()
-				.map(this::convertModel)
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(this::displayData, this::handleError);
-
-	}
-
-	private void handleError(Throwable throwable) {
-		Timber.e(throwable);
-		//TODO: make retry
-		Snackbar
-				.make(mRecyclerView, R.string.error_on_query, Snackbar.LENGTH_LONG)
-				.setAction(R.string.retry, view -> {})
-				.show();
-	}
-
-	private List<ListItem> convertModel(List<Drink> drinks) {
-		List<ListItem> list = new ArrayList<>(drinks.size());
-		for (int i = 0; i < drinks.size(); i++) {
-			Drink drink = drinks.get(i);
-			list.add(new ListItem(drink.getIdDrink(), drink.getStrDrink(), drink.getStrInstructions(), drink.getStrDrinkThumb()));
-		}
-		return list;
-	}
-
-	private ListItem convertModel(Drink drink) {
-		if (drink.getIdDrink() != Drink.NO_ID) {
-			return new ListItem(drink.getIdDrink(), drink.getStrDrink(), drink.getStrInstructions(), drink.getStrDrinkThumb());
-		} else {
-			return null;
-		}
-	}
-
-	private void displayData(List<ListItem> data) {
-		if (data.size() > 0) {
-			mAdapter.setData(data);
-		} else {
-			Snackbar.make(mRecyclerView, R.string.did_not_find_anything, Snackbar.LENGTH_LONG).show();
-		}
-	}
-
-	private void displayData(ListItem data) {
-		List<ListItem> list = new ArrayList<>(1);
-		list.add(data);
-		mAdapter.setData(list);
 	}
 
 	@Override
@@ -224,5 +175,28 @@ public class CocktailsSearchFragment extends Fragment {
 			}
 			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
 		}
+	}
+
+	@Override
+	public void showProgress() {
+		mProgressBar.setVisibility(View.VISIBLE);
+		mRecyclerView.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void hideProgress() {
+		mProgressBar.setVisibility(View.GONE);
+		mRecyclerView.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void showError(Throwable throwable) {
+		Timber.e(throwable);
+		Snackbar.make(mRecyclerView, R.string.error_on_query, Snackbar.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void displayData(List<ListItem> data) {
+		mAdapter.setData(data);
 	}
 }

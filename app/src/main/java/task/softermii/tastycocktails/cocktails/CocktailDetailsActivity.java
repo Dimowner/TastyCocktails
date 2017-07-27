@@ -31,8 +31,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.util.AndroidUtils;
 
@@ -47,19 +45,18 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 	public static final String EXTRAS_KEY_DESCRIPTION = "cocktail_description";
 	public static final String EXTRAS_KEY_IMAGE_URL = "cocktail_image";
 
-	@BindView(R.id.toolbar) Toolbar toolbar;
-	@BindView(R.id.details_name) TextView txtName;
-	@BindView(R.id.details_description) TextView txtDescription;
-	@BindView(R.id.details_image) ImageView ivImage;
-
-	private long mId;
+//	private long mId;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cocktail_details);
 		supportPostponeEnterTransition();
-		ButterKnife.bind(this);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		TextView txtName = (TextView) findViewById(R.id.details_name);
+		TextView txtDescription = (TextView) findViewById(R.id.details_description);
+		ImageView ivImage = (ImageView) findViewById(R.id.details_image);
 
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
@@ -68,9 +65,9 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 		}
 
 		Bundle extras = getIntent().getExtras();
-		if (extras.containsKey(EXTRAS_KEY_COCKTAIL_ID)) {
-			mId = extras.getLong(EXTRAS_KEY_COCKTAIL_ID);
-		}
+//		if (extras.containsKey(EXTRAS_KEY_COCKTAIL_ID)) {
+//			mId = extras.getLong(EXTRAS_KEY_COCKTAIL_ID);
+//		}
 
 		if (extras.containsKey(EXTRAS_KEY_NAME)) {
 			txtName.setText(extras.getString(EXTRAS_KEY_NAME));

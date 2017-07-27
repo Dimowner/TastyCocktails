@@ -39,7 +39,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 
 import static task.softermii.tastycocktails.util.AndroidUtils.dpToPx;
 
@@ -49,7 +52,6 @@ import static task.softermii.tastycocktails.util.AndroidUtils.dpToPx;
  */
 public class BaseActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {//implements IMainView {
 
-	//TODO: Update profile icon after login
 	// symbols for navdrawer items (indices must correspond to array below). This is
 	// not a list of items that are necessarily *present* in the Nav Drawer; rather,
 	// it's a list of all possible items.
@@ -66,6 +68,11 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 	protected NavigationView mNavigationView;
 	protected ActionBarDrawerToggle mDrawerToggle;
 
+	private TextView userName;
+	private ImageView userIconView;
+
+	private ProfileTracker profileTracker;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,16 +87,18 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 		super.onPostCreate(savedInstanceState);
 		setupNavDrawer();
 
+		userName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
+		userIconView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.user_icon);
+
+
 		Profile profile = Profile.getCurrentProfile();
 		if (profile != null) {
-			TextView userName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
-			ImageView userIconView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.user_icon);
-			loadUserFace(profile, userIconView, userName);
-			setUserDetailsActivity(profile, userIconView, userName);
+			loadUserFace(profile);
+			setUserDetailsActivity(profile);
 		}
 	}
 
-	private void loadUserFace(@NonNull Profile profile, @NonNull ImageView userIconView, @NonNull TextView userName) {
+	private void loadUserFace(@NonNull Profile profile) {
 		userName.setText(profile.getName());
 		Glide.with(BaseActivity.this)
 				.load(profile.getProfilePictureUri(dpToPx(60), dpToPx(60)).toString())
@@ -97,17 +106,17 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 				.into(userIconView);
 	}
 
-	private void setUserDetailsActivity(@NonNull Profile profile, @NonNull ImageView userIconView, @NonNull TextView userName) {
-		userIconView.setOnClickListener(v -> startUserDetailsActivity(profile.getId(), userIconView, userName));
-		userName.setOnClickListener(v -> startUserDetailsActivity(profile.getId(), userIconView, userName));
+	private void setUserDetailsActivity(@NonNull Profile profile) {
+		userIconView.setOnClickListener(v -> startUserDetailsActivity(profile.getId()));
+		userName.setOnClickListener(v -> startUserDetailsActivity(profile.getId()));
 	}
 
-	private void startUserDetailsActivity(@NonNull String id, @NonNull ImageView userImageView, @NonNull TextView userName) {
+	private void startUserDetailsActivity(@NonNull String id) {
 		Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
 		intent.putExtra(UserDetailsActivity.EXTRAS_KEY_USER_ID, id);
 		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
 				BaseActivity.this,
-				Pair.create(userImageView, ViewCompat.getTransitionName(userImageView)),
+				Pair.create(userIconView, ViewCompat.getTransitionName(userIconView)),
 				Pair.create(userName, ViewCompat.getTransitionName(userName))
 			);
 		startActivity(intent, options.toBundle());
@@ -182,6 +191,26 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 		if (mDrawerLayout != null) {
 			mDrawerLayout.closeDrawer(Gravity.START);
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		profileTracker = new ProfileTracker() {
+			@Override
+			protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+				if (currentProfile != null) {
+					loadUserFace(currentProfile);
+					setUserDetailsActivity(currentProfile);
+				}
+			}
+		};
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		profileTracker.stopTracking();
 	}
 
 	@Override

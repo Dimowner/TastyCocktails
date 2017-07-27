@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.data;
+package task.softermii.tastycocktails.dagger.cocktails;
 
-import android.support.annotation.NonNull;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import java.util.List;
-
-import io.reactivex.Single;
-import task.softermii.tastycocktails.data.model.Drink;
+import javax.inject.Scope;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public interface RepositoryContract {
-
-	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
-	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
-	Single<Drink> getRandomCocktail();
-	Single<Drink> getCocktail(long id);
-	Single<List<Drink>> getLastSearch();
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+@interface CocktailsScope {
 }

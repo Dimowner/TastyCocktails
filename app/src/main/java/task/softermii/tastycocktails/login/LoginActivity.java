@@ -14,7 +14,6 @@ import com.facebook.login.widget.LoginButton;
 
 import java.util.Arrays;
 
-import butterknife.ButterKnife;
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.cocktails.CocktailsActivity;
 import task.softermii.tastycocktails.util.UIUtil;
@@ -32,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		ButterKnife.bind(this);
 
 		callbackManager = CallbackManager.Factory.create();
 		LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -42,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
 			@Override
 			public void onSuccess(LoginResult loginResult) {
 				startCocktailsActivity();
-
 			}
 
 			@Override
@@ -69,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	public void startCocktailsActivity() {
 		Intent intent = new Intent(getApplicationContext(), CocktailsActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
 

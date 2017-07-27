@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.cocktails;
+package task.softermii.tastycocktails.cocktails.list;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -40,7 +40,7 @@ import task.softermii.tastycocktails.R;
  * Created on 26.07.2017.
  * @author Dimowner
  */
-class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAdapter.ItemViewHolder> {
+public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAdapter.ItemViewHolder> {
 
 	private List<ListItem> mShowingData;
 
@@ -61,7 +61,7 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 			}
  	}
 
-	CocktailsRecyclerAdapter() {
+	public CocktailsRecyclerAdapter() {
 		this.mShowingData = Collections.emptyList();
 	}
 
@@ -100,7 +100,7 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 		return mShowingData.size();
 	}
 
-	ListItem getItem(int pos) {
+	public ListItem getItem(int pos) {
 		return mShowingData.get(pos);
 	}
 
@@ -113,7 +113,7 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 		notifyDataSetChanged();
 	}
 
-	void setItemClickListener(ItemClickListener itemClickListener) {
+	public void setItemClickListener(ItemClickListener itemClickListener) {
 		this.itemClickListener = itemClickListener;
 	}
 
@@ -121,7 +121,7 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 	 * Save adapters state
 	 * @return adapter state.
 	 */
-	Parcelable onSaveInstanceState() {
+	public Parcelable onSaveInstanceState() {
 		SavedState ss = new SavedState(AbsSavedState.EMPTY_STATE);
 		ss.items = mShowingData.toArray(new ListItem[0]);
 		return ss;
@@ -131,7 +131,7 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 	 * Restore adapters state
 	 * @param state Adapter state.
 	 */
-	void onRestoreInstanceState(Parcelable state) {
+	public void onRestoreInstanceState(Parcelable state) {
 		SavedState ss = (SavedState) state;
 		mShowingData = new ArrayList<>();
 		Collections.addAll(mShowingData, ss.items);
@@ -174,7 +174,7 @@ class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAda
 				};
 	}
 
-	interface ItemClickListener{
+	public interface ItemClickListener{
 		void onItemClick(View view, int position);
 	}
 }

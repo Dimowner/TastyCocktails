@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.data;
+package task.softermii.tastycocktails.dagger.application;
 
-import android.support.annotation.NonNull;
+import javax.inject.Singleton;
 
-import java.util.List;
-
-import io.reactivex.Single;
-import task.softermii.tastycocktails.data.model.Drink;
+import dagger.Component;
+import task.softermii.tastycocktails.dagger.cocktails.CocktailsComponent;
+import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public interface RepositoryContract {
+@Component(modules = {AppModule.class})
+@Singleton
+public interface AppComponent {
 
-	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
-	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
-	Single<Drink> getRandomCocktail();
-	Single<Drink> getCocktail(long id);
-	Single<List<Drink>> getLastSearch();
+	CocktailsComponent plus(CocktailsModule exerciseModule);
 }

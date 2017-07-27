@@ -11,9 +11,6 @@ ext.versions = [
 		// Components
 		constraintlayout : "1.0.2",
 
-		// Utility
-		butterknife      : "8.6.0",
-
 		//Rx
 		rxJava			  : "2.0.1",
 
@@ -21,7 +18,7 @@ ext.versions = [
 		retroFit			  : "2.3.0",
 
 		//Dagger2
-//		dagger2			  : "2.11",
+		dagger2			  : "2.11",
 
 		//Glide
 		glide				  : "4.0.0-RC1",
@@ -94,8 +91,8 @@ dependencies {
 	compile "com.squareup.okhttp3:logging-interceptor:$versions.logInterceptor"
 
 //	//Dagger2
-//	compile "com.google.dagger:dagger:$versions.dagger2"
-//	annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger2"
+	compile "com.google.dagger:dagger:$versions.dagger2"
+	annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger2"
 
 	//Glide
 	compile "com.github.bumptech.glide:glide:$versions.glide"
@@ -104,10 +101,6 @@ dependencies {
 	compile "android.arch.persistence.room:runtime:$versions.archComp"
 	compile "android.arch.persistence.room:rxjava2:$versions.archComp"
 	annotationProcessor "android.arch.persistence.room:compiler:$versions.archComp"
-
-	//Butter Knife
-	compile "com.jakewharton:butterknife:$versions.butterKnife"
-	annotationProcessor "com.jakewharton:butterknife-compiler:$versions.butterKnife"
 
 	//Timber
 	compile "com.jakewharton.timber:timber:$versions.timber"

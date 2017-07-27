@@ -14,24 +14,32 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.data;
+package task.softermii.tastycocktails.dagger.application;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
-import java.util.List;
+import javax.inject.Singleton;
 
-import io.reactivex.Single;
-import task.softermii.tastycocktails.data.model.Drink;
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Created on 27.07.2017.
+ * Created on 27.0.2017.
  * @author Dimowner
  */
-public interface RepositoryContract {
+@Module
+public class AppModule {
 
-	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
-	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
-	Single<Drink> getRandomCocktail();
-	Single<Drink> getCocktail(long id);
-	Single<List<Drink>> getLastSearch();
+	private final Context appContext;
+
+	public AppModule(@NonNull Context context) {
+		appContext = context;
+	}
+
+	@Provides
+	@Singleton
+	Context provideContext() {
+		return appContext;
+	}
 }

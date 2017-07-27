@@ -14,24 +14,38 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.data;
+package task.softermii.tastycocktails.cocktails;
 
 import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import io.reactivex.Single;
-import task.softermii.tastycocktails.data.model.Drink;
+import task.softermii.tastycocktails.cocktails.list.ListItem;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public interface RepositoryContract {
+public interface CocktailsSearchContract {
 
-	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
-	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
-	Single<Drink> getRandomCocktail();
-	Single<Drink> getCocktail(long id);
-	Single<List<Drink>> getLastSearch();
+	interface View {
+		void showProgress();
+
+		void hideProgress();
+
+		void showError(Throwable throwable);
+
+		void displayData(List<ListItem> data);
+	}
+
+	interface UserActionsListener {
+
+		void bindView(@NonNull View view);
+
+		void unbindView();
+
+		void startSearch(String search);
+
+		void loadLastSearch();
+	}
 }

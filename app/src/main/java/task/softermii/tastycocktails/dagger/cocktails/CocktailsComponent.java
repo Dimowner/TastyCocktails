@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.data;
+package task.softermii.tastycocktails.dagger.cocktails;
 
-import android.support.annotation.NonNull;
-
-import java.util.List;
-
-import io.reactivex.Single;
-import task.softermii.tastycocktails.data.model.Drink;
+import dagger.Subcomponent;
+import task.softermii.tastycocktails.cocktails.CocktailsSearchFragment;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public interface RepositoryContract {
+@Subcomponent(modules = {CocktailsModule.class})
+@CocktailsScope
+public interface CocktailsComponent {
 
-	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
-	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
-	Single<Drink> getRandomCocktail();
-	Single<Drink> getCocktail(long id);
-	Single<List<Drink>> getLastSearch();
+	void injectCocktailsSearch(CocktailsSearchFragment searchFragment);
 }

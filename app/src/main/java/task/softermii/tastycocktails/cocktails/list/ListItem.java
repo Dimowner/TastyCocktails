@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.cocktails;
+package task.softermii.tastycocktails.cocktails.list;
 
 import android.os.Parcel;
 import android.os.Parcelable;
