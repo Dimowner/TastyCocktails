@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -76,11 +76,7 @@ public class LocalRepository implements RepositoryContract {
 			if (count > 0) {
 				return getRepositoriesDao().getAll().subscribeOn(Schedulers.io());
 			} else {
-				return Single.fromCallable(() -> {
-					List<Drink> list = new ArrayList<>(1);
-					list.add(Drink.emptyDrink());
-					return list;
-				});
+				return Single.fromCallable(Collections::emptyList);
 			}
 		});
 	}
@@ -94,7 +90,9 @@ public class LocalRepository implements RepositoryContract {
 				getRepositoriesDao().deleteAll();
 				getRepositoriesDao().insertAll(data.toArray(new Drink[data.size()]));
 				return null;
-			}).subscribeOn(Schedulers.io()).subscribe((o, throwable) -> Timber.e(throwable));
+			})
+			.subscribeOn(Schedulers.io())
+			.subscribe((o, throwable) -> Timber.e(throwable));
 	}
 
 	private CocktailsDao getRepositoriesDao() {

@@ -73,7 +73,9 @@ public class DetailsPresenter implements DetailsContract.UserActionsListener {
 
 	private void displayData(DetailsModel model) {
 		view.hideProgress();
-		view.displayData(model);
+		if (model != null) {
+			view.displayData(model);
+		}
 	}
 
 	private void handleError(Throwable throwable) {
@@ -82,6 +84,10 @@ public class DetailsPresenter implements DetailsContract.UserActionsListener {
 	}
 
 	private DetailsModel convertModel(Drink drink) {
-		return new DetailsModel(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrDrinkThumb());
+		if (drink.getIdDrink() != Drink.NO_ID) {
+			return new DetailsModel(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrDrinkThumb());
+		} else {
+			return null;
+		}
 	}
 }
