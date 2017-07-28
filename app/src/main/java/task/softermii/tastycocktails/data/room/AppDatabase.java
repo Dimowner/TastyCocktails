@@ -17,9 +17,7 @@
 package task.softermii.tastycocktails.data.room;
 
 import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.content.Context;
 
 import task.softermii.tastycocktails.data.model.Drink;
 
@@ -27,22 +25,8 @@ import task.softermii.tastycocktails.data.model.Drink;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Database(entities = {Drink.class}, version = 1)
+@Database(entities = {Drink.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-	public abstract CocktailsDao repositoriesDao();
-
-	private static volatile AppDatabase appDatabase;
-
-	public static AppDatabase getInstance(Context context) {
-		if (appDatabase == null) {
-			synchronized (AppDatabase.class) {
-				if (appDatabase == null) {
-					appDatabase = Room.databaseBuilder(context.getApplicationContext(),
-												AppDatabase.class, "cocktails_db").build();
-				}
-			}
-		}
-		return appDatabase;
-	}
+	public abstract CocktailsDao cocktailsDao();
 }

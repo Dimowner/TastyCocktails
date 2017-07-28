@@ -23,6 +23,7 @@ import task.softermii.tastycocktails.dagger.cocktails.CocktailsComponent;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
 import task.softermii.tastycocktails.dagger.random.RandomCocktailComponent;
 import task.softermii.tastycocktails.dagger.random.RandomCocktailModule;
+import task.softermii.tastycocktails.data.LocalRepository;
 
 /**
  * Created on 27.07.2017.
@@ -34,4 +35,5 @@ public interface AppComponent {
 
 	CocktailsComponent plus(CocktailsModule exerciseModule);
 	RandomCocktailComponent plus(RandomCocktailModule detailsModule);
+	void inject(LocalRepository repository);
 }

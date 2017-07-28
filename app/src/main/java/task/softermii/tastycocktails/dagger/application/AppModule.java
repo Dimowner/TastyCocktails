@@ -16,6 +16,7 @@
 
 package task.softermii.tastycocktails.dagger.application;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -26,6 +27,7 @@ import dagger.Provides;
 import task.softermii.tastycocktails.data.LocalRepository;
 import task.softermii.tastycocktails.data.RemoteRepository;
 import task.softermii.tastycocktails.data.Repository;
+import task.softermii.tastycocktails.data.room.AppDatabase;
 
 /**
  * Created on 27.0.2017.
@@ -61,6 +63,12 @@ public class AppModule {
 		remoteRepository.setOnLoadListener(localRepository::rewriteRepositories);
 
 		return new Repository(context, localRepository, remoteRepository);
+	}
+
+	@Provides
+	@Singleton
+	AppDatabase provideAppDatabase(Context context) {
+		return Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "cocktails_db").build();
 	}
 
 	@Provides

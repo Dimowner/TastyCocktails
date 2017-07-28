@@ -73,13 +73,14 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 	}
 
 	@Override
-	public void onBindViewHolder(final ItemViewHolder holder, final int position) {
-		holder.name.setText(mShowingData.get(position).getName());
-		holder.description.setText(mShowingData.get(position).getDescription());
+	public void onBindViewHolder(final ItemViewHolder holder, final int position1) {
+		int pos = holder.getAdapterPosition();
+		holder.name.setText(mShowingData.get(pos).getName());
+		holder.description.setText(mShowingData.get(pos).getDescription());
 
-		if (mShowingData.get(position).getAvatar_url() != null) {
+		if (mShowingData.get(pos).getAvatar_url() != null) {
 			Glide.with(holder.view.getContext())
-					.load(mShowingData.get(position).getAvatar_url())
+					.load(mShowingData.get(pos).getAvatar_url())
 					.apply(RequestOptions.circleCropTransform())
 					.into(holder.image);
 		}
@@ -90,9 +91,9 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 			}
 		});
 		//Set transition names
-		ViewCompat.setTransitionName(holder.name, mShowingData.get(position).getName());
-		ViewCompat.setTransitionName(holder.description, mShowingData.get(position).getName() + "description");
-		ViewCompat.setTransitionName(holder.image, mShowingData.get(position).getName() + "image");
+		ViewCompat.setTransitionName(holder.name, mShowingData.get(pos).getName());
+		ViewCompat.setTransitionName(holder.description, mShowingData.get(pos).getName() + "description");
+		ViewCompat.setTransitionName(holder.image, mShowingData.get(pos).getName() + "image");
 	}
 
 	@Override

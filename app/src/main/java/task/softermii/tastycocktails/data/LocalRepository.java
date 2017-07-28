@@ -19,12 +19,14 @@ package task.softermii.tastycocktails.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.data.model.Drink;
 import task.softermii.tastycocktails.data.room.AppDatabase;
 import task.softermii.tastycocktails.data.room.CocktailsDao;
@@ -36,10 +38,15 @@ import timber.log.Timber;
  */
 public class LocalRepository implements RepositoryContract {
 
-	private WeakReference<Context> weakContext;
+	@Inject
+	AppDatabase appDatabase;
 
 	public LocalRepository(Context context) {
-		this.weakContext = new WeakReference<>(context);
+		TCApplication.get(context).applicationComponent().inject(this);
+	}
+
+	private CocktailsDao getRepositoriesDao() {
+		return appDatabase.cocktailsDao();
 	}
 
 	@Override
@@ -93,9 +100,5 @@ public class LocalRepository implements RepositoryContract {
 			})
 			.subscribeOn(Schedulers.io())
 			.subscribe((o, throwable) -> Timber.e(throwable));
-	}
-
-	private CocktailsDao getRepositoriesDao() {
-		return AppDatabase.getInstance(weakContext.get()).repositoriesDao();
 	}
 }
