@@ -14,35 +14,18 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.details;
+package task.softermii.tastycocktails.dagger.random;
 
-import android.support.annotation.NonNull;
-import task.softermii.tastycocktails.data.model.DetailsModel;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import javax.inject.Scope;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public interface DetailsContract {
-
-	interface View {
-		void showProgress();
-
-		void hideProgress();
-
-		void showError(Throwable throwable);
-
-		void displayData(DetailsModel drink);
-	}
-
-	interface UserActionsListener {
-
-		void bindView(@NonNull View view);
-
-		void unbindView();
-
-		void loadDrinkById(long id);
-
-		void loadRandomDrink();
-	}
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+@interface RandomCocktailScope {
 }

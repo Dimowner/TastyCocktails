@@ -45,9 +45,9 @@
 		</activity>
 
 		<activity android:name=".cocktails.CocktailsActivity"/>
-		<activity android:name=".details.DetailsActivity"/>
 		<activity android:name=".UserDetailsActivity"/>
 		<activity android:name=".random.RandomCocktailActivity"/>
+		<activity android:name=".cocktails.CocktailDetailsActivity"/>
 
 	</application>
 

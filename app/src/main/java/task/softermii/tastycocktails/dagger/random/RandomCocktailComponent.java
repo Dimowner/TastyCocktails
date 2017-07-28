@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.dagger.details;
+package task.softermii.tastycocktails.dagger.random;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-import javax.inject.Scope;
+import dagger.Subcomponent;
+import task.softermii.tastycocktails.random.RandomCocktailFragment;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-@interface DetailsScope {
+@Subcomponent(modules = {RandomCocktailModule.class})
+@RandomCocktailScope
+public interface RandomCocktailComponent {
+
+	void injectDetailsFragment(RandomCocktailFragment fragment);
 }

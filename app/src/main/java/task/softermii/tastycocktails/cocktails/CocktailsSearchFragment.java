@@ -47,7 +47,6 @@ import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
-import task.softermii.tastycocktails.details.DetailsActivity;
 import timber.log.Timber;
 
 /**
@@ -110,11 +109,10 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 	}
 
 	private void startDetailsActivity(ListItem item, View view1) {
-		Intent intent = new Intent(getContext(), DetailsActivity.class);
-		intent.putExtra(DetailsActivity.EXTRAS_KEY_COCKTAIL_ID, item.getId());
-		intent.putExtra(DetailsActivity.EXTRAS_KEY_NAME, item.getName());
-		intent.putExtra(DetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
-		intent.putExtra(DetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
+		Intent intent = new Intent(getContext(), CocktailDetailsActivity.class);
+		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_NAME, item.getName());
+		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
+		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
 
 		//Transition
 		View txtName = view1.findViewById(R.id.list_item_name);

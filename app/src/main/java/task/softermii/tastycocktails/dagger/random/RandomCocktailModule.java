@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.dagger.details;
+package task.softermii.tastycocktails.dagger.random;
 
-import dagger.Subcomponent;
-import task.softermii.tastycocktails.details.DetailsFragment;
+import dagger.Module;
+import dagger.Provides;
+import task.softermii.tastycocktails.data.Repository;
+import task.softermii.tastycocktails.random.RandomCocktailContract;
+import task.softermii.tastycocktails.random.RandomCocktailPresenter;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Subcomponent(modules = {DetailsModule.class})
-@DetailsScope
-public interface DetailsComponent {
+@Module
+public class RandomCocktailModule {
 
-	void injectDetailsFragment(DetailsFragment fragment);
+	@Provides
+	@RandomCocktailScope
+	RandomCocktailContract.UserActionsListener provideDetailsPresenter(Repository repository) {
+		return new RandomCocktailPresenter(repository);
+	}
 }

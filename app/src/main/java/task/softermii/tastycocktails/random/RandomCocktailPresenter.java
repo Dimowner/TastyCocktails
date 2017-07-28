@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.details;
+package task.softermii.tastycocktails.random;
 
 import android.support.annotation.NonNull;
 
@@ -28,20 +28,20 @@ import task.softermii.tastycocktails.data.model.Drink;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public class DetailsPresenter implements DetailsContract.UserActionsListener {
+public class RandomCocktailPresenter implements RandomCocktailContract.UserActionsListener {
 
 	private RepositoryContract repository;
 
-	private DetailsContract.View view;
+	private RandomCocktailContract.View view;
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-	public DetailsPresenter(RepositoryContract repository) {
+	public RandomCocktailPresenter(RepositoryContract repository) {
 		this.repository = repository;
 	}
 
 	@Override
-	public void bindView(@NonNull DetailsContract.View view) {
+	public void bindView(@NonNull RandomCocktailContract.View view) {
 		this.view = view;
 	}
 

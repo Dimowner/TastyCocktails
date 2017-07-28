@@ -21,8 +21,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsComponent;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
-import task.softermii.tastycocktails.dagger.details.DetailsComponent;
-import task.softermii.tastycocktails.dagger.details.DetailsModule;
+import task.softermii.tastycocktails.dagger.random.RandomCocktailComponent;
+import task.softermii.tastycocktails.dagger.random.RandomCocktailModule;
 
 /**
  * Created on 27.07.2017.
@@ -33,5 +33,5 @@ import task.softermii.tastycocktails.dagger.details.DetailsModule;
 public interface AppComponent {
 
 	CocktailsComponent plus(CocktailsModule exerciseModule);
-	DetailsComponent plus(DetailsModule detailsModule);
+	RandomCocktailComponent plus(RandomCocktailModule detailsModule);
 }

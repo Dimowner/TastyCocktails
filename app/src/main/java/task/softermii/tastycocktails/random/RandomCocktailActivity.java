@@ -24,7 +24,6 @@ import android.view.MenuItem;
 
 import task.softermii.tastycocktails.BaseActivity;
 import task.softermii.tastycocktails.R;
-import task.softermii.tastycocktails.details.DetailsFragment;
 
 /**
  * Created on 27.07.2017.
@@ -32,7 +31,7 @@ import task.softermii.tastycocktails.details.DetailsFragment;
  */
 public class RandomCocktailActivity extends BaseActivity {
 
-	private DetailsFragment fragment;
+	private RandomCocktailFragment fragment;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class RandomCocktailActivity extends BaseActivity {
 
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
-			fragment = new DetailsFragment();
+			fragment = new RandomCocktailFragment();
 			manager
 					.beginTransaction()
 					.add(R.id.fragment, fragment, "details_fragment")

@@ -14,24 +14,35 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.dagger.details;
+package task.softermii.tastycocktails.random;
 
-import dagger.Module;
-import dagger.Provides;
-import task.softermii.tastycocktails.data.Repository;
-import task.softermii.tastycocktails.details.DetailsContract;
-import task.softermii.tastycocktails.details.DetailsPresenter;
+import android.support.annotation.NonNull;
+import task.softermii.tastycocktails.data.model.DetailsModel;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Module
-public class DetailsModule {
+public interface RandomCocktailContract {
 
-	@Provides
-	@DetailsScope
-	DetailsContract.UserActionsListener provideDetailsPresenter(Repository repository) {
-		return new DetailsPresenter(repository);
+	interface View {
+		void showProgress();
+
+		void hideProgress();
+
+		void showError(Throwable throwable);
+
+		void displayData(DetailsModel drink);
+	}
+
+	interface UserActionsListener {
+
+		void bindView(@NonNull View view);
+
+		void unbindView();
+
+		void loadDrinkById(long id);
+
+		void loadRandomDrink();
 	}
 }
