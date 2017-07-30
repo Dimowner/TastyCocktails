@@ -36,7 +36,7 @@ public class CocktailsActivity extends BaseActivity {
 
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
-			CocktailsSearchFragment fragment = new CocktailsSearchFragment();
+			SearchFragment fragment = new SearchFragment();
 			manager
 					.beginTransaction()
 					.add(R.id.fragment, fragment, "cocktails_fragment")

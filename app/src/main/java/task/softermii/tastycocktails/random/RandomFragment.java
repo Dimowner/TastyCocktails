@@ -16,6 +16,7 @@
 
 package task.softermii.tastycocktails.random;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import javax.inject.Inject;
 
@@ -34,19 +39,18 @@ import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.dagger.random.RandomCocktailModule;
 import task.softermii.tastycocktails.data.model.DetailsModel;
-import timber.log.Timber;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public class RandomCocktailFragment extends Fragment implements RandomCocktailContract.View {
+public class RandomFragment extends Fragment implements RandomContract.View {
 
-//	public static final String EXTRAS_KEY_ID = "cocktail_id";
+	public static final String EXTRAS_KEY_ID = "cocktail_id";
 //	public static final String EXTRAS_KEY_TRANSITION_BUNDLE = "transition_bundle";
 
 	@Inject
-	RandomCocktailContract.UserActionsListener mPresenter;
+	RandomContract.UserActionsListener mPresenter;
 
 	private ProgressBar mProgressBar;
 	private ImageView ivImage;
@@ -54,10 +58,10 @@ public class RandomCocktailFragment extends Fragment implements RandomCocktailCo
 	private TextView txtDescription;
 	private TextView txtError;
 
-//	private long mId;
-//
-//	public static RandomCocktailFragment newInstance(long id, Bundle transitionBundle) {
-//		RandomCocktailFragment fragment = new RandomCocktailFragment();
+	private long mId = -1;
+
+//	public static RandomFragment newInstance(long id, Bundle transitionBundle) {
+//		RandomFragment fragment = new RandomFragment();
 //		Bundle data = new Bundle();
 //		data.putBundle(EXTRAS_KEY_TRANSITION_BUNDLE, transitionBundle);
 //		data.putLong(EXTRAS_KEY_ID, id);
@@ -76,7 +80,7 @@ public class RandomCocktailFragment extends Fragment implements RandomCocktailCo
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_cocktail_details, container, false);
+		return inflater.inflate(R.layout.content_cocktail, container, false);
 	}
 
 	@Override
@@ -90,18 +94,34 @@ public class RandomCocktailFragment extends Fragment implements RandomCocktailCo
 		txtError = (TextView) view.findViewById(R.id.details_error);
 
 		mPresenter.bindView(this);
-		mPresenter.loadRandomDrink();
+		if (savedInstanceState == null) {
+			mPresenter.loadRandomDrink();
+		} else if (savedInstanceState.containsKey(EXTRAS_KEY_ID)) {
+//			TODO fix to restore from cache
+			mId = savedInstanceState.getLong(EXTRAS_KEY_ID);
+			mPresenter.loadDrinkById(mId);
+		}
 	}
 
-	public void loadNewRandomDrink() {
+	public void loadRandomDrink() {
 		mPresenter.loadRandomDrink();
-		hideError();
+		ivImage.setVisibility(View.VISIBLE);
+		txtError.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (mId != -1) {
+			outState.putLong(EXTRAS_KEY_ID, mId);
+		}
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		mPresenter.unbindView();
+		mPresenter = null;
 	}
 
 	@Override
@@ -115,31 +135,46 @@ public class RandomCocktailFragment extends Fragment implements RandomCocktailCo
 	}
 
 	@Override
-	public void showError(Throwable throwable) {
-		Timber.e(throwable);
-		showError();
-	}
-
-	private void showError() {
-		ivImage.setVisibility(View.GONE);
-		txtName.setVisibility(View.GONE);
-		txtDescription.setVisibility(View.GONE);
+	public void showQueryError() {
+		ivImage.setVisibility(View.INVISIBLE);
 		txtError.setVisibility(View.VISIBLE);
+		txtError.setText(R.string.msg_error_on_query);
+		txtName.setText(null);
+		txtDescription.setText(null);
 	}
 
-	private void hideError() {
-		ivImage.setVisibility(View.VISIBLE);
-		txtName.setVisibility(View.VISIBLE);
-		txtDescription.setVisibility(View.VISIBLE);
-		txtError.setVisibility(View.GONE);
+	@Override
+	public void showNetworkError() {
+		ivImage.setVisibility(View.INVISIBLE);
+		txtError.setVisibility(View.VISIBLE);
+		txtError.setText(R.string.msg_error_no_internet);
+		txtName.setText(null);
+		txtDescription.setText(null);
 	}
 
 	@Override
 	public void displayData(DetailsModel model) {
 		if (model.getImageUrl() != null) {
+			mId = model.getId();
 			ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			Glide.with(getContext())
 					.load(model.getImageUrl())
+					.listener(new RequestListener<Drawable>() {
+						@Override
+						public boolean onLoadFailed(@Nullable GlideException e, Object model,
+															 Target<Drawable> target, boolean isFirstResource) {
+
+							hideProgress();
+							return false;
+						}
+
+						@Override
+						public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+																 DataSource dataSource, boolean isFirstResource) {
+							hideProgress();
+							return false;
+						}
+					})
 					.into(ivImage);
 		}
 		txtName.setText(model.getName());

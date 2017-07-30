@@ -81,7 +81,7 @@ public class LocalRepository implements RepositoryContract {
 	public Single<List<Drink>> getLastSearch() {
 		return getRepositoriesDao().getRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 			if (count > 0) {
-				return getRepositoriesDao().getAll().subscribeOn(Schedulers.io());
+				return getRepositoriesDao().getAll();
 			} else {
 				return Single.fromCallable(Collections::emptyList);
 			}

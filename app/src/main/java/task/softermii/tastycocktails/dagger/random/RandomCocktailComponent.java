@@ -17,7 +17,7 @@
 package task.softermii.tastycocktails.dagger.random;
 
 import dagger.Subcomponent;
-import task.softermii.tastycocktails.random.RandomCocktailFragment;
+import task.softermii.tastycocktails.random.RandomFragment;
 
 /**
  * Created on 27.07.2017.
@@ -27,5 +27,5 @@ import task.softermii.tastycocktails.random.RandomCocktailFragment;
 @RandomCocktailScope
 public interface RandomCocktailComponent {
 
-	void injectDetailsFragment(RandomCocktailFragment fragment);
+	void injectDetailsFragment(RandomFragment fragment);
 }

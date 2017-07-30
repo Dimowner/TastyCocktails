@@ -16,17 +16,14 @@
 
 package task.softermii.tastycocktails.cocktails;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -34,8 +31,10 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.util.List;
@@ -47,13 +46,12 @@ import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
-import timber.log.Timber;
 
 /**
  * Created on 26.07.2017.
  * @author Dimowner
  */
-public class CocktailsSearchFragment extends Fragment implements CocktailsSearchContract.View {
+public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 	public static final String EXTRAS_KEY_NAME_TRANSITION_NAME = "txt_name_transition_name";
@@ -66,7 +64,7 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 	private CocktailsRecyclerAdapter mAdapter;
 
 	@Inject
-	CocktailsSearchContract.UserActionsListener mPresenter;
+	SearchContract.UserActionsListener mPresenter;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +78,7 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_search_cocktails, container, false);
+		return inflater.inflate(R.layout.fragment_search, container, false);
 	}
 
 	@Override
@@ -93,26 +91,22 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-		DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-		divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.recycler_divider));
-		mRecyclerView.addItemDecoration(divider);
-
-		mAdapter = new CocktailsRecyclerAdapter();
-		mAdapter.setItemClickListener((view1, position) -> {
-			startDetailsActivity(mAdapter.getItem(position), view1);
-		});
-
-		mRecyclerView.setAdapter(mAdapter);
-
 		mPresenter.bindView(this);
-		mPresenter.loadLastSearch();
+
+		if (savedInstanceState == null) {
+			mAdapter = new CocktailsRecyclerAdapter();
+			mAdapter.setItemClickListener((view1, position) ->
+					startDetailsActivity(mAdapter.getItem(position), view1));
+			mRecyclerView.setAdapter(mAdapter);
+			mPresenter.loadLastSearch();
+		}
 	}
 
 	private void startDetailsActivity(ListItem item, View view1) {
-		Intent intent = new Intent(getContext(), CocktailDetailsActivity.class);
-		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_NAME, item.getName());
-		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
-		intent.putExtra(CocktailDetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
+		Intent intent = new Intent(getContext(), DetailsActivity.class);
+		intent.putExtra(DetailsActivity.EXTRAS_KEY_NAME, item.getName());
+		intent.putExtra(DetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
+		intent.putExtra(DetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
 
 		//Transition
 		View txtName = view1.findViewById(R.id.list_item_name);
@@ -123,7 +117,7 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 		intent.putExtra(EXTRAS_KEY_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(ivImage));
 
 		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-				CocktailsSearchFragment.this.getActivity(),
+				SearchFragment.this.getActivity(),
 				Pair.create(txtName, ViewCompat.getTransitionName(txtName)),
 				Pair.create(txtDescription, ViewCompat.getTransitionName(txtDescription)),
 				Pair.create(ivImage, ViewCompat.getTransitionName(ivImage)));
@@ -135,12 +129,14 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 	public void onDestroyView() {
 		super.onDestroyView();
 		mPresenter.unbindView();
+		mPresenter = null;
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.search_menu, menu);
+		inflater.inflate(R.menu.menu_search, menu);
+		final MenuItem searchMenu = menu.findItem(R.id.action_search);
 		final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
@@ -153,6 +149,20 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 			public boolean onQueryTextChange(final String newText) {
 				return false;
 			}
+		});
+
+		// Get the search close button image view
+		ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
+
+		// Set on click listener
+		closeButton.setOnClickListener(v -> {
+			mPresenter.cancelSearch();
+			//Clear query
+			searchView.setQuery("", false);
+			//Collapse the action view
+			searchView.onActionViewCollapsed();
+			//Collapse the search widget
+			searchMenu.collapseActionView();
 		});
 	}
 
@@ -172,6 +182,8 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 				mAdapter = new CocktailsRecyclerAdapter();
 				mRecyclerView.setAdapter(mAdapter);
 			}
+			mAdapter.setItemClickListener((view1, position) ->
+					startDetailsActivity(mAdapter.getItem(position), view1));
 			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
 		}
 	}
@@ -189,9 +201,13 @@ public class CocktailsSearchFragment extends Fragment implements CocktailsSearch
 	}
 
 	@Override
-	public void showError(Throwable throwable) {
-		Timber.e(throwable);
+	public void showQueryError() {
 		Snackbar.make(mRecyclerView, R.string.msg_error_on_query, Snackbar.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void showNetworkError() {
+		Snackbar.make(mRecyclerView, R.string.msg_error_no_internet, Snackbar.LENGTH_LONG).show();
 	}
 
 	@Override

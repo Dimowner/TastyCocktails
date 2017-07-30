@@ -14,38 +14,30 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.cocktails;
-
-import android.support.annotation.NonNull;
-
-import java.util.List;
-
-import task.softermii.tastycocktails.cocktails.list.ListItem;
+package task.softermii.tastycocktails.util;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 
 /**
- * Created on 27.07.2017.
+ * Created on 30.07.2017.
  * @author Dimowner
  */
-public interface CocktailsSearchContract {
+public class AnimationUtil {
 
-	interface View {
-		void showProgress();
+	private AnimationUtil() {}
 
-		void hideProgress();
-
-		void showError(Throwable throwable);
-
-		void displayData(List<ListItem> data);
-	}
-
-	interface UserActionsListener {
-
-		void bindView(@NonNull View view);
-
-		void unbindView();
-
-		void startSearch(String search);
-
-		void loadLastSearch();
+	public static void viewRevealAnimation(View view) {
+		view.setAlpha(0f);
+		view.setScaleX(0f);
+		view.setScaleY(0f);
+		view.animate()
+				.alpha(1f)
+				.scaleX(1f)
+				.scaleY(1f)
+				.translationY(0f)
+				.setDuration(500L)
+				.setInterpolator(AnimationUtils.loadInterpolator(view.getContext(),
+						android.R.interpolator.accelerate_decelerate))
+				.start();
 	}
 }

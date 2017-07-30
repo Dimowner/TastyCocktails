@@ -14,24 +14,42 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.dagger.random;
+package task.softermii.tastycocktails.cocktails;
 
-import dagger.Module;
-import dagger.Provides;
-import task.softermii.tastycocktails.data.Repository;
-import task.softermii.tastycocktails.random.RandomContract;
-import task.softermii.tastycocktails.random.RandomPresenter;
+import android.support.annotation.NonNull;
+
+import java.util.List;
+
+import task.softermii.tastycocktails.cocktails.list.ListItem;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Module
-public class RandomCocktailModule {
+public interface SearchContract {
 
-	@Provides
-	@RandomCocktailScope
-	RandomContract.UserActionsListener provideDetailsPresenter(Repository repository) {
-		return new RandomPresenter(repository);
+	interface View {
+		void showProgress();
+
+		void hideProgress();
+
+		void showQueryError();
+
+		void showNetworkError();
+
+		void displayData(List<ListItem> data);
+	}
+
+	interface UserActionsListener {
+
+		void bindView(@NonNull View view);
+
+		void unbindView();
+
+		void startSearch(String search);
+
+		void cancelSearch();
+
+		void loadLastSearch();
 	}
 }

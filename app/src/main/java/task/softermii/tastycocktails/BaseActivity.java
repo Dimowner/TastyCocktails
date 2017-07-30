@@ -39,13 +39,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 
 import task.softermii.tastycocktails.cocktails.CocktailsActivity;
-import task.softermii.tastycocktails.random.RandomCocktailActivity;
+import task.softermii.tastycocktails.random.RandomActivity;
 
 import static task.softermii.tastycocktails.util.AndroidUtils.dpToPx;
 
@@ -64,7 +62,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 	protected static final int NAVDRAWER_ITEM_INVALID		= -1;
 
 	// Primary toolbar and drawer toggle
-	private Toolbar mActionBarToolbar;
+	protected Toolbar mActionBarToolbar;
 
 	// Navigation drawer:
 	protected DrawerLayout mDrawerLayout;
@@ -230,7 +228,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 				finish();
 				break;
 			case NAVDRAWER_ITEM_RANDOM:
-				startActivity(new Intent(getApplicationContext(), RandomCocktailActivity.class));
+				startActivity(new Intent(getApplicationContext(), RandomActivity.class));
 				finish();
 				break;
 			case NAVDRAWER_ITEM_ABOUT:

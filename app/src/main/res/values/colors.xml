@@ -18,7 +18,7 @@
 <resources>
 	<color name="colorPrimary">#ff1744</color>
 	<color name="colorPrimaryDark">#c11335</color>
-	<color name="colorAccent">#e9b825</color>
+	<color name="colorAccent">#FFCA28</color>
 
 	<color name="load_screen_gradient_dark">#b62541</color>
 	<color name="load_screen_gradient_light">#f11842</color>
@@ -35,6 +35,6 @@
 	<color name="blue_grey_600">#546e7a</color>
 
 	<color name="light_cyan">#E6F5F3</color>
-	<color name="light_red">#ffe3e9</color>
+	<color name="light_red">#ffeaee</color>
 
 </resources>

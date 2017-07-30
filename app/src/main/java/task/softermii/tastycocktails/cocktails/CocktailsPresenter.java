@@ -23,19 +23,22 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.data.RepositoryContract;
 import task.softermii.tastycocktails.data.model.Drink;
+import timber.log.Timber;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public class CocktailsPresenter implements CocktailsSearchContract.UserActionsListener {
+public class CocktailsPresenter implements SearchContract.UserActionsListener {
 
 	private RepositoryContract repository;
 
-	private CocktailsSearchContract.View view;
+	private SearchContract.View view;
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -44,7 +47,7 @@ public class CocktailsPresenter implements CocktailsSearchContract.UserActionsLi
 	}
 
 	@Override
-	public void bindView(@NonNull CocktailsSearchContract.View view) {
+	public void bindView(@NonNull SearchContract.View view) {
 		this.view = view;
 	}
 
@@ -64,14 +67,27 @@ public class CocktailsPresenter implements CocktailsSearchContract.UserActionsLi
 						.subscribe(this::displayData, this::handleError));
 	}
 
+	@Override
+	public void cancelSearch() {
+		view.hideProgress();
+		if (compositeDisposable.size() > 0) {
+			compositeDisposable.clear();
+		}
+	}
+
 	private void displayData(List<ListItem> data) {
 		view.hideProgress();
 		view.displayData(data);
 	}
 
 	private void handleError(Throwable throwable) {
+		Timber.e(throwable);
 		view.hideProgress();
-		view.showError(throwable);
+		if (TCApplication.isConnected()) {
+			view.showQueryError();
+		} else {
+			view.showNetworkError();
+		}
 	}
 
 	@Override
@@ -80,6 +96,7 @@ public class CocktailsPresenter implements CocktailsSearchContract.UserActionsLi
 		compositeDisposable.add(
 				repository.getLastSearch()
 						.map(this::convertModel)
+						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(this::displayData, this::handleError));
 	}

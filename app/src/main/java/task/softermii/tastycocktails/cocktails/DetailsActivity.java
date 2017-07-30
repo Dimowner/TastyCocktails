@@ -21,8 +21,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -33,24 +37,36 @@ import com.bumptech.glide.request.target.Target;
 
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.util.AndroidUtils;
+import task.softermii.tastycocktails.util.AnimationUtil;
 
 /**
  * Created on 26.07.2017.
  * @author Dimowner
  */
-public class CocktailDetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity {
 
 	public static final String EXTRAS_KEY_NAME = "cocktail_name";
 	public static final String EXTRAS_KEY_DESCRIPTION = "cocktail_description";
 	public static final String EXTRAS_KEY_IMAGE_URL = "cocktail_image";
 
+	private Toolbar toolbar;
+	private TextView txtError;
+	private ProgressBar progress;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_cocktail_details);
+		setContentView(R.layout.activity_container_scroll_view);
+
+		// Inflate content and bind views.
+		LayoutInflater.from(this).inflate(R.layout.content_cocktail, (ViewGroup) findViewById(R.id.scroll_view));
+
 		supportPostponeEnterTransition();
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		txtError = (TextView) findViewById(R.id.details_error);
+		progress = (ProgressBar) findViewById(R.id.progress);
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+
 		TextView txtName = (TextView) findViewById(R.id.details_name);
 		TextView txtDescription = (TextView) findViewById(R.id.details_description);
 		ImageView ivImage = (ImageView) findViewById(R.id.details_image);
@@ -60,6 +76,9 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setTitle("");
 		}
+
+		// Set the padding to match the Status Bar height
+		toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
 
 		Bundle extras = getIntent().getExtras();
 
@@ -73,6 +92,7 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 		if (extras.containsKey(EXTRAS_KEY_IMAGE_URL)) {
 			String url = extras.getString(EXTRAS_KEY_IMAGE_URL);
 			if (url != null) {
+				showProgress();
 				ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				Glide.with(getApplicationContext())
 						.load(url)
@@ -81,6 +101,8 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 							public boolean onLoadFailed(@Nullable GlideException e, Object model,
 																 Target<Drawable> target, boolean isFirstResource) {
 								supportStartPostponedEnterTransition();
+								hideProgress();
+								showError();
 								return false;
 							}
 
@@ -88,23 +110,44 @@ public class CocktailDetailsActivity extends AppCompatActivity {
 							public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
 																	 DataSource dataSource, boolean isFirstResource) {
 								supportStartPostponedEnterTransition();
+								hideProgress();
 								return false;
 							}
 						})
 						.into(ivImage);
 			} else {
 				supportStartPostponedEnterTransition();
+				ivImage.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+				ivImage.setImageResource(R.drawable.no_image);
 			}
 		}
 
 		if (AndroidUtils.isAndroid5()) {
-			String nameTransitionName = extras.getString(CocktailsSearchFragment.EXTRAS_KEY_NAME_TRANSITION_NAME);
+			String nameTransitionName = extras.getString(SearchFragment.EXTRAS_KEY_NAME_TRANSITION_NAME);
 			txtName.setTransitionName(nameTransitionName);
-			String descrTransitionName = extras.getString(CocktailsSearchFragment.EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME);
+			String descrTransitionName = extras.getString(SearchFragment.EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME);
 			txtDescription.setTransitionName(descrTransitionName);
-			String imageTransitionName = extras.getString(CocktailsSearchFragment.EXTRAS_KEY_IMAGE_TRANSITION_NAME);
+			String imageTransitionName = extras.getString(SearchFragment.EXTRAS_KEY_IMAGE_TRANSITION_NAME);
 			ivImage.setTransitionName(imageTransitionName);
 		}
+	}
+
+	private void showProgress() {
+		progress.setVisibility(View.VISIBLE);
+	}
+
+	private void hideProgress() {
+		progress.setVisibility(View.GONE);
+	}
+
+	private void showError() {
+		txtError.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void onEnterAnimationComplete() {
+		super.onEnterAnimationComplete();
+		AnimationUtil.viewRevealAnimation(toolbar.getChildAt(0));
 	}
 
 	@Override

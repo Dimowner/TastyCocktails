@@ -23,14 +23,16 @@ import task.softermii.tastycocktails.data.model.DetailsModel;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public interface RandomCocktailContract {
+public interface RandomContract {
 
 	interface View {
 		void showProgress();
 
 		void hideProgress();
 
-		void showError(Throwable throwable);
+		void showQueryError();
+
+		void showNetworkError();
 
 		void displayData(DetailsModel drink);
 	}

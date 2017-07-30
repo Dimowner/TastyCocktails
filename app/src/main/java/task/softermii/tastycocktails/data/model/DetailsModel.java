@@ -21,14 +21,20 @@ package task.softermii.tastycocktails.data.model;
  * @author Dimowner
  */
 public class DetailsModel {
+	private final long id;
 	private final String name;
 	private final String description;
 	private final String imageUrl;
 
-	public DetailsModel(String name, String description, String imageUrl) {
+	public DetailsModel(long id, String name, String description, String imageUrl) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.imageUrl = imageUrl;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -46,7 +52,8 @@ public class DetailsModel {
 	@Override
 	public String toString() {
 		return "DetailsModel{" +
-				"name='" + name + '\'' +
+				"id=" + id +
+				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", imageUrl='" + imageUrl + '\'' +
 				'}';

@@ -56,13 +56,12 @@ public class AppModule {
 
 	@Provides
 	@Singleton
-	Repository provideRepository(Context context,
-										  LocalRepository localRepository,
+	Repository provideRepository(LocalRepository localRepository,
 										  RemoteRepository remoteRepository) {
 		//Remote repo passes last query result into Local repo for saving.
 		remoteRepository.setOnLoadListener(localRepository::rewriteRepositories);
 
-		return new Repository(context, localRepository, remoteRepository);
+		return new Repository(localRepository, remoteRepository);
 	}
 
 	@Provides

@@ -34,6 +34,7 @@
 
 	<string name="msg_error_on_login">Error on login</string>
 	<string name="msg_error_on_query">Error on query</string>
+	<string name="msg_error_no_internet">No internet</string>
 
 	<string name="did_not_find_anything">Did not find anything</string>
 	<string name="retry">RETRY</string>

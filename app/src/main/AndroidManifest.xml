@@ -45,9 +45,14 @@
 		</activity>
 
 		<activity android:name=".cocktails.CocktailsActivity"/>
+
 		<activity android:name=".UserDetailsActivity"/>
-		<activity android:name=".random.RandomCocktailActivity"/>
-		<activity android:name=".cocktails.CocktailDetailsActivity"/>
+
+		<activity android:name=".random.RandomActivity"
+					 android:theme="@style/TransparentStatusBar"/>
+
+		<activity android:name=".cocktails.DetailsActivity"
+					 android:theme="@style/TransparentStatusBar"/>
 
 	</application>
 

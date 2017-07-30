@@ -20,28 +20,30 @@ import android.support.annotation.NonNull;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.data.RepositoryContract;
 import task.softermii.tastycocktails.data.model.DetailsModel;
 import task.softermii.tastycocktails.data.model.Drink;
+import timber.log.Timber;
 
 /**
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public class RandomCocktailPresenter implements RandomCocktailContract.UserActionsListener {
+public class RandomPresenter implements RandomContract.UserActionsListener {
 
 	private RepositoryContract repository;
 
-	private RandomCocktailContract.View view;
+	private RandomContract.View view;
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-	public RandomCocktailPresenter(RepositoryContract repository) {
+	public RandomPresenter(RepositoryContract repository) {
 		this.repository = repository;
 	}
 
 	@Override
-	public void bindView(@NonNull RandomCocktailContract.View view) {
+	public void bindView(@NonNull RandomContract.View view) {
 		this.view = view;
 	}
 
@@ -72,20 +74,25 @@ public class RandomCocktailPresenter implements RandomCocktailContract.UserActio
 	}
 
 	private void displayData(DetailsModel model) {
-		view.hideProgress();
+//		view.hideProgress();
 		if (model != null) {
 			view.displayData(model);
 		}
 	}
 
 	private void handleError(Throwable throwable) {
+		Timber.e(throwable);
 		view.hideProgress();
-		view.showError(throwable);
+		if (TCApplication.isConnected()) {
+			view.showQueryError();
+		} else {
+			view.showNetworkError();
+		}
 	}
 
 	private DetailsModel convertModel(Drink drink) {
 		if (drink.getIdDrink() != Drink.NO_ID) {
-			return new DetailsModel(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrDrinkThumb());
+			return new DetailsModel(drink.getIdDrink(), drink.getStrDrink(), drink.getStrInstructions(), drink.getStrDrinkThumb());
 		} else {
 			return null;
 		}

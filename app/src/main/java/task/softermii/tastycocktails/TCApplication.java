@@ -17,12 +17,16 @@
 package task.softermii.tastycocktails;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 
 import task.softermii.tastycocktails.dagger.application.AppComponent;
 import task.softermii.tastycocktails.dagger.application.AppModule;
 import task.softermii.tastycocktails.dagger.application.DaggerAppComponent;
+import task.softermii.tastycocktails.util.AndroidUtils;
 import timber.log.Timber;
 
 /**
@@ -30,6 +34,14 @@ import timber.log.Timber;
  * @author Dimowner
  */
 public class TCApplication extends Application {
+
+	final static String CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+	private NetworkStateChangeReceiver networkStateChangeReceiver;
+	private static boolean isConnectedToNetwork = false;
+
+	public static boolean isConnected() {
+		return isConnectedToNetwork;
+	}
 
 	// dagger2 appComponent
 	@SuppressWarnings("NullableProblems")
@@ -51,6 +63,17 @@ public class TCApplication extends Application {
 				}
 			});
 		}
+
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(CONNECTIVITY_ACTION);
+		networkStateChangeReceiver = new NetworkStateChangeReceiver();
+		registerReceiver(networkStateChangeReceiver, intentFilter);
+	}
+
+	@Override
+	public void onTerminate() {
+		super.onTerminate();
+		unregisterReceiver(networkStateChangeReceiver);
 	}
 
 	@NonNull
@@ -67,5 +90,22 @@ public class TCApplication extends Application {
 	@NonNull
 	public AppComponent applicationComponent() {
 		return appComponent;
+	}
+
+
+	private class NetworkStateChangeReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String actionOfIntent = intent.getAction();
+			if(actionOfIntent.equals(CONNECTIVITY_ACTION)){
+				if(AndroidUtils.isConnectedToNetwork(context)){
+					Timber.d("network state changed - Connected");
+					isConnectedToNetwork = true;
+				} else {
+					Timber.d("network state changed - Disconnected");
+					isConnectedToNetwork = false;
+				}
+			}
+		}
 	}
 }

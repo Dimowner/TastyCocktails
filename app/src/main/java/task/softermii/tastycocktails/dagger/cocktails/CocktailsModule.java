@@ -19,7 +19,7 @@ package task.softermii.tastycocktails.dagger.cocktails;
 import dagger.Module;
 import dagger.Provides;
 import task.softermii.tastycocktails.cocktails.CocktailsPresenter;
-import task.softermii.tastycocktails.cocktails.CocktailsSearchContract;
+import task.softermii.tastycocktails.cocktails.SearchContract;
 import task.softermii.tastycocktails.data.Repository;
 
 /**
@@ -31,7 +31,7 @@ public class CocktailsModule {
 
 	@Provides
 	@CocktailsScope
-	CocktailsSearchContract.UserActionsListener provideCocktailsPresenter(Repository repository) {
+	SearchContract.UserActionsListener provideCocktailsPresenter(Repository repository) {
 		return new CocktailsPresenter(repository);
 	}
 }

@@ -16,15 +16,12 @@
 
 package task.softermii.tastycocktails.data;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import io.reactivex.Single;
+import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.data.model.Drink;
-import task.softermii.tastycocktails.util.AndroidUtils;
 
 /**
  * Created on 27.07.2017.
@@ -35,14 +32,10 @@ public class Repository implements RepositoryContract {
 	private LocalRepository localRepository;
 	private RemoteRepository remoteRepository;
 
-	private WeakReference<Context> weakContext;
-
-	public Repository(@NonNull Context context,
-							@NonNull LocalRepository localRepository,
+	public Repository(@NonNull LocalRepository localRepository,
 							@NonNull RemoteRepository remoteRepository) {
 		this.localRepository = localRepository;
 		this.remoteRepository = remoteRepository;
-		this.weakContext = new WeakReference<>(context);
 	}
 
 	@Override
@@ -57,9 +50,10 @@ public class Repository implements RepositoryContract {
 
 	@Override
 	public Single<Drink> getRandomCocktail() {
-		if (AndroidUtils.isConnectedToNetwork(weakContext.get())) {
+		if (TCApplication.isConnected()) {
 			return remoteRepository.getRandomCocktail();
 		} else {
+//			TODO:store images in local cache storage
 			return localRepository.getRandomCocktail();
 		}
 	}

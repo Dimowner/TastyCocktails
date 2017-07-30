@@ -20,18 +20,19 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
-import android.view.LayoutInflater;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import task.softermii.tastycocktails.util.AndroidUtils;
@@ -48,6 +49,7 @@ public class AboutDialog extends DialogFragment {
 	public AboutDialog() {
 	}
 
+	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Get app version
@@ -65,10 +67,16 @@ public class AboutDialog extends DialogFragment {
 		SpannableStringBuilder aboutBody = new SpannableStringBuilder();
 		aboutBody.append(Html.fromHtml(getString(R.string.about_body, versionName)));
 
-		LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(
-				Context.LAYOUT_INFLATER_SERVICE);
-		TextView aboutBodyView = (TextView) layoutInflater.inflate(R.layout.dialog_about, null);
+		TextView aboutBodyView = new TextView(getContext());
+		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.MATCH_PARENT);
+		aboutBodyView.setLayoutParams(lp);
+
+		aboutBodyView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_medium));
 		aboutBodyView.setText(aboutBody);
+		int pad = (int) getResources().getDimension(R.dimen.padding_double);
+		aboutBodyView.setPadding(pad, pad, pad, pad);
 		aboutBodyView.setMovementMethod(new LinkMovementMethod());
 
 		AlertDialog alertDialog = new AlertDialog.Builder(getActivity())

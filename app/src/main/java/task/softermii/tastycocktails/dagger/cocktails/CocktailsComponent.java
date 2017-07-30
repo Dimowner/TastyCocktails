@@ -17,7 +17,7 @@
 package task.softermii.tastycocktails.dagger.cocktails;
 
 import dagger.Subcomponent;
-import task.softermii.tastycocktails.cocktails.CocktailsSearchFragment;
+import task.softermii.tastycocktails.cocktails.SearchFragment;
 
 /**
  * Created on 27.07.2017.
@@ -27,5 +27,5 @@ import task.softermii.tastycocktails.cocktails.CocktailsSearchFragment;
 @CocktailsScope
 public interface CocktailsComponent {
 
-	void injectCocktailsSearch(CocktailsSearchFragment searchFragment);
+	void injectCocktailsSearch(SearchFragment searchFragment);
 }

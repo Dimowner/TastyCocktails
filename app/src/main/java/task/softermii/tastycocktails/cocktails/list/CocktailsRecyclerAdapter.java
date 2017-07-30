@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 
 import task.softermii.tastycocktails.R;
+import timber.log.Timber;
 
 /**
  * Created on 26.07.2017.
@@ -83,6 +84,8 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 					.load(mShowingData.get(pos).getAvatar_url())
 					.apply(RequestOptions.circleCropTransform())
 					.into(holder.image);
+		} else {
+			holder.image.setImageResource(R.drawable.no_image);
 		}
 
 		holder.view.setOnClickListener(v -> {
