@@ -16,6 +16,7 @@
 
 package task.softermii.tastycocktails.cocktails.list;
 
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.AbsSavedState;
@@ -35,7 +36,6 @@ import java.util.Collections;
 import java.util.List;
 
 import task.softermii.tastycocktails.R;
-import timber.log.Timber;
 
 /**
  * Created on 26.07.2017.
@@ -93,10 +93,12 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 				itemClickListener.onItemClick(v, holder.getAdapterPosition());
 			}
 		});
+
 		//Set transition names
-		ViewCompat.setTransitionName(holder.name, mShowingData.get(pos).getName());
-		ViewCompat.setTransitionName(holder.description, mShowingData.get(pos).getName() + "description");
-		ViewCompat.setTransitionName(holder.image, mShowingData.get(pos).getName() + "image");
+		Resources res = holder.view.getResources();
+		ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
+		ViewCompat.setTransitionName(holder.description, res.getString(R.string.list_item_content_transition));
+		ViewCompat.setTransitionName(holder.image, res.getString(R.string.list_item_image_transition));
 	}
 
 	@Override

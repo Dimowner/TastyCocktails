@@ -16,6 +16,7 @@
 
 package task.softermii.tastycocktails.random;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -25,7 +26,6 @@ import task.softermii.tastycocktails.BaseActivity;
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.util.AndroidUtils;
 import task.softermii.tastycocktails.util.AnimationUtil;
-import timber.log.Timber;
 
 /**
  * Created on 27.07.2017.
@@ -43,10 +43,12 @@ public class RandomActivity extends BaseActivity {
 
 		fab = (FloatingActionButton) findViewById(R.id.fab);
 
-		getSupportActionBar().setTitle("");
+		if (getSupportActionBar() != null) getSupportActionBar().setTitle("");
 
-		// Set the padding to match the Status Bar height
-		mActionBarToolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			// Set the padding to match the Status Bar height
+			mActionBarToolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
+		}
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
 			fragment = new RandomFragment();

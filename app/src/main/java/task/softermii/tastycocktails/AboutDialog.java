@@ -17,6 +17,7 @@
 package task.softermii.tastycocktails;
 
 import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -85,7 +86,7 @@ public class AboutDialog extends DialogFragment {
 				.setPositiveButton(R.string.btn_ok, (dialog, whichButton) -> dismiss())
 				.create();
 
-		if (alertDialog.getWindow() != null) {
+		if (AndroidUtils.isAndroid5() && alertDialog.getWindow() != null) {
 			View decorView = alertDialog.getWindow().getDecorView();
 			alertDialog.setOnShowListener(dialogInterface -> revealShow(decorView));
 		}
@@ -102,21 +103,20 @@ public class AboutDialog extends DialogFragment {
 	}
 
 	//Reveal animation for dialog
+	@TargetApi(21)
 	private void revealShow(View view) {
-		if (AndroidUtils.isAndroid5()) {
-			int w = view.getWidth();
-			int h = view.getHeight();
+		int w = view.getWidth();
+		int h = view.getHeight();
 
-			int endRadius = (int) Math.hypot(w, h);
+		int endRadius = (int) Math.hypot(w, h);
 
-			int cx = (int) view.getX() + w / 2;
-			int cy = (int) view.getY() + h / 2;
+		int cx = (int) view.getX() + w / 2;
+		int cy = (int) view.getY() + h / 2;
 
-			Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, endRadius);
+		Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, endRadius);
 
-			view.setVisibility(View.VISIBLE);
-			revealAnimator.setDuration(REVEAL_DURATION);
-			revealAnimator.start();
-		}
+		view.setVisibility(View.VISIBLE);
+		revealAnimator.setDuration(REVEAL_DURATION);
+		revealAnimator.start();
 	}
 }

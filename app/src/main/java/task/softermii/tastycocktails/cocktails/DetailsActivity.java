@@ -17,8 +17,10 @@
 package task.softermii.tastycocktails.cocktails;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -77,8 +79,10 @@ public class DetailsActivity extends AppCompatActivity {
 			getSupportActionBar().setTitle("");
 		}
 
-		// Set the padding to match the Status Bar height
-		toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			// Set the padding to match the Status Bar height
+			toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
+		}
 
 		Bundle extras = getIntent().getExtras();
 
@@ -117,18 +121,15 @@ public class DetailsActivity extends AppCompatActivity {
 						.into(ivImage);
 			} else {
 				supportStartPostponedEnterTransition();
-				ivImage.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+				ivImage.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
 				ivImage.setImageResource(R.drawable.no_image);
 			}
 		}
 
 		if (AndroidUtils.isAndroid5()) {
-			String nameTransitionName = extras.getString(SearchFragment.EXTRAS_KEY_NAME_TRANSITION_NAME);
-			txtName.setTransitionName(nameTransitionName);
-			String descrTransitionName = extras.getString(SearchFragment.EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME);
-			txtDescription.setTransitionName(descrTransitionName);
-			String imageTransitionName = extras.getString(SearchFragment.EXTRAS_KEY_IMAGE_TRANSITION_NAME);
-			ivImage.setTransitionName(imageTransitionName);
+			txtName.setTransitionName(getResources().getString(R.string.list_item_label_transition));
+			txtDescription.setTransitionName(getResources().getString(R.string.list_item_content_transition));
+			ivImage.setTransitionName(getResources().getString(R.string.list_item_image_transition));
 		}
 	}
 

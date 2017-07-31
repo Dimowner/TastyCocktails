@@ -47,7 +47,6 @@ import task.softermii.tastycocktails.data.model.DetailsModel;
 public class RandomFragment extends Fragment implements RandomContract.View {
 
 	public static final String EXTRAS_KEY_ID = "cocktail_id";
-//	public static final String EXTRAS_KEY_TRANSITION_BUNDLE = "transition_bundle";
 
 	@Inject
 	RandomContract.UserActionsListener mPresenter;
@@ -58,6 +57,7 @@ public class RandomFragment extends Fragment implements RandomContract.View {
 	private TextView txtDescription;
 	private TextView txtError;
 
+	//TODO: this field shouldn't be in view
 	private long mId = -1;
 
 //	public static RandomFragment newInstance(long id, Bundle transitionBundle) {

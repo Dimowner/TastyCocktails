@@ -87,6 +87,18 @@ public class TCApplication extends Application {
 				.appModule(new AppModule(this));
 	}
 
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		Timber.d("onLowMemory");
+	}
+
+	@Override
+	public void onTrimMemory(int level) {
+		super.onTrimMemory(level);
+		Timber.d("onTrimMemory level = " + level);
+	}
+
 	@NonNull
 	public AppComponent applicationComponent() {
 		return appComponent;

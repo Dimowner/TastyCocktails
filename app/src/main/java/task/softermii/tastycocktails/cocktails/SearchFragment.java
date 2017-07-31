@@ -23,7 +23,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -54,9 +53,6 @@ import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
 public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
-	public static final String EXTRAS_KEY_NAME_TRANSITION_NAME = "txt_name_transition_name";
-	public static final String EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME = "txt_description_transition_name";
-	public static final String EXTRAS_KEY_IMAGE_TRANSITION_NAME = "txt_image_transition_name";
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
@@ -112,15 +108,11 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		View txtName = view1.findViewById(R.id.list_item_name);
 		View txtDescription = view1.findViewById(R.id.list_item_description);
 		View ivImage = view1.findViewById(R.id.list_item_image);
-		intent.putExtra(EXTRAS_KEY_NAME_TRANSITION_NAME, ViewCompat.getTransitionName(txtName));
-		intent.putExtra(EXTRAS_KEY_DESCRIPTION_TRANSITION_NAME, ViewCompat.getTransitionName(txtDescription));
-		intent.putExtra(EXTRAS_KEY_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(ivImage));
 
-		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-				SearchFragment.this.getActivity(),
-				Pair.create(txtName, ViewCompat.getTransitionName(txtName)),
-				Pair.create(txtDescription, ViewCompat.getTransitionName(txtDescription)),
-				Pair.create(ivImage, ViewCompat.getTransitionName(ivImage)));
+		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(SearchFragment.this.getActivity(),
+				Pair.create(txtName, getResources().getString(R.string.list_item_label_transition)),
+				Pair.create(txtDescription, getResources().getString(R.string.list_item_content_transition)),
+				Pair.create(ivImage, getResources().getString(R.string.list_item_image_transition)));
 
 		startActivity(intent, options.toBundle());
 	}

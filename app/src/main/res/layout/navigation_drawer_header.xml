@@ -19,6 +19,7 @@
 				  android:layout_width="match_parent"
 				  android:layout_height="@dimen/nav_header_height"
 				  xmlns:tools="http://schemas.android.com/tools"
+				  xmlns:app="http://schemas.android.com/apk/res-auto"
 				  android:background="@drawable/default_cover"
 				  android:gravity="bottom"
 				  android:orientation="vertical"
@@ -32,7 +33,7 @@
 			android:layout_marginBottom="@dimen/padding_standard"
 			android:contentDescription="@string/content_description_user_face"
 			android:transitionName="@string/transition_user_face"
-			android:src="@drawable/account"
+			app:srcCompat="@drawable/account"
 			tools:ignore="UnusedAttribute"/>
 
 	<TextView

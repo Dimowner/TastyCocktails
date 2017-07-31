@@ -50,4 +50,8 @@
 	<string name="content_description_cocktail_image">Cocktail image</string>
 	<string name="transition_user_face">transition_user_face</string>
 	<string name="transition_user_name">transition_user_name</string>
+
+	<string name="list_item_image_transition">list_item_image_transition</string>
+	<string name="list_item_label_transition">list_item_label_transition</string>
+	<string name="list_item_content_transition">list_item_content_transition</string>
 </resources>

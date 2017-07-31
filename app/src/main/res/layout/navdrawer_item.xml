@@ -28,8 +28,10 @@
 		android:layout_height="24dp"
 		android:layout_width="24dp"
 		android:layout_marginRight="@dimen/padding_double"
-		android:layout_marginEnd="@dimen/padding_double"/>
+		android:layout_marginEnd="@dimen/padding_double"
+		android:contentDescription="@null"/>
 
+	<!--suppress AndroidDomInspection -->
 	<TextView
 		android:id="@+id/title"
 		android:layout_width="wrap_content"

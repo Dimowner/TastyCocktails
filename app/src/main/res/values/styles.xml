@@ -23,6 +23,7 @@
 
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
+		<item name="android:windowActionBarOverlay">true</item>
 
 		<item name="actionBarInsetStart">@dimen/padding_huge</item>
 	</style>
