@@ -30,8 +30,8 @@ public class AndroidUtils {
 
 	private AndroidUtils() {}
 
-	public static int dpToPx(int dp) {
-		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+	public static float dpToPx(int dp) {
+		return (dp * Resources.getSystem().getDisplayMetrics().density);
 	}
 
 	public static boolean isAndroid5() {

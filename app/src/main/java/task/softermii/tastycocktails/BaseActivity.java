@@ -101,7 +101,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 	private void loadUserFace(@NonNull Profile profile) {
 		userName.setText(profile.getName());
 		Glide.with(BaseActivity.this)
-				.load(profile.getProfilePictureUri(dpToPx(60), dpToPx(60)).toString())
+				.load(profile.getProfilePictureUri((int) dpToPx(60), (int) dpToPx(60)).toString())
 				.apply(RequestOptions.circleCropTransform())
 				.into(userIconView);
 	}

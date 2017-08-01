@@ -61,7 +61,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 		userName.setText(profile.getName());
 
 		Glide.with(UserDetailsActivity.this)
-				.load(profile.getProfilePictureUri(dpToPx(200), dpToPx(200)).toString())
+				.load(profile.getProfilePictureUri((int) dpToPx(200), (int) dpToPx(200)).toString())
 				.apply(RequestOptions.circleCropTransform())
 				.into(userFace);
 	}
