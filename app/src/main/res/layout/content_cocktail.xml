@@ -17,7 +17,7 @@
   -->
 
 <android.support.constraint.ConstraintLayout
-		android:id="@+id/coordinator_layout"
+		android:id="@+id/constraint_layout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		xmlns:android="http://schemas.android.com/apk/res/android"
@@ -70,6 +70,7 @@
 			android:paddingRight="@dimen/padding_double"
 			android:paddingBottom="@dimen/padding_double"
 			app:layout_constraintTop_toBottomOf="@+id/details_name"
+			app:layout_constraintBottom_toTopOf="@+id/ingredients_label"
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"
 			/>
@@ -99,6 +100,35 @@
 			app:layout_constraintRight_toRightOf="parent"
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintBottom_toTopOf="@+id/details_name"
+			/>
+
+	<TextView
+			style="@style/TextView.Label"
+			android:id="@+id/ingredients_label"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/text_size_large"
+			android:textStyle="bold"
+			android:paddingLeft="@dimen/padding_double"
+			android:paddingStart="@dimen/padding_double"
+			android:paddingEnd="@dimen/padding_double"
+			android:paddingRight="@dimen/padding_double"
+			android:paddingBottom="@dimen/padding_small"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/details_description"
+			app:layout_constraintBottom_toTopOf="@+id/recycler_view"
+			android:text="@string/ingredients"
+			/>
+
+	<android.support.v7.widget.RecyclerView
+			android:id="@+id/recycler_view"
+			android:layout_width="0dp"
+			android:layout_height="200dp"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintBottom_toBottomOf="@+id/constraint_layout"
+			app:layout_constraintTop_toBottomOf="@+id/ingredients_label"
 			/>
 
 </android.support.constraint.ConstraintLayout>

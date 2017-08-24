@@ -20,6 +20,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,12 +36,17 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.TCApplication;
+import task.softermii.tastycocktails.cocktails.details.IngredientItem;
+import task.softermii.tastycocktails.cocktails.details.IngredientsAdapter;
 import task.softermii.tastycocktails.dagger.random.RandomCocktailModule;
 import task.softermii.tastycocktails.data.model.DetailsModel;
+import timber.log.Timber;
 
 /**
  * Created on 27.07.2017.
@@ -56,6 +64,9 @@ public class RandomFragment extends Fragment implements RandomContract.View {
 	private TextView txtName;
 	private TextView txtDescription;
 	private TextView txtError;
+
+	private RecyclerView mRecyclerView;
+	private IngredientsAdapter mAdapter;
 
 	//TODO: this field shouldn't be in view
 	private long mId = -1;
@@ -93,14 +104,30 @@ public class RandomFragment extends Fragment implements RandomContract.View {
 		txtDescription = (TextView) view.findViewById(R.id.details_description);
 		txtError = (TextView) view.findViewById(R.id.details_error);
 
+		mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+		mRecyclerView.setHasFixedSize(true);
+
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
 		mPresenter.bindView(this);
-		if (savedInstanceState == null) {
+
+		mAdapter = new IngredientsAdapter();
+		mAdapter.setItemClickListener((view1, position) ->
+				startIngredientDetailsActivity(mAdapter.getItem(position), view1));
+		mRecyclerView.setAdapter(mAdapter);
+
+//		if (savedInstanceState == null) {
 			mPresenter.loadRandomDrink();
-		} else if (savedInstanceState.containsKey(EXTRAS_KEY_ID)) {
-//			TODO fix to restore from cache
-			mId = savedInstanceState.getLong(EXTRAS_KEY_ID);
-			mPresenter.loadDrinkById(mId);
-		}
+//		} else if (savedInstanceState.containsKey(EXTRAS_KEY_ID)) {
+////			TODO fix to restore from cache
+//			mId = savedInstanceState.getLong(EXTRAS_KEY_ID);
+//			mPresenter.loadDrinkById(mId);
+//		}
+	}
+
+	private void startIngredientDetailsActivity(IngredientItem item, View view1) {
+		Timber.v("start ingredient details activity here");
+		//TODO: start ingredient details activity here
 	}
 
 	public void loadRandomDrink() {
@@ -109,13 +136,13 @@ public class RandomFragment extends Fragment implements RandomContract.View {
 		txtError.setVisibility(View.GONE);
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		if (mId != -1) {
-			outState.putLong(EXTRAS_KEY_ID, mId);
-		}
-	}
+//	@Override
+//	public void onSaveInstanceState(Bundle outState) {
+//		super.onSaveInstanceState(outState);
+//		if (mId != -1) {
+//			outState.putLong(EXTRAS_KEY_ID, mId);
+//		}
+//	}
 
 	@Override
 	public void onDestroyView() {
@@ -152,32 +179,78 @@ public class RandomFragment extends Fragment implements RandomContract.View {
 		txtDescription.setText(null);
 	}
 
+
 	@Override
-	public void displayData(DetailsModel model) {
-		if (model.getImageUrl() != null) {
-			mId = model.getId();
+	public void displayData(String name, String description) {
+		txtName.setText(name);
+		txtDescription.setText(description);
+	}
+
+	@Override
+	public void displayImage(String url) {
+		if (url != null && !url.isEmpty()) {
+			showProgress();
 			ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			Glide.with(getContext())
-					.load(model.getImageUrl())
+					.load(url)
 					.listener(new RequestListener<Drawable>() {
 						@Override
 						public boolean onLoadFailed(@Nullable GlideException e, Object model,
 															 Target<Drawable> target, boolean isFirstResource) {
-
+//							supportStartPostponedEnterTransition();
 							hideProgress();
+//							showError();
 							return false;
 						}
 
 						@Override
 						public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
 																 DataSource dataSource, boolean isFirstResource) {
+//							supportStartPostponedEnterTransition();
 							hideProgress();
 							return false;
 						}
 					})
 					.into(ivImage);
+		} else {
+//			supportStartPostponedEnterTransition();
+			ivImage.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+			ivImage.setImageResource(R.drawable.no_image);
+			hideProgress();
 		}
-		txtName.setText(model.getName());
-		txtDescription.setText(model.getDescription());
 	}
+
+	@Override
+	public void displayIngredientsList(List<IngredientItem> items) {
+		mAdapter.setData(items);
+	}
+
+//	@Override
+//	public void displayData(DetailsModel model) {
+//		if (model.getImageUrl() != null) {
+//			mId = model.getId();
+//			ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//			Glide.with(getContext())
+//					.load(model.getImageUrl())
+//					.listener(new RequestListener<Drawable>() {
+//						@Override
+//						public boolean onLoadFailed(@Nullable GlideException e, Object model,
+//															 Target<Drawable> target, boolean isFirstResource) {
+//
+//							hideProgress();
+//							return false;
+//						}
+//
+//						@Override
+//						public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+//																 DataSource dataSource, boolean isFirstResource) {
+//							hideProgress();
+//							return false;
+//						}
+//					})
+//					.into(ivImage);
+//		}
+//		txtName.setText(model.getName());
+//		txtDescription.setText(model.getDescription());
+//	}
 }

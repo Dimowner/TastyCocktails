@@ -42,6 +42,7 @@ import javax.inject.Inject;
 
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.TCApplication;
+import task.softermii.tastycocktails.cocktails.details.DetailsActivity;
 import task.softermii.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
@@ -100,9 +101,10 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private void startDetailsActivity(ListItem item, View view1) {
 		Intent intent = new Intent(getContext(), DetailsActivity.class);
-		intent.putExtra(DetailsActivity.EXTRAS_KEY_NAME, item.getName());
-		intent.putExtra(DetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
-		intent.putExtra(DetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
+		intent.putExtra(DetailsActivity.EXTRAS_KEY_ID, item.getId());
+//		intent.putExtra(DetailsActivity.EXTRAS_KEY_NAME, item.getName());
+//		intent.putExtra(DetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
+//		intent.putExtra(DetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
 
 		//Transition
 		View txtName = view1.findViewById(R.id.list_item_name);

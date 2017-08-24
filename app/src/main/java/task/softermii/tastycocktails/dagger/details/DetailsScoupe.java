@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.data.room;
+package task.softermii.tastycocktails.dagger.details;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import task.softermii.tastycocktails.data.model.Drink;
+import javax.inject.Scope;
 
 /**
- * Created on 27.07.2017.
+ * Created on 15.08.2017.
  * @author Dimowner
  */
-@Database(entities = {Drink.class}, version = 2, exportSchema = false)
-public abstract class AppDatabase extends RoomDatabase {
-
-	public abstract CocktailsDao cocktailsDao();
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface DetailsScoupe {
 }

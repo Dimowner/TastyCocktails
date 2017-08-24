@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.random;
+package task.softermii.tastycocktails.cocktails.details;
 
 import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import task.softermii.tastycocktails.cocktails.details.IngredientItem;
 import task.softermii.tastycocktails.data.model.DetailsModel;
 
 /**
- * Created on 27.07.2017.
+ * Created on 15.08.2017.
+ *
  * @author Dimowner
  */
-public interface RandomContract {
+public interface DetailsContract {
 
 	interface View {
 		void showProgress();
@@ -37,8 +37,6 @@ public interface RandomContract {
 		void showQueryError();
 
 		void showNetworkError();
-
-//		void displayData(DetailsModel drink);
 
 		void displayData(String name, String description);
 
@@ -54,7 +52,5 @@ public interface RandomContract {
 		void unbindView();
 
 		void loadDrinkById(long id);
-
-		void loadRandomDrink();
 	}
 }

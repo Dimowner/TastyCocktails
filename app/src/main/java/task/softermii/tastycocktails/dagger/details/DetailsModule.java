@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.data.room;
+package task.softermii.tastycocktails.dagger.details;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
-
-import task.softermii.tastycocktails.data.model.Drink;
+import dagger.Module;
+import dagger.Provides;
+import task.softermii.tastycocktails.cocktails.details.DetailsContract;
+import task.softermii.tastycocktails.cocktails.details.DetailsPresenter;
+import task.softermii.tastycocktails.data.Repository;
 
 /**
- * Created on 27.07.2017.
+ * Created on 15.08.2017.
  * @author Dimowner
  */
-@Database(entities = {Drink.class}, version = 2, exportSchema = false)
-public abstract class AppDatabase extends RoomDatabase {
+@Module
+public class DetailsModule {
 
-	public abstract CocktailsDao cocktailsDao();
+	@Provides
+	@DetailsScoupe
+	DetailsContract.UserActionsListener provideDetailsPresenter(Repository repository) {
+		return new DetailsPresenter(repository);
+	}
+
 }

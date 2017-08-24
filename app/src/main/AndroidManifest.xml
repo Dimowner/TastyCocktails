@@ -51,7 +51,7 @@
 		<activity android:name=".random.RandomActivity"
 					 android:theme="@style/TransparentStatusBar"/>
 
-		<activity android:name=".cocktails.DetailsActivity"
+		<activity android:name=".cocktails.details.DetailsActivity"
 					 android:theme="@style/TransparentStatusBar"/>
 
 	</application>

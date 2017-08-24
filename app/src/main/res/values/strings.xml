@@ -39,6 +39,10 @@
 	<string name="did_not_find_anything">Did not find anything</string>
 	<string name="retry">RETRY</string>
 
+	<string name="ingredients">Ingredients:</string>
+	<string name="network_error">Query error happen here</string>
+	<string name="query_error">Network error happen here</string>
+
 	<!-- Shown in the 'About' window of the app. -->
 	<string name="about_body"><![CDATA[
     	<b>Tasty Cocktails 2017</b><br>
