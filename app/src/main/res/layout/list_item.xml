@@ -27,7 +27,7 @@
 		android:paddingBottom="@dimen/padding_standard"
 		android:paddingTop="@dimen/padding_standard"
 		android:clickable="true"
-		android:orientation="vertical"
+		android:focusable="true"
 		android:background="?android:attr/selectableItemBackground">
 
 	<ImageView

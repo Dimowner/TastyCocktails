@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 
 ext.versions = [
 		// Android
-		targetSdkVersion : 25,
+		targetSdkVersion : 26,
 		minSdkVersion    : 16,
-		buildtools       : "25.0.3",
-		support          : "25.3.1",
+//		buildtools       : "26.0.1",
+//		support          : "26.0.1",
 
 		// Components
 		constraintlayout : "1.0.2",
@@ -36,12 +36,12 @@ ext.versions = [
 ]
 
 android {
-	compileSdkVersion versions.targetSdkVersion
-	buildToolsVersion versions.buildtools
+	compileSdkVersion 26
+	buildToolsVersion "26.0.1"
 	defaultConfig {
 		applicationId "task.softermii.tastycocktails"
-		minSdkVersion versions.minSdkVersion
-		targetSdkVersion versions.targetSdkVersion
+		minSdkVersion 16
+		targetSdkVersion 26
 		versionCode 1
 		versionName "1.0"
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -68,18 +68,17 @@ dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 
 	// Android
-	compile "com.android.support:support-v4:$versions.support"
-	compile "com.android.support:appcompat-v7:$versions.support"
-	compile "com.android.support:design:$versions.support"
-	compile "com.android.support:support-annotations:$versions.support"
+	compile "com.android.support:support-v4:26.0.1"
+	compile "com.android.support:appcompat-v7:26.0.1"
+	compile "com.android.support:design:26.0.1"
+	compile "com.android.support:support-annotations:26.0.1"
 
 	// Android: Components
 	compile "com.android.support.constraint:constraint-layout:$versions.constraintlayout"
 	compile "com.android.support.constraint:constraint-layout-solver:$versions.constraintlayout"
 
 	//Facebook sdk
-	compile 'com.facebook.android:facebook-android-sdk:4.24.0'
-//	compile project(':facebook-android-sdk-4.24.0')
+	compile 'com.facebook.android:facebook-android-sdk:4.25.0'
 
 	// Rx
 	compile "io.reactivex.rxjava2:rxjava:$versions.rxJava"

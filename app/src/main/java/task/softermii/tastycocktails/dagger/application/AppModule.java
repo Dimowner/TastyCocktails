@@ -59,7 +59,7 @@ public class AppModule {
 	Repository provideRepository(LocalRepository localRepository,
 										  RemoteRepository remoteRepository) {
 		//Remote repo passes last query result into Local repo for saving.
-		remoteRepository.setOnLoadListener(localRepository::rewriteRepositories);
+		remoteRepository.setOnLoadListener(localRepository::rewriteDrinks);
 
 		return new Repository(localRepository, remoteRepository);
 	}

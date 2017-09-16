@@ -92,7 +92,7 @@ public class LocalRepository implements RepositoryContract {
 	 * Rewrite local cached Drinks
 	 * @param items new Drinks to save.
 	 */
-	public void rewriteRepositories(List<Drink> items) {
+	public void rewriteDrinks(List<Drink> items) {
 		Single.just(items).map(data -> {
 				getRepositoriesDao().deleteAll();
 				getRepositoriesDao().insertAll(data.toArray(new Drink[data.size()]));
