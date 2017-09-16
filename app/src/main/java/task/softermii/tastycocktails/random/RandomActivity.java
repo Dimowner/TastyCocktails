@@ -41,7 +41,7 @@ public class RandomActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_random);
 
-		fab = (FloatingActionButton) findViewById(R.id.fab);
+		fab = findViewById(R.id.fab);
 
 		if (getSupportActionBar() != null) getSupportActionBar().setTitle("");
 

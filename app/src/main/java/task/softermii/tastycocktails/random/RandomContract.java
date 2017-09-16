@@ -16,12 +16,7 @@
 
 package task.softermii.tastycocktails.random;
 
-import android.support.annotation.NonNull;
-
-import java.util.List;
-
-import task.softermii.tastycocktails.cocktails.details.IngredientItem;
-import task.softermii.tastycocktails.data.model.DetailsModel;
+import task.softermii.tastycocktails.cocktails.details.DetailsContract;
 
 /**
  * Created on 27.07.2017.
@@ -29,31 +24,7 @@ import task.softermii.tastycocktails.data.model.DetailsModel;
  */
 public interface RandomContract {
 
-	interface View {
-		void showProgress();
-
-		void hideProgress();
-
-		void showQueryError();
-
-		void showNetworkError();
-
-//		void displayData(DetailsModel drink);
-
-		void displayData(String name, String description);
-
-		void displayImage(String url);
-
-		void displayIngredientsList(List<IngredientItem> items);
-	}
-
-	interface UserActionsListener {
-
-		void bindView(@NonNull View view);
-
-		void unbindView();
-
-		void loadDrinkById(long id);
+	interface UserActionsListener extends DetailsContract.UserActionsListener {
 
 		void loadRandomDrink();
 	}

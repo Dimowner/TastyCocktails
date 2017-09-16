@@ -16,27 +16,17 @@
 
 package task.softermii.tastycocktails.cocktails.details;
 
-import android.support.annotation.NonNull;
-
 import java.util.List;
 
-import task.softermii.tastycocktails.data.model.DetailsModel;
+import task.softermii.tastycocktails.Contract;
 
 /**
  * Created on 15.08.2017.
- *
  * @author Dimowner
  */
-public interface DetailsContract {
+public interface DetailsContract  {
 
-	interface View {
-		void showProgress();
-
-		void hideProgress();
-
-		void showQueryError();
-
-		void showNetworkError();
+	interface View extends Contract.View {
 
 		void displayData(String name, String description);
 
@@ -45,11 +35,7 @@ public interface DetailsContract {
 		void displayIngredientsList(List<IngredientItem> items);
 	}
 
-	interface UserActionsListener {
-
-		void bindView(@NonNull View view);
-
-		void unbindView();
+	interface UserActionsListener extends Contract.UserActionsListener<DetailsContract.View> {
 
 		void loadDrinkById(long id);
 	}

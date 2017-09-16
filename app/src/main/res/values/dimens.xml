@@ -31,7 +31,7 @@
 
 	<dimen name="user_face_size">192dp</dimen>
 
-	<dimen name="nav_header_height">170dp</dimen>
+	<dimen name="nav_header_height">200dp</dimen>
 	<dimen name="navdrawer_width">260dp</dimen>
 	<dimen name="navdrawer_profile_image_size">60dp</dimen>
 

@@ -17,33 +17,78 @@
 package task.softermii.tastycocktails.cocktails.details;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.AbsSavedState;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import task.softermii.tastycocktails.R;
-import timber.log.Timber;
+import task.softermii.tastycocktails.util.AndroidUtils;
 
 /**
  * Created on 14.08.2017.
  * @author Dimowner
  */
-public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.IngredientViewHolder> {
+public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DetailsContract.View  {
 
+	private static final int VIEW_TYPE_HEADER = 1;
+	private static final int VIEW_TYPE_NORMAL = 2;
+	private static final int VIEW_TYPE_FOOTER = 3;
+
+	private HeaderViewHolder headerViewHolder;
 
 	private List<IngredientItem> mShowingData;
 
 	private ItemClickListener itemClickListener;
+
+	private AnimationListener animationListener;
+
+	public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+		final View view;
+		final ImageView image;
+		final TextView name;
+		final TextView description;
+		final TextView error;
+		final ProgressBar progress;
+
+		HeaderViewHolder(View itemView){
+			super(itemView);
+			view = itemView;
+			image = itemView.findViewById(R.id.details_image);
+			name = itemView.findViewById(R.id.details_name);
+			description = itemView.findViewById(R.id.details_description);
+
+			error = itemView.findViewById(R.id.details_error);
+			progress = itemView.findViewById(R.id.progress);
+
+			if (AndroidUtils.isAndroid5()) {
+				Resources res = name.getContext().getResources();
+				name.setTransitionName(res.getString(R.string.list_item_label_transition));
+				description.setTransitionName(res.getString(R.string.list_item_content_transition));
+				image.setTransitionName(res.getString(R.string.list_item_image_transition));
+			}
+		}
+	}
 
 	class IngredientViewHolder extends RecyclerView.ViewHolder {
 		TextView name;
@@ -53,8 +98,17 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 		IngredientViewHolder(View itemView) {
 			super(itemView);
 			this.view = itemView;
-			this.name = (TextView) itemView.findViewById(R.id.list_item_ingredient_name);
-			this.measure = (TextView) itemView.findViewById(R.id.list_item_ingredient_measure);
+			this.name = itemView.findViewById(R.id.list_item_ingredient_name);
+			this.measure = itemView.findViewById(R.id.list_item_ingredient_measure);
+		}
+	}
+
+	public static class FooterViewHolder extends RecyclerView.ViewHolder {
+		final View view;
+
+		FooterViewHolder(View itemView){
+			super(itemView);
+			view = itemView;
 		}
 	}
 
@@ -63,43 +117,176 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 	}
 
 	@Override
-	public IngredientViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.list_item_ingredient, parent, false);
-		return new IngredientViewHolder(v);
+	public void showProgress() {
+		if (headerViewHolder !=  null) {
+			headerViewHolder.progress.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
-	public void onBindViewHolder(IngredientViewHolder holder, int position) {
-		Timber.v("onBindViewHolder");
-		int pos = holder.getAdapterPosition();
-		holder.name.setText(mShowingData.get(pos).getName());
-		if (mShowingData.get(pos).getMeasure() != null && !mShowingData.get(pos).getMeasure().trim().isEmpty()) {
-			holder.measure.setText(mShowingData.get(pos).getMeasure());
-		} else {
-			holder.measure.setText("");
+	public void hideProgress() {
+		if (headerViewHolder !=  null) {
+			headerViewHolder.progress.setVisibility(View.GONE);
 		}
+	}
 
-		holder.view.setOnClickListener(v -> {
-			if (itemClickListener != null) {
-				itemClickListener.onItemClick(v, holder.getAdapterPosition());
+	@Override
+	public void showQueryError() {
+		if (headerViewHolder !=  null) {
+			headerViewHolder.image.setVisibility(View.INVISIBLE);
+			headerViewHolder.error.setVisibility(View.VISIBLE);
+			headerViewHolder.error.setText(R.string.msg_error_on_query);
+			headerViewHolder.name.setText(null);
+			headerViewHolder.description.setText(null);
+		}
+	}
+
+	@Override
+	public void showNetworkError() {
+		if (headerViewHolder !=  null) {
+			headerViewHolder.image.setVisibility(View.INVISIBLE);
+			headerViewHolder.error.setVisibility(View.VISIBLE);
+			headerViewHolder.error.setText(R.string.msg_error_no_internet);
+			headerViewHolder.name.setText(null);
+			headerViewHolder.description.setText(null);
+		}
+	}
+
+	@Override
+	public void displayData(String name, String description) {
+		if (headerViewHolder !=  null) {
+			headerViewHolder.name.setText(name);
+			headerViewHolder.description.setText(description);
+		}
+	}
+
+	@Override
+	public void displayImage(String url) {
+		if (url != null && !url.isEmpty()) {
+			showProgress();
+			headerViewHolder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			Glide.with(headerViewHolder.image.getContext())
+					.load(url)
+					.listener(new RequestListener<Drawable>() {
+						@Override
+						public boolean onLoadFailed(@Nullable GlideException e, Object model,
+															 Target<Drawable> target, boolean isFirstResource) {
+							if (animationListener != null) {
+								animationListener.onAnimation();
+							}
+							hideProgress();
+							headerViewHolder.error.setVisibility(View.VISIBLE);
+							return false;
+						}
+
+						@Override
+						public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+																 DataSource dataSource, boolean isFirstResource) {
+							if (animationListener != null) {
+								animationListener.onAnimation();
+							}
+							hideProgress();
+							return false;
+						}
+					})
+					.into(headerViewHolder.image);
+		} else {
+			if (animationListener != null) {
+				animationListener.onAnimation();
 			}
-		});
+				headerViewHolder.image.setBackgroundColor(ContextCompat.getColor(headerViewHolder.image.getContext(), R.color.colorPrimary));
+				headerViewHolder.image.setImageResource(R.drawable.no_image);
+				hideProgress();
+		}
+	}
 
-		//Set transition names
-		Resources res = holder.view.getResources();
-		ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
-		ViewCompat.setTransitionName(holder.measure, res.getString(R.string.list_item_content_transition));
+
+
+	@Override
+	public void displayIngredientsList(List<IngredientItem> items) {
+		setData(items);
+	}
+
+	@Override
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		if (viewType == VIEW_TYPE_HEADER) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item_details_header, parent, false);
+			return new HeaderViewHolder(v);
+		} else if (viewType == VIEW_TYPE_NORMAL) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item_ingredient, parent, false);
+			return new IngredientViewHolder(v);
+		} else if (viewType == VIEW_TYPE_FOOTER) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item_details_footer, parent, false);
+			return new FooterViewHolder(v);
+		}
+		return null;
+	}
+
+	@Override
+	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+		if (viewHolder.getItemViewType() == VIEW_TYPE_HEADER) {
+			//Do nothing
+		} else if (viewHolder.getItemViewType() == VIEW_TYPE_NORMAL) {
+			IngredientViewHolder holder = ((IngredientViewHolder) viewHolder);
+			int pos = holder.getAdapterPosition()-1;
+			holder.name.setText(mShowingData.get(pos).getName());
+			if (mShowingData.get(pos).getMeasure() != null && !mShowingData.get(pos).getMeasure().trim().isEmpty()) {
+				holder.measure.setText(mShowingData.get(pos).getMeasure());
+			} else {
+				holder.measure.setText("");
+			}
+
+			holder.view.setOnClickListener(v -> {
+				if (itemClickListener != null) {
+					itemClickListener.onItemClick(v, holder.getAdapterPosition());
+				}
+			});
+
+			//Set transition names
+			Resources res = holder.view.getResources();
+			ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
+			ViewCompat.setTransitionName(holder.measure, res.getString(R.string.list_item_content_transition));
+		} else if (viewHolder.getItemViewType() == VIEW_TYPE_FOOTER) {
+			//Do nothing
+		}
+	}
+
+	@Override
+	public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+		super.onViewAttachedToWindow(holder);
+		if (holder.getItemViewType() == VIEW_TYPE_HEADER) {
+			headerViewHolder = (HeaderViewHolder) holder;
+		}
+	}
+
+	@Override
+	public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+		super.onViewDetachedFromWindow(holder);
+		if (holder.getItemViewType() == VIEW_TYPE_HEADER) {
+			headerViewHolder = null;
+		}
 	}
 
 	@Override
 	public int getItemCount() {
-		return mShowingData.size();
+		return mShowingData.size() + 2;
 	}
 
+	@Override
+	public int getItemViewType(int position) {
+		if (position == 0) {
+			return VIEW_TYPE_HEADER;
+		} else if (position == mShowingData.size()+1) {
+			return VIEW_TYPE_FOOTER;
+		}
+		return VIEW_TYPE_NORMAL;
+	}
 
 	public IngredientItem getItem(int pos) {
-		return mShowingData.get(pos);
+		return mShowingData.get(pos-1);
 	}
 
 	public void setData(List<IngredientItem> data) {
@@ -113,6 +300,10 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 
 	public void setItemClickListener(ItemClickListener itemClickListener) {
 		this.itemClickListener = itemClickListener;
+	}
+
+	public void setAnimationListener(AnimationListener animationListener) {
+		this.animationListener = animationListener;
 	}
 
 	/**
@@ -174,5 +365,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 
 	public interface ItemClickListener{
 		void onItemClick(View view, int position);
+	}
+
+	public interface AnimationListener {
+		void onAnimation();
 	}
 }

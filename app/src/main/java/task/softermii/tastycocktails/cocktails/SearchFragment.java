@@ -82,8 +82,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
-		mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+		mProgressBar = view.findViewById(R.id.progress);
+		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -102,9 +102,6 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	private void startDetailsActivity(ListItem item, View view1) {
 		Intent intent = new Intent(getContext(), DetailsActivity.class);
 		intent.putExtra(DetailsActivity.EXTRAS_KEY_ID, item.getId());
-//		intent.putExtra(DetailsActivity.EXTRAS_KEY_NAME, item.getName());
-//		intent.putExtra(DetailsActivity.EXTRAS_KEY_DESCRIPTION, item.getDescription());
-//		intent.putExtra(DetailsActivity.EXTRAS_KEY_IMAGE_URL, item.getAvatar_url());
 
 		//Transition
 		View txtName = view1.findViewById(R.id.list_item_name);
@@ -146,7 +143,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		});
 
 		// Get the search close button image view
-		ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
+		ImageView closeButton = searchView.findViewById(R.id.search_close_btn);
 
 		// Set on click listener
 		closeButton.setOnClickListener(v -> {

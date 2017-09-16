@@ -16,10 +16,9 @@
 
 package task.softermii.tastycocktails.cocktails;
 
-import android.support.annotation.NonNull;
-
 import java.util.List;
 
+import task.softermii.tastycocktails.Contract;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 
 /**
@@ -28,23 +27,12 @@ import task.softermii.tastycocktails.cocktails.list.ListItem;
  */
 public interface SearchContract {
 
-	interface View {
-		void showProgress();
-
-		void hideProgress();
-
-		void showQueryError();
-
-		void showNetworkError();
+	interface View extends Contract.View {
 
 		void displayData(List<ListItem> data);
 	}
 
-	interface UserActionsListener {
-
-		void bindView(@NonNull View view);
-
-		void unbindView();
+	interface UserActionsListener extends Contract.UserActionsListener<SearchContract.View> {
 
 		void startSearch(String search);
 

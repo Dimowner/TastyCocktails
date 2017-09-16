@@ -24,9 +24,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import task.softermii.tastycocktails.ModelMapper;
 import task.softermii.tastycocktails.TCApplication;
+import task.softermii.tastycocktails.cocktails.details.DetailsContract;
 import task.softermii.tastycocktails.cocktails.details.IngredientItem;
 import task.softermii.tastycocktails.data.RepositoryContract;
-import task.softermii.tastycocktails.data.model.DetailsModel;
 import task.softermii.tastycocktails.data.model.Drink;
 import timber.log.Timber;
 
@@ -38,7 +38,7 @@ public class RandomPresenter implements RandomContract.UserActionsListener {
 
 	private RepositoryContract repository;
 
-	private RandomContract.View view;
+	private DetailsContract.View view;
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -47,7 +47,7 @@ public class RandomPresenter implements RandomContract.UserActionsListener {
 	}
 
 	@Override
-	public void bindView(@NonNull RandomContract.View view) {
+	public void bindView(@NonNull DetailsContract.View view) {
 		this.view = view;
 	}
 
@@ -62,7 +62,6 @@ public class RandomPresenter implements RandomContract.UserActionsListener {
 		view.showProgress();
 		compositeDisposable.add(
 				repository.getCocktail(id)
-//						.map(this::convertModel)
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(this::displayData, this::handleError));
 	}
@@ -72,7 +71,6 @@ public class RandomPresenter implements RandomContract.UserActionsListener {
 		view.showProgress();
 		compositeDisposable.add(
 				repository.getRandomCocktail()
-//						.map(this::convertModel)
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(this::displayData, this::handleError));
 	}
@@ -91,13 +89,6 @@ public class RandomPresenter implements RandomContract.UserActionsListener {
 		}
 	}
 
-//	private void displayData(DetailsModel model) {
-//		view.hideProgress();
-//		if (model != null) {
-//			view.displayData(model);
-//		}
-//	}
-
 	private void handleError(Throwable throwable) {
 		Timber.e(throwable);
 		view.hideProgress();
@@ -107,12 +98,4 @@ public class RandomPresenter implements RandomContract.UserActionsListener {
 			view.showNetworkError();
 		}
 	}
-//
-//	private DetailsModel convertModel(Drink drink) {
-//		if (drink.getIdDrink() != Drink.NO_ID) {
-//			return new DetailsModel(drink.getIdDrink(), drink.getStrDrink(), drink.getStrInstructions(), drink.getStrDrinkThumb());
-//		} else {
-//			return null;
-//		}
-//	}
 }

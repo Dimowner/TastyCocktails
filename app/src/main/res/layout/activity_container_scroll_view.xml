@@ -20,11 +20,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
-	<ScrollView
-			android:id="@+id/scroll_view"
+	<FrameLayout
+			android:id="@+id/container"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:fillViewport="true"/>
+			android:layout_height="match_parent"/>
 
 	<include layout="@layout/toolbar_transparent"/>
 
