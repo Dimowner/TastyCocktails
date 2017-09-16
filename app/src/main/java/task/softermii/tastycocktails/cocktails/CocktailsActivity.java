@@ -36,6 +36,7 @@ public class CocktailsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		setTheme(R.style.AppTheme);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.base_nav_activity);
 

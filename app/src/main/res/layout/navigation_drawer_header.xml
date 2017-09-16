@@ -33,8 +33,8 @@
 			android:layout_marginBottom="@dimen/padding_standard"
 			android:contentDescription="@string/content_description_user_face"
 			android:transitionName="@string/transition_user_face"
-			app:srcCompat="@drawable/account"
 			tools:ignore="UnusedAttribute"/>
+	<!--app:srcCompat="@drawable/account"-->
 
 	<TextView
 			android:id="@+id/user_name"
