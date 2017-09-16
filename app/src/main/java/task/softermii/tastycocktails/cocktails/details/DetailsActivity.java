@@ -74,19 +74,19 @@ public class DetailsActivity extends AppCompatActivity {
 
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-		//TODO:fix save state
-//		if (savedInstanceState == null) {
-		mAdapter = new IngredientsAdapter();
-		mAdapter.setItemClickListener((view1, position) ->
-				startIngredientDetailsActivity(mAdapter.getItem(position), view1));
-		mAdapter.setAnimationListener(this::supportStartPostponedEnterTransition);
-		mRecyclerView.setAdapter(mAdapter);
+		if (savedInstanceState == null) {
+			mAdapter = new IngredientsAdapter();
+			mAdapter.setItemClickListener((view1, position) ->
+					startIngredientDetailsActivity(mAdapter.getItem(position), view1));
+			mAdapter.setAnimationListener(this::supportStartPostponedEnterTransition);
+			mRecyclerView.setAdapter(mAdapter);
 
-		mPresenter.bindView(mAdapter);
+			mPresenter.bindView(mAdapter);
 
-		long id = getIntent().getLongExtra(EXTRAS_KEY_ID, -1);
-		if (id >= 0) {
-			mPresenter.loadDrinkById(id);
+			long id = getIntent().getLongExtra(EXTRAS_KEY_ID, -1);
+			if (id >= 0) {
+				mPresenter.loadDrinkById(id);
+			}
 		}
 
 		setSupportActionBar(toolbar);
@@ -112,10 +112,6 @@ public class DetailsActivity extends AppCompatActivity {
 		//TODO: start ingredient details activity here
 	}
 
-//	private void showError() {
-//		txtError.setVisibility(View.VISIBLE);
-//	}
-
 	@Override
 	public void onEnterAnimationComplete() {
 		super.onEnterAnimationComplete();
@@ -136,27 +132,27 @@ public class DetailsActivity extends AppCompatActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	//TODO: fix save state
-//	@Override
-//	public void onSaveInstanceState(Bundle outState) {
-//		super.onSaveInstanceState(outState);
-//		if (mAdapter != null) {
-//			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
-//		}
-//	}
-//
-//	@Override
-//	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//		super.onRestoreInstanceState(savedInstanceState);
-//		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
-//			if (mAdapter == null) {
-//				mAdapter = new IngredientsAdapter();
-//				mRecyclerView.setAdapter(mAdapter);
-//			}
-//			mAdapter.setItemClickListener((view1, position) ->
-//					startIngredientDetailsActivity(mAdapter.getItem(position), view1));
-//			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
-//		}
-//	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Timber.v("saveState");
+		if (mAdapter != null) {
+			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
+		}
+	}
 
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
+			if (mAdapter == null) {
+				mAdapter = new IngredientsAdapter();
+				mRecyclerView.setAdapter(mAdapter);
+			}
+			mPresenter.bindView(mAdapter);
+			mAdapter.setItemClickListener((view1, position) ->
+					startIngredientDetailsActivity(mAdapter.getItem(position), view1));
+			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+		}
+	}
 }

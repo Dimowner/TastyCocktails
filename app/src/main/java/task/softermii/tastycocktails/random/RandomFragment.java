@@ -38,7 +38,7 @@ import task.softermii.tastycocktails.dagger.random.RandomCocktailModule;
  */
 public class RandomFragment extends Fragment {
 
-	public static final String EXTRAS_KEY_ID = "cocktail_id";
+	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 
 	@Inject
 	RandomContract.UserActionsListener mPresenter;
@@ -46,14 +46,6 @@ public class RandomFragment extends Fragment {
 	private RecyclerView mRecyclerView;
 	private IngredientsAdapter mAdapter;
 
-//	public static RandomFragment newInstance(long id, Bundle transitionBundle) {
-//		RandomFragment fragment = new RandomFragment();
-//		Bundle data = new Bundle();
-//		data.putBundle(EXTRAS_KEY_TRANSITION_BUNDLE, transitionBundle);
-//		data.putLong(EXTRAS_KEY_ID, id);
-//		fragment.setArguments(data);
-//		return fragment;
-//	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,34 +69,39 @@ public class RandomFragment extends Fragment {
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+		if (savedInstanceState == null) {
+			mAdapter = new IngredientsAdapter();
+			mRecyclerView.setAdapter(mAdapter);
 
-		mAdapter = new IngredientsAdapter();
-		mRecyclerView.setAdapter(mAdapter);
-
-		mPresenter.bindView(mAdapter);
-
-//		if (savedInstanceState == null) {
+			mPresenter.bindView(mAdapter);
 			mPresenter.loadRandomDrink();
-//		} else if (savedInstanceState.containsKey(EXTRAS_KEY_ID)) {
-////			TODO fix to restore from cache
-//			mId = savedInstanceState.getLong(EXTRAS_KEY_ID);
-//			mPresenter.loadDrinkById(mId);
-//		}
+		}
 	}
 
 	public void loadRandomDrink() {
 		mPresenter.loadRandomDrink();
-//		ivImage.setVisibility(View.VISIBLE);
-//		txtError.setVisibility(View.GONE);
 	}
 
-//	@Override
-//	public void onSaveInstanceState(Bundle outState) {
-//		super.onSaveInstanceState(outState);
-//		if (mId != -1) {
-//			outState.putLong(EXTRAS_KEY_ID, mId);
-//		}
-//	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (mAdapter != null) {
+			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
+		}
+	}
+
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
+			if (mAdapter == null) {
+				mAdapter = new IngredientsAdapter();
+				mRecyclerView.setAdapter(mAdapter);
+			}
+			mPresenter.bindView(mAdapter);
+			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+		}
+	}
 
 	@Override
 	public void onDestroyView() {

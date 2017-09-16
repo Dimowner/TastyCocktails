@@ -23,7 +23,7 @@
 
 	<application
 			android:name=".TCApplication"
-			android:allowBackup="true"
+			android:allowBackup="false"
 			android:icon="@mipmap/tasty_cocktail_logo"
 			android:label="@string/app_name"
 			android:roundIcon="@mipmap/tasty_cocktail_logo"

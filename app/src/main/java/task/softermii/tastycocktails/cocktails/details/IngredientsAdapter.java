@@ -55,9 +55,13 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	private static final int VIEW_TYPE_NORMAL = 2;
 	private static final int VIEW_TYPE_FOOTER = 3;
 
-	private HeaderViewHolder headerViewHolder;
-
 	private List<IngredientItem> mShowingData;
+
+	private String name;
+	private String description;
+	private String imageUrl;
+
+	private HeaderViewHolder headerViewHolder;
 
 	private ItemClickListener itemClickListener;
 
@@ -159,18 +163,33 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	@Override
 	public void displayData(String name, String description) {
 		if (headerViewHolder !=  null) {
-			headerViewHolder.name.setText(name);
-			headerViewHolder.description.setText(description);
-			headerViewHolder.ingredientsLabel.setVisibility(View.VISIBLE);
+			this.name = name;
+			this.description = description;
+			displayData(headerViewHolder);
 		}
+	}
+
+	private void displayData(HeaderViewHolder holder) {
+		holder.name.setText(name);
+		holder.description.setText(description);
+		holder.ingredientsLabel.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	public void displayImage(String url) {
-		if (url != null && !url.isEmpty()) {
-			headerViewHolder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			Glide.with(headerViewHolder.image.getContext())
-					.load(url)
+		if (imageUrl == null || !imageUrl.equals(url)) {
+			imageUrl = url;
+		}
+		if (headerViewHolder != null) {
+			displayImage(headerViewHolder);
+		}
+	}
+
+	private void displayImage(HeaderViewHolder header) {
+		if (imageUrl != null && !imageUrl.isEmpty()) {
+			header.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			Glide.with(header.image.getContext())
+					.load(imageUrl)
 					.listener(new RequestListener<Drawable>() {
 						@Override
 						public boolean onLoadFailed(@Nullable GlideException e, Object model,
@@ -179,7 +198,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 								animationListener.onAnimation();
 							}
 							hideProgress();
-							headerViewHolder.error.setVisibility(View.VISIBLE);
+							header.error.setVisibility(View.VISIBLE);
 							return false;
 						}
 
@@ -193,18 +212,16 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 							return false;
 						}
 					})
-					.into(headerViewHolder.image);
+					.into(header.image);
 		} else {
 			if (animationListener != null) {
 				animationListener.onAnimation();
 			}
-			headerViewHolder.image.setBackgroundColor(ContextCompat.getColor(headerViewHolder.image.getContext(), R.color.colorPrimary));
-			headerViewHolder.image.setImageResource(R.drawable.no_image);
+			header.image.setBackgroundColor(ContextCompat.getColor(header.image.getContext(), R.color.colorPrimary));
+			header.image.setImageResource(R.drawable.no_image);
 			hideProgress();
 		}
 	}
-
-
 
 	@Override
 	public void displayIngredientsList(List<IngredientItem> items) {
@@ -233,6 +250,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 		if (viewHolder.getItemViewType() == VIEW_TYPE_HEADER) {
 			//Do nothing
+			displayData((HeaderViewHolder) viewHolder);
+			displayImage((HeaderViewHolder) viewHolder);
 		} else if (viewHolder.getItemViewType() == VIEW_TYPE_NORMAL) {
 			IngredientViewHolder holder = ((IngredientViewHolder) viewHolder);
 			int pos = holder.getAdapterPosition()-1;
@@ -317,6 +336,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	public Parcelable onSaveInstanceState() {
 		SavedState ss = new SavedState(AbsSavedState.EMPTY_STATE);
 		ss.items = mShowingData.toArray(new IngredientItem[0]);
+		ss.name = name;
+		ss.description = description;
+		ss.imageUrl = imageUrl;
 		return ss;
 	}
 
@@ -328,6 +350,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		SavedState ss = (SavedState) state;
 		mShowingData = new ArrayList<>();
 		Collections.addAll(mShowingData, ss.items);
+		name = ss.name;
+		description = ss.description;
+		imageUrl = ss.imageUrl;
 		notifyDataSetChanged();
 	}
 
@@ -343,15 +368,24 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		private SavedState(Parcel in) {
 			super(in);
 			items = (IngredientItem[]) in.readParcelableArray(getClass().getClassLoader());
+			String[] strings = new String[3];
+			in.readStringArray(strings);
+			name = strings[0];
+			description = strings[1];
+			imageUrl = strings[2];
 		}
 
 		@Override
 		public void writeToParcel(Parcel out, int flags) {
 			super.writeToParcel(out, flags);
 			out.writeParcelableArray(items, flags);
+			out.writeStringArray(new String[] {name, description, imageUrl});
 		}
 
 		IngredientItem[] items;
+		String name;
+		String description;
+		String imageUrl;
 
 		public static final Parcelable.Creator<SavedState> CREATOR =
 				new Parcelable.Creator<SavedState>() {

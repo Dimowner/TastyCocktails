@@ -60,7 +60,7 @@ public class Repository implements RepositoryContract {
 
 	@Override
 	public Single<Drink> getCocktail(long id) {
-		return remoteRepository.getCocktail(id);
+		return localRepository.getCocktail(id);
 	}
 
 	@Override

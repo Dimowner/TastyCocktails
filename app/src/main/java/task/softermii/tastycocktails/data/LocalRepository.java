@@ -74,7 +74,15 @@ public class LocalRepository implements RepositoryContract {
 
 	@Override
 	public Single<Drink> getCocktail(long id) {
-		throw new RuntimeException("This method is supported only in RemoteRepository");
+		return getRepositoriesDao().getRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
+			if (count > 0) {
+				return getRepositoriesDao()
+						.getCocktail(id)
+						.subscribeOn(Schedulers.io());
+			} else {
+				return Single.fromCallable(Drink::emptyDrink);
+			}
+		});
 	}
 
 	@Override

@@ -29,6 +29,11 @@ import task.softermii.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
+	//TODO: Fix transition from list to details
+	//TODO: remove circle around icon in load screen
+	//TODO: fix random btn when orientation change in Random Activity
+
+	//TODO: Add Information when no history
 	//TODO: Add Tests: Unit tests, Instrumentation tests, UI tests
 	//TODO: Add Ingredient details
 	//TODO: Add section favorites

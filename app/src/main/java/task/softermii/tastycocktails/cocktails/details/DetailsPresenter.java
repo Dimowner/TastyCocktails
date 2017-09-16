@@ -63,6 +63,10 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 		this.view = null;
 	}
 
+	public DetailsContract.View getView() {
+		return view;
+	}
+
 	@Override
 	public void loadDrinkById(long id) {
 		view.showProgress();
