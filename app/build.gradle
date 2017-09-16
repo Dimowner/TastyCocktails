@@ -5,8 +5,8 @@ ext.versions = [
 		// Android
 		targetSdkVersion : 26,
 		minSdkVersion    : 16,
-//		buildtools       : "26.0.1",
-//		support          : "26.0.1",
+		buildtools       : "26.0.1",
+		support          : "26.1.0",
 
 		// Components
 		constraintlayout : "1.0.2",
@@ -24,7 +24,7 @@ ext.versions = [
 		glide				  : "4.0.0-RC1",
 
 		//Architecture components
-		archComp			  : "1.0.0-alpha5",
+		archComp			  : "1.0.0-alpha9",
 
 		//ButterKnife
 		butterKnife		  : "8.7.0",
@@ -35,15 +35,19 @@ ext.versions = [
 		logInterceptor	  : "3.8.1"
 ]
 
+def versionMajor = 0
+def versionMinor = 4
+def versionPatch = 0
+
 android {
-	compileSdkVersion 26
-	buildToolsVersion "26.0.1"
+	compileSdkVersion versions.targetSdkVersion
+	buildToolsVersion versions.buildtools
 	defaultConfig {
 		applicationId "task.softermii.tastycocktails"
-		minSdkVersion 16
-		targetSdkVersion 26
-		versionCode 1
-		versionName "1.0"
+		minSdkVersion versions.minSdkVersion
+		targetSdkVersion versions.targetSdkVersion
+		versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
+		versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 		vectorDrawables.useSupportLibrary = true
 	}
@@ -68,10 +72,10 @@ dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 
 	// Android
-	compile "com.android.support:support-v4:26.0.1"
-	compile "com.android.support:appcompat-v7:26.0.1"
-	compile "com.android.support:design:26.0.1"
-	compile "com.android.support:support-annotations:26.0.1"
+	compile "com.android.support:support-v4:$versions.support"
+	compile "com.android.support:appcompat-v7:$versions.support"
+	compile "com.android.support:design:$versions.support"
+	compile "com.android.support:support-annotations:$versions.support"
 
 	// Android: Components
 	compile "com.android.support.constraint:constraint-layout:$versions.constraintlayout"
@@ -97,6 +101,10 @@ dependencies {
 	//Glide
 	compile "com.github.bumptech.glide:glide:$versions.glide"
 
+	compile "android.arch.lifecycle:runtime:$versions.archComp"
+	compile "android.arch.lifecycle:extensions:$versions.archComp"
+	annotationProcessor "android.arch.lifecycle:compiler:$versions.archComp"
+
 	//Room
 	compile "android.arch.persistence.room:runtime:$versions.archComp"
 	compile "android.arch.persistence.room:rxjava2:$versions.archComp"
@@ -111,5 +119,5 @@ dependencies {
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.mockito:mockito-core:2.8.47'
 	// AssertJ
-	testCompile "org.assertj:assertj-core:3.0.0"
+	testCompile "org.assertj:assertj-core:3.7.0"
 }

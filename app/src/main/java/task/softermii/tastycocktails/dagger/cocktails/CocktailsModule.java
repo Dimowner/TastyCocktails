@@ -16,6 +16,9 @@
 
 package task.softermii.tastycocktails.dagger.cocktails;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.v4.app.Fragment;
+
 import dagger.Module;
 import dagger.Provides;
 import task.softermii.tastycocktails.cocktails.CocktailsPresenter;
@@ -29,9 +32,17 @@ import task.softermii.tastycocktails.data.Repository;
 @Module
 public class CocktailsModule {
 
+	private Fragment fragment;
+
+	public CocktailsModule(Fragment fragment) {
+		this.fragment = fragment;
+	}
+
 	@Provides
 	@CocktailsScope
 	SearchContract.UserActionsListener provideCocktailsPresenter(Repository repository) {
-		return new CocktailsPresenter(repository);
+		CocktailsPresenter presenter = ViewModelProviders.of(fragment).get(CocktailsPresenter.class);
+		presenter.setRepository(repository);
+		return presenter;
 	}
 }

@@ -16,6 +16,8 @@
 
 package task.softermii.tastycocktails.cocktails.details;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -34,7 +36,7 @@ import timber.log.Timber;
  * Created on 15.08.2017.
  * @author Dimowner
  */
-public class DetailsPresenter implements UserActionsListener {
+public class DetailsPresenter extends AndroidViewModel implements UserActionsListener {
 
 	private RepositoryContract repository;
 
@@ -42,7 +44,11 @@ public class DetailsPresenter implements UserActionsListener {
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-	public DetailsPresenter(RepositoryContract repository) {
+	public DetailsPresenter(Application application) {
+		super(application);
+	}
+
+	public void setRepository(RepositoryContract repository) {
 		this.repository = repository;
 	}
 

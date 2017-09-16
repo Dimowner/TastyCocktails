@@ -16,6 +16,8 @@
 
 package task.softermii.tastycocktails.random;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -34,7 +36,7 @@ import timber.log.Timber;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public class RandomPresenter implements RandomContract.UserActionsListener {
+public class RandomPresenter extends AndroidViewModel implements RandomContract.UserActionsListener {
 
 	private RepositoryContract repository;
 
@@ -42,7 +44,11 @@ public class RandomPresenter implements RandomContract.UserActionsListener {
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-	public RandomPresenter(RepositoryContract repository) {
+	public RandomPresenter(Application application) {
+		super(application);
+	}
+
+	public void setRepository(RepositoryContract repository) {
 		this.repository = repository;
 	}
 

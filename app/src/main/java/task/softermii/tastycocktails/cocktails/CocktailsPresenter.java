@@ -16,6 +16,8 @@
 
 package task.softermii.tastycocktails.cocktails;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import timber.log.Timber;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public class CocktailsPresenter implements SearchContract.UserActionsListener {
+public class CocktailsPresenter extends AndroidViewModel implements SearchContract.UserActionsListener {
 
 	private RepositoryContract repository;
 
@@ -42,7 +44,11 @@ public class CocktailsPresenter implements SearchContract.UserActionsListener {
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-	public CocktailsPresenter(RepositoryContract repository) {
+	public CocktailsPresenter(Application application) {
+		super(application);
+	}
+
+	public void setRepository(RepositoryContract repository) {
 		this.repository = repository;
 	}
 

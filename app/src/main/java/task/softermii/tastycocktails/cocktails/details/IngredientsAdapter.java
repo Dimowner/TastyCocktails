@@ -68,6 +68,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		final ImageView image;
 		final TextView name;
 		final TextView description;
+		final TextView ingredientsLabel;
 		final TextView error;
 		final ProgressBar progress;
 
@@ -77,6 +78,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			image = itemView.findViewById(R.id.details_image);
 			name = itemView.findViewById(R.id.details_name);
 			description = itemView.findViewById(R.id.details_description);
+			ingredientsLabel = itemView.findViewById(R.id.ingredients_label);
 
 			error = itemView.findViewById(R.id.details_error);
 			progress = itemView.findViewById(R.id.progress);
@@ -136,6 +138,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			headerViewHolder.image.setVisibility(View.INVISIBLE);
 			headerViewHolder.error.setVisibility(View.VISIBLE);
 			headerViewHolder.error.setText(R.string.msg_error_on_query);
+			headerViewHolder.ingredientsLabel.setVisibility(View.INVISIBLE);
 			headerViewHolder.name.setText(null);
 			headerViewHolder.description.setText(null);
 		}
@@ -147,6 +150,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			headerViewHolder.image.setVisibility(View.INVISIBLE);
 			headerViewHolder.error.setVisibility(View.VISIBLE);
 			headerViewHolder.error.setText(R.string.msg_error_no_internet);
+			headerViewHolder.ingredientsLabel.setVisibility(View.INVISIBLE);
 			headerViewHolder.name.setText(null);
 			headerViewHolder.description.setText(null);
 		}
@@ -157,13 +161,13 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		if (headerViewHolder !=  null) {
 			headerViewHolder.name.setText(name);
 			headerViewHolder.description.setText(description);
+			headerViewHolder.ingredientsLabel.setVisibility(View.VISIBLE);
 		}
 	}
 
 	@Override
 	public void displayImage(String url) {
 		if (url != null && !url.isEmpty()) {
-			showProgress();
 			headerViewHolder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			Glide.with(headerViewHolder.image.getContext())
 					.load(url)
@@ -194,9 +198,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			if (animationListener != null) {
 				animationListener.onAnimation();
 			}
-				headerViewHolder.image.setBackgroundColor(ContextCompat.getColor(headerViewHolder.image.getContext(), R.color.colorPrimary));
-				headerViewHolder.image.setImageResource(R.drawable.no_image);
-				hideProgress();
+			headerViewHolder.image.setBackgroundColor(ContextCompat.getColor(headerViewHolder.image.getContext(), R.color.colorPrimary));
+			headerViewHolder.image.setImageResource(R.drawable.no_image);
+			hideProgress();
 		}
 	}
 

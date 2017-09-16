@@ -60,7 +60,7 @@ public class RandomFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 
 		TCApplication.get(getContext()).applicationComponent()
-				.plus(new RandomCocktailModule()).injectDetailsFragment(this);
+				.plus(new RandomCocktailModule(this)).injectDetailsFragment(this);
 	}
 
 	@Nullable

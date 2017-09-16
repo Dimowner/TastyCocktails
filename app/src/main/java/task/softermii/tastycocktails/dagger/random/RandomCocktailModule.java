@@ -16,6 +16,9 @@
 
 package task.softermii.tastycocktails.dagger.random;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.v4.app.Fragment;
+
 import dagger.Module;
 import dagger.Provides;
 import task.softermii.tastycocktails.data.Repository;
@@ -29,9 +32,17 @@ import task.softermii.tastycocktails.random.RandomPresenter;
 @Module
 public class RandomCocktailModule {
 
+	private Fragment fragment;
+
+	public RandomCocktailModule(Fragment fragment) {
+		this.fragment = fragment;
+	}
+
 	@Provides
 	@RandomCocktailScope
 	RandomContract.UserActionsListener provideDetailsPresenter(Repository repository) {
-		return new RandomPresenter(repository);
+		RandomPresenter presenter = ViewModelProviders.of(fragment).get(RandomPresenter.class);
+		presenter.setRepository(repository);
+		return presenter;
 	}
 }

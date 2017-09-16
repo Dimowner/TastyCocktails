@@ -29,13 +29,12 @@ import task.softermii.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
-	//TODO: Add ingredients
-	//TODO: Add ingredients header
 	//TODO: Add Tests: Unit tests, Instrumentation tests, UI tests
 	//TODO: Add Ingredient details
 	//TODO: Add section favorites
 	//TODO: Extend ModelView with presenter
 	//TODO: Save state in random fragment
+	//TODO: Details activity load from local DB
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

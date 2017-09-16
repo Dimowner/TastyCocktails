@@ -60,7 +60,7 @@ public class DetailsActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_container_scroll_view);
 
 		TCApplication.get(getApplicationContext()).applicationComponent()
-				.plus(new DetailsModule()).injectDetails(this);
+				.plus(new DetailsModule(this)).injectDetails(this);
 
 		// Inflate content and bind views.
 		LayoutInflater.from(this).inflate(R.layout.content_cocktail, findViewById(R.id.container));

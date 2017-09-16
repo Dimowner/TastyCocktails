@@ -69,7 +69,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		setHasOptionsMenu(true);
 
 		TCApplication.get(getContext()).applicationComponent()
-				.plus(new CocktailsModule()).injectCocktailsSearch(this);
+				.plus(new CocktailsModule(this)).injectCocktailsSearch(this);
 	}
 
 	@Nullable
