@@ -26,7 +26,7 @@
 </item>
 <item>
 	<bitmap
-		android:src="@drawable/loadscreen"
+		android:src="@drawable/loadscreen2"
 		android:gravity="center"
 		android:tileMode="disabled"/>
 </item>
