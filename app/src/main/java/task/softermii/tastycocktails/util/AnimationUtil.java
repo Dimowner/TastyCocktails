@@ -15,6 +15,10 @@
  */
 
 package task.softermii.tastycocktails.util;
+import android.support.animation.DynamicAnimation;
+import android.support.animation.FloatPropertyCompat;
+import android.support.animation.SpringAnimation;
+import android.support.animation.SpringForce;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
@@ -40,4 +44,31 @@ public class AnimationUtil {
 						android.R.interpolator.accelerate_decelerate))
 				.start();
 	}
+
+	public static void physBasedRevealAnimation(View fab) {
+		fab.setScaleX(0f);
+		fab.setScaleY(0f);
+
+		FloatPropertyCompat<View> scale = new FloatPropertyCompat<View>("") {
+			@Override
+			public float getValue(View object) {
+				return object.getScaleX();
+			}
+
+			@Override
+			public void setValue(View object, float value) {
+				object.setScaleX(value);
+				object.setScaleY(value);
+			}
+		};
+
+		SpringAnimation animation = new SpringAnimation(fab, scale, 1f);
+		animation.getSpring().setStiffness(SpringForce.STIFFNESS_LOW)
+				.setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
+		animation.setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_ALPHA)
+				.setStartVelocity(2f);
+
+		animation.start();
+	}
+
 }

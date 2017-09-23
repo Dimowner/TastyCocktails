@@ -63,7 +63,7 @@ public class RandomActivity extends BaseActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		AnimationUtil.viewRevealAnimation(fab);
+		AnimationUtil.physBasedRevealAnimation(fab);
 	}
 
 	@Override

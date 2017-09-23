@@ -104,16 +104,17 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		intent.putExtra(DetailsActivity.EXTRAS_KEY_ID, item.getId());
 
 		//Transition
-		View txtName = view1.findViewById(R.id.list_item_name);
-		View txtDescription = view1.findViewById(R.id.list_item_description);
-		View ivImage = view1.findViewById(R.id.list_item_image);
-
-		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(SearchFragment.this.getActivity(),
-				Pair.create(txtName, getResources().getString(R.string.list_item_label_transition)),
-				Pair.create(txtDescription, getResources().getString(R.string.list_item_content_transition)),
-				Pair.create(ivImage, getResources().getString(R.string.list_item_image_transition)));
-
-		startActivity(intent, options.toBundle());
+//		View txtName = view1.findViewById(R.id.list_item_name);
+//		View txtDescription = view1.findViewById(R.id.list_item_description);
+//		View ivImage = view1.findViewById(R.id.list_item_image);
+//
+//		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(SearchFragment.this.getActivity(),
+//				Pair.create(txtName, getResources().getString(R.string.list_item_label_transition)),
+//				Pair.create(txtDescription, getResources().getString(R.string.list_item_content_transition)),
+//				Pair.create(ivImage, getResources().getString(R.string.list_item_image_transition)));
+//
+//		startActivity(intent, options.toBundle());
+		startActivity(intent);
 	}
 
 	@Override

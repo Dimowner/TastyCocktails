@@ -65,7 +65,7 @@ public class DetailsActivity extends AppCompatActivity {
 		// Inflate content and bind views.
 		LayoutInflater.from(this).inflate(R.layout.content_cocktail, findViewById(R.id.container));
 
-		supportPostponeEnterTransition();
+//		supportPostponeEnterTransition();
 
 		toolbar = findViewById(R.id.toolbar);
 
@@ -78,7 +78,7 @@ public class DetailsActivity extends AppCompatActivity {
 			mAdapter = new IngredientsAdapter();
 			mAdapter.setItemClickListener((view1, position) ->
 					startIngredientDetailsActivity(mAdapter.getItem(position), view1));
-			mAdapter.setAnimationListener(this::supportStartPostponedEnterTransition);
+//			mAdapter.setAnimationListener(this::supportStartPostponedEnterTransition);
 			mRecyclerView.setAdapter(mAdapter);
 
 			mPresenter.bindView(mAdapter);
@@ -99,6 +99,8 @@ public class DetailsActivity extends AppCompatActivity {
 			// Set the padding to match the Status Bar height
 			toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
 		}
+
+		AnimationUtil.physBasedRevealAnimation(toolbar.getChildAt(0));
 	}
 
 	@Override
@@ -112,11 +114,11 @@ public class DetailsActivity extends AppCompatActivity {
 		//TODO: start ingredient details activity here
 	}
 
-	@Override
-	public void onEnterAnimationComplete() {
-		super.onEnterAnimationComplete();
-		AnimationUtil.viewRevealAnimation(toolbar.getChildAt(0));
-	}
+//	@Override
+//	public void onEnterAnimationComplete() {
+//		super.onEnterAnimationComplete();
+//		AnimationUtil.viewRevealAnimation(toolbar.getChildAt(0));
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -135,7 +137,6 @@ public class DetailsActivity extends AppCompatActivity {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Timber.v("saveState");
 		if (mAdapter != null) {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
 		}
