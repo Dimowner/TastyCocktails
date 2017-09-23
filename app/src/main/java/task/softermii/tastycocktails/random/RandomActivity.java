@@ -56,8 +56,8 @@ public class RandomActivity extends BaseActivity {
 					.beginTransaction()
 					.add(R.id.fragment, fragment, "random_fragment")
 					.commit();
-			fab.setOnClickListener(v -> fragment.loadRandomDrink());
 		}
+		fab.setOnClickListener(v -> fragment.loadRandomDrink());
 	}
 
 	@Override

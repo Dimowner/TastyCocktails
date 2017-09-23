@@ -59,8 +59,16 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 
 	@Override
 	public void unbindView() {
-		compositeDisposable.dispose();
+		if (compositeDisposable.size() > 0) {
+			compositeDisposable.clear();
+		}
 		this.view = null;
+	}
+
+	@Override
+	protected void onCleared() {
+		super.onCleared();
+		compositeDisposable.dispose();
 	}
 
 	public DetailsContract.View getView() {

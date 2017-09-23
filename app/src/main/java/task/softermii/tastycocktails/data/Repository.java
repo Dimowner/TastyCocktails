@@ -53,7 +53,6 @@ public class Repository implements RepositoryContract {
 		if (TCApplication.isConnected()) {
 			return remoteRepository.getRandomCocktail();
 		} else {
-//			TODO:store images in local cache storage
 			return localRepository.getRandomCocktail();
 		}
 	}

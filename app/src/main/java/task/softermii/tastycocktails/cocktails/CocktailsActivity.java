@@ -29,15 +29,12 @@ import task.softermii.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
-	//TODO: fix random btn when orientation change in Random Activity
-
 	//TODO: Add Information when no history
 	//TODO: Add Tests: Unit tests, Instrumentation tests, UI tests
 	//TODO: Add Ingredient details
 	//TODO: Add section favorites
-	//TODO: Extend ModelView with presenter
-	//TODO: Save state in random fragment
-	//TODO: Details activity load from local DB
+	//TODO: Open image on click it
+	//TODO:store images in local cache storage
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

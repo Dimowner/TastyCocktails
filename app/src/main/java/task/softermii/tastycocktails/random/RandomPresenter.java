@@ -59,8 +59,16 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 
 	@Override
 	public void unbindView() {
-		compositeDisposable.dispose();
+		if (compositeDisposable.size() > 0) {
+			compositeDisposable.clear();
+		}
 		this.view = null;
+	}
+
+	@Override
+	protected void onCleared() {
+		super.onCleared();
+		compositeDisposable.dispose();
 	}
 
 	@Override
