@@ -69,43 +69,43 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 		final View view;
-		final ImageView image;
-		final TextView name;
-		final TextView description;
+		final ImageView ivImage;
+		final TextView txtName;
+		final TextView txtDescription;
 		final TextView ingredientsLabel;
-		final TextView error;
+		final TextView txtError;
 		final ProgressBar progress;
 
 		HeaderViewHolder(View itemView){
 			super(itemView);
 			view = itemView;
-			image = itemView.findViewById(R.id.details_image);
-			name = itemView.findViewById(R.id.details_name);
-			description = itemView.findViewById(R.id.details_description);
+			ivImage = itemView.findViewById(R.id.details_image);
+			txtName = itemView.findViewById(R.id.details_name);
+			txtDescription = itemView.findViewById(R.id.details_description);
 			ingredientsLabel = itemView.findViewById(R.id.ingredients_label);
 
-			error = itemView.findViewById(R.id.details_error);
+			txtError = itemView.findViewById(R.id.details_error);
 			progress = itemView.findViewById(R.id.progress);
 
 			if (AndroidUtils.isAndroid5()) {
-				Resources res = name.getContext().getResources();
-				name.setTransitionName(res.getString(R.string.list_item_label_transition));
-				description.setTransitionName(res.getString(R.string.list_item_content_transition));
-				image.setTransitionName(res.getString(R.string.list_item_image_transition));
+				Resources res = txtName.getContext().getResources();
+				txtName.setTransitionName(res.getString(R.string.list_item_label_transition));
+				txtDescription.setTransitionName(res.getString(R.string.list_item_content_transition));
+				ivImage.setTransitionName(res.getString(R.string.list_item_image_transition));
 			}
 		}
 	}
 
 	class IngredientViewHolder extends RecyclerView.ViewHolder {
-		TextView name;
-		TextView measure;
+		TextView txtName;
+		TextView txtMeasure;
 		View view;
 
 		IngredientViewHolder(View itemView) {
 			super(itemView);
 			this.view = itemView;
-			this.name = itemView.findViewById(R.id.list_item_ingredient_name);
-			this.measure = itemView.findViewById(R.id.list_item_ingredient_measure);
+			this.txtName = itemView.findViewById(R.id.list_item_ingredient_name);
+			this.txtMeasure = itemView.findViewById(R.id.list_item_ingredient_measure);
 		}
 	}
 
@@ -139,39 +139,39 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	@Override
 	public void showQueryError() {
 		if (headerViewHolder !=  null) {
-			headerViewHolder.image.setVisibility(View.INVISIBLE);
-			headerViewHolder.error.setVisibility(View.VISIBLE);
-			headerViewHolder.error.setText(R.string.msg_error_on_query);
+			headerViewHolder.ivImage.setVisibility(View.INVISIBLE);
+			headerViewHolder.txtError.setVisibility(View.VISIBLE);
+			headerViewHolder.txtError.setText(R.string.msg_error_on_query);
 			headerViewHolder.ingredientsLabel.setVisibility(View.INVISIBLE);
-			headerViewHolder.name.setText(null);
-			headerViewHolder.description.setText(null);
+			headerViewHolder.txtName.setText(null);
+			headerViewHolder.txtDescription.setText(null);
 		}
 	}
 
 	@Override
 	public void showNetworkError() {
 		if (headerViewHolder !=  null) {
-			headerViewHolder.image.setVisibility(View.INVISIBLE);
-			headerViewHolder.error.setVisibility(View.VISIBLE);
-			headerViewHolder.error.setText(R.string.msg_error_no_internet);
+			headerViewHolder.ivImage.setVisibility(View.INVISIBLE);
+			headerViewHolder.txtError.setVisibility(View.VISIBLE);
+			headerViewHolder.txtError.setText(R.string.msg_error_no_internet);
 			headerViewHolder.ingredientsLabel.setVisibility(View.INVISIBLE);
-			headerViewHolder.name.setText(null);
-			headerViewHolder.description.setText(null);
+			headerViewHolder.txtName.setText(null);
+			headerViewHolder.txtDescription.setText(null);
 		}
 	}
 
 	@Override
 	public void displayData(String name, String description) {
+		this.name = name;
+		this.description = description;
 		if (headerViewHolder !=  null) {
-			this.name = name;
-			this.description = description;
 			displayData(headerViewHolder);
 		}
 	}
 
 	private void displayData(HeaderViewHolder holder) {
-		holder.name.setText(name);
-		holder.description.setText(description);
+		holder.txtName.setText(name);
+		holder.txtDescription.setText(description);
 		holder.ingredientsLabel.setVisibility(View.VISIBLE);
 	}
 
@@ -187,8 +187,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	private void displayImage(HeaderViewHolder header) {
 		if (imageUrl != null && !imageUrl.isEmpty()) {
-			header.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			Glide.with(header.image.getContext())
+			header.ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			Glide.with(header.ivImage.getContext())
 					.load(imageUrl)
 					.listener(new RequestListener<Drawable>() {
 						@Override
@@ -198,7 +198,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 								animationListener.onAnimation();
 							}
 							hideProgress();
-							header.error.setVisibility(View.VISIBLE);
+							header.txtError.setVisibility(View.VISIBLE);
 							return false;
 						}
 
@@ -212,13 +212,13 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 							return false;
 						}
 					})
-					.into(header.image);
+					.into(header.ivImage);
 		} else {
 			if (animationListener != null) {
 				animationListener.onAnimation();
 			}
-			header.image.setBackgroundColor(ContextCompat.getColor(header.image.getContext(), R.color.colorPrimary));
-			header.image.setImageResource(R.drawable.no_image);
+			header.ivImage.setBackgroundColor(ContextCompat.getColor(header.ivImage.getContext(), R.color.colorPrimary));
+			header.ivImage.setImageResource(R.drawable.no_image);
 			hideProgress();
 		}
 	}
@@ -255,11 +255,11 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		} else if (viewHolder.getItemViewType() == VIEW_TYPE_NORMAL) {
 			IngredientViewHolder holder = ((IngredientViewHolder) viewHolder);
 			int pos = holder.getAdapterPosition()-1;
-			holder.name.setText(mShowingData.get(pos).getName());
+			holder.txtName.setText(mShowingData.get(pos).getName());
 			if (mShowingData.get(pos).getMeasure() != null && !mShowingData.get(pos).getMeasure().trim().isEmpty()) {
-				holder.measure.setText(mShowingData.get(pos).getMeasure());
+				holder.txtMeasure.setText(mShowingData.get(pos).getMeasure());
 			} else {
-				holder.measure.setText("");
+				holder.txtMeasure.setText("");
 			}
 
 			holder.view.setOnClickListener(v -> {
@@ -270,8 +270,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 			//Set transition names
 			Resources res = holder.view.getResources();
-			ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
-			ViewCompat.setTransitionName(holder.measure, res.getString(R.string.list_item_content_transition));
+			ViewCompat.setTransitionName(holder.txtName, res.getString(R.string.list_item_label_transition));
+			ViewCompat.setTransitionName(holder.txtMeasure, res.getString(R.string.list_item_content_transition));
 		} else if (viewHolder.getItemViewType() == VIEW_TYPE_FOOTER) {
 			//Do nothing
 		}

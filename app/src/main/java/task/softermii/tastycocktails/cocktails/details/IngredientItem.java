@@ -81,8 +81,8 @@ public class IngredientItem implements Parcelable {
 	@Override
 	public String toString() {
 		return "IngredientItem{" +
-				"name='" + name + '\'' +
-				", measure='" + measure + '\'' +
+				"txtName='" + name + '\'' +
+				", txtMeasure='" + measure + '\'' +
 				'}';
 	}
 }
