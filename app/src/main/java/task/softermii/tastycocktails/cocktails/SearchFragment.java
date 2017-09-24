@@ -20,9 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -34,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import java.util.List;
@@ -46,6 +45,7 @@ import task.softermii.tastycocktails.cocktails.details.DetailsActivity;
 import task.softermii.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
+import task.softermii.tastycocktails.data.Prefs;
 
 /**
  * Created on 26.07.2017.
@@ -57,11 +57,14 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
+	private LinearLayout mWelcomePanel;
 
 	private CocktailsRecyclerAdapter mAdapter;
 
 	@Inject
 	SearchContract.UserActionsListener mPresenter;
+
+	Prefs prefs;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +73,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 		TCApplication.get(getContext()).applicationComponent()
 				.plus(new CocktailsModule(this)).injectCocktailsSearch(this);
+
+		prefs = Prefs.getInstance(getContext());
 	}
 
 	@Nullable
@@ -82,6 +87,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		mWelcomePanel = view.findViewById(R.id.welcome_panel);
 		mProgressBar = view.findViewById(R.id.progress);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
@@ -89,6 +95,11 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 		mPresenter.bindView(this);
+
+		if (prefs.isFirstRun()) {
+			mWelcomePanel.setVisibility(View.VISIBLE);
+			mRecyclerView.setVisibility(View.GONE);
+		}
 
 		if (savedInstanceState == null) {
 			mAdapter = new CocktailsRecyclerAdapter();
@@ -204,6 +215,12 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	@Override
 	public void displayData(List<ListItem> data) {
+		if (data.size() > 0 && prefs.isFirstRun()) {
+			prefs.firstRunExecuted();
+			mRecyclerView.setVisibility(View.VISIBLE);
+			mWelcomePanel.setVisibility(View.GONE);
+		}
+
 		mAdapter.setData(data);
 	}
 }

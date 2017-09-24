@@ -31,6 +31,38 @@
 	<android.support.v7.widget.RecyclerView
 			android:id="@+id/recycler_view"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
+			android:layout_height="match_parent"
+			/>
 
+	<LinearLayout
+			android:id="@+id/welcome_panel"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@color/colorPrimary"
+			android:visibility="gone"
+			android:orientation="vertical">
+
+		<ImageView
+				android:layout_width="200dp"
+				android:layout_height="200dp"
+				android:contentDescription="@string/app_name"
+				android:layout_gravity="center"
+				android:src="@drawable/loadscreen4"/>
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textSize="@dimen/text_size_xlarge"
+				android:textColor="@color/text_primary_light"
+				android:textStyle="bold"
+				android:gravity="center_horizontal"
+				android:text="@string/welcome"/>
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textSize="@dimen/text_size_large"
+				android:textColor="@color/text_primary_light"
+				android:gravity="center_horizontal"
+				android:text="@string/type_search"/>
+	</LinearLayout>
 </FrameLayout>

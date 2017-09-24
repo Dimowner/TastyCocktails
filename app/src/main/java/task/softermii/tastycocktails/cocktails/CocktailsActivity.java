@@ -29,7 +29,6 @@ import task.softermii.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
-	//TODO: Add Information when no history
 	//TODO: Add section favorites
 	//TODO: Open image on click it
 	//TODO: Store images in local cache storage
