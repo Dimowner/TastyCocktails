@@ -24,6 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -54,6 +55,9 @@ public class DetailsActivity extends AppCompatActivity {
 	private RecyclerView mRecyclerView;
 	private IngredientsAdapter mAdapter;
 
+	private MenuItem itemFavorite;
+	private boolean isFavorite = false;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,7 +67,7 @@ public class DetailsActivity extends AppCompatActivity {
 				.plus(new DetailsModule(this)).injectDetails(this);
 
 		// Inflate content and bind views.
-		LayoutInflater.from(this).inflate(R.layout.content_cocktail, findViewById(R.id.container));
+		LayoutInflater.from(this).inflate(R.layout.fragment_details, findViewById(R.id.container));
 
 //		supportPostponeEnterTransition();
 
@@ -79,6 +83,10 @@ public class DetailsActivity extends AppCompatActivity {
 			mAdapter.setItemClickListener((view1, position) ->
 					startIngredientDetailsActivity(mAdapter.getItem(position), view1));
 //			mAdapter.setAnimationListener(this::supportStartPostponedEnterTransition);
+			mAdapter.setFavoriteUpdateListener(fav -> {
+				isFavorite = fav;
+				updateFavorite(fav);
+			});
 			mRecyclerView.setAdapter(mAdapter);
 
 			mPresenter.bindView(mAdapter);
@@ -121,6 +129,14 @@ public class DetailsActivity extends AppCompatActivity {
 //	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_details, menu);
+		itemFavorite = menu.findItem(R.id.action_add_to_favorites);
+		updateFavorite(isFavorite);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
@@ -129,6 +145,9 @@ public class DetailsActivity extends AppCompatActivity {
 				} else {
 					finish();
 				}
+				break;
+			case R.id.action_add_to_favorites:
+				mPresenter.addToFavorites();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -140,12 +159,15 @@ public class DetailsActivity extends AppCompatActivity {
 		if (mAdapter != null) {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
 		}
+		outState.putBoolean("is_favorite", isFavorite);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
+			isFavorite = savedInstanceState.getBoolean("is_favorite");
+			updateFavorite(isFavorite);
 			if (mAdapter == null) {
 				mAdapter = new IngredientsAdapter();
 				mRecyclerView.setAdapter(mAdapter);
@@ -153,7 +175,17 @@ public class DetailsActivity extends AppCompatActivity {
 			mPresenter.bindView(mAdapter);
 			mAdapter.setItemClickListener((view1, position) ->
 					startIngredientDetailsActivity(mAdapter.getItem(position), view1));
+			mAdapter.setFavoriteUpdateListener(fav -> {
+				isFavorite = fav;
+				updateFavorite(fav);
+			});
 			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+		}
+	}
+
+	private void updateFavorite(boolean fav) {
+		if (itemFavorite != null) {
+			itemFavorite.setIcon(fav ? R.drawable.heart : R.drawable.heart_outline);
 		}
 	}
 }

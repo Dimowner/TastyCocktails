@@ -43,6 +43,10 @@ import task.softermii.tastycocktails.R;
  */
 public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAdapter.ItemViewHolder> {
 
+	private List<ListItem> mBaseData = new ArrayList<>();
+
+	private String filterStr = "";
+
 	private List<ListItem> mShowingData;
 
 	private ItemClickListener itemClickListener;
@@ -56,14 +60,14 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 		ItemViewHolder(View itemView) {
 				super(itemView);
 				this.view = itemView;
-				this.name = (TextView) itemView.findViewById(R.id.list_item_name);
-				this.description = (TextView) itemView.findViewById(R.id.list_item_description);
-				this.image = (ImageView) itemView.findViewById(R.id.list_item_image);
+				this.name = itemView.findViewById(R.id.list_item_name);
+				this.description = itemView.findViewById(R.id.list_item_description);
+				this.image = itemView.findViewById(R.id.list_item_image);
 			}
  	}
 
 	public CocktailsRecyclerAdapter() {
-		this.mShowingData = Collections.emptyList();
+		this.mShowingData = new ArrayList<>();
 	}
 
 	@Override
@@ -111,12 +115,45 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 	}
 
 	public void setData(List<ListItem> data) {
-		if (data != null) {
-			this.mShowingData = data;
+		mBaseData = data;
+		if (isFiltered()) {
+			updateShowingDataWithFilter();
 		} else {
-			this.mShowingData = Collections.emptyList();
+			this.mShowingData.clear();
+			this.mShowingData.addAll(mBaseData);
+			notifyDataSetChanged();
 		}
-		notifyDataSetChanged();
+	}
+
+	/**
+	 * Update showing data by applying search filter.
+	 */
+	private void updateShowingDataWithFilter() {
+		if (isFiltered()) {
+			mShowingData.clear();
+			for (int i = 0; i < mBaseData.size(); i++) {
+				if (mBaseData.get(i).getName().toLowerCase().contains(filterStr.toLowerCase())) {
+					mShowingData.add(mBaseData.get(i));
+				}
+			}
+			notifyDataSetChanged();
+		}
+	}
+
+	public void applyFilter(String str) {
+		if (str == null || str.isEmpty()) {
+			filterStr = "";
+			this.mShowingData.clear();
+			mShowingData.addAll(mBaseData);
+			notifyDataSetChanged();
+		} else {
+			filterStr = str;
+			updateShowingDataWithFilter();
+		}
+	}
+
+	private boolean isFiltered() {
+		return (filterStr != null && !filterStr.isEmpty());
 	}
 
 	public void setItemClickListener(ItemClickListener itemClickListener) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package task.softermii.tastycocktails.cocktails;
+package task.softermii.tastycocktails.favorites;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,32 +22,22 @@ import android.support.v4.app.FragmentManager;
 
 import task.softermii.tastycocktails.BaseActivity;
 import task.softermii.tastycocktails.R;
+import task.softermii.tastycocktails.cocktails.SearchFragment;
 
 /**
- * Created on 26.07.2017.
+ * Created on 24.09.2017.
  * @author Dimowner
  */
-public class CocktailsActivity extends BaseActivity {
-
-	//TODO: Add button favorite in lists
-	//TODO: Instantly update lists when add/remove from favorites.
-	//TODO: Combine Cocktail Details and RandomCocktail in one Fragment
-	//TODO: Add mapper and replace Drink model by more readable POJO for using presenters and UI
-	//TODO: Open image on click it
-	//TODO: Use LiveData with Local database
-	//TODO: Store images in local cache storage
-	//TODO: Add Tests: Unit tests, Instrumentation tests, UI tests
-	//TODO: Add Ingredient details
+public class FavoritesActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		setTheme(R.style.AppTheme);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.base_nav_activity);
 
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
-			SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_NORMAL);
+			SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_FAVORITES);
 			manager
 					.beginTransaction()
 					.add(R.id.fragment, fragment, "cocktails_fragment")
@@ -57,6 +47,6 @@ public class CocktailsActivity extends BaseActivity {
 
 	@Override
 	protected int getSelfNavDrawerItem() {
-		return NAVDRAWER_ITEM_COCKTAILS;
+		return NAVDRAWER_ITEM_FAVORITES;
 	}
 }

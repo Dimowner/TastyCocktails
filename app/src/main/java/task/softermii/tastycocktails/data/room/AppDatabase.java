@@ -25,7 +25,7 @@ import task.softermii.tastycocktails.data.model.Drink;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Database(entities = {Drink.class}, version = 2, exportSchema = false)
+@Database(entities = {Drink.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
 	public abstract CocktailsDao cocktailsDao();

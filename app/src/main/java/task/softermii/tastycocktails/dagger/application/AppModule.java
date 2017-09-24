@@ -67,7 +67,9 @@ public class AppModule {
 	@Provides
 	@Singleton
 	AppDatabase provideAppDatabase(Context context) {
-		return Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "cocktails_db").build();
+		return Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "cocktails_db")
+				.fallbackToDestructiveMigration()
+				.build();
 	}
 
 	@Provides

@@ -39,5 +39,7 @@ public interface SearchContract {
 		void cancelSearch();
 
 		void loadLastSearch();
+
+		void loadFavorites();
 	}
 }

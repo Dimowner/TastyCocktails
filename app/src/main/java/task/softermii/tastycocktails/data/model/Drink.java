@@ -24,10 +24,10 @@ import android.arch.persistence.room.PrimaryKey;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Entity
+@Entity(tableName = "drinks")
 public class Drink {
 
-	public static long NO_ID = -1;
+	public static final long NO_ID = -1;
 
 	@PrimaryKey
 	private final long idDrink;
@@ -49,6 +49,9 @@ public class Drink {
 
 	@ColumnInfo(name = "strDrinkThumb")
 	private final String strDrinkThumb;
+
+	@ColumnInfo(name = "isFavorite")
+	private boolean isFavorite;
 
 	@ColumnInfo(name = "strIngredient1")
 	private final String strIngredient1;
@@ -113,14 +116,14 @@ public class Drink {
 	private final String strMeasure15;
 
 	public Drink(long idDrink, String strDrink, String strCategory, String strAlcoholic, String strGlass,
-					 String strInstructions, String strDrinkThumb, String strIngredient1, String strIngredient2,
-					 String strIngredient3, String strIngredient4, String strIngredient5, String strIngredient6,
-					 String strIngredient7, String strIngredient8, String strIngredient9, String strIngredient10,
-					 String strIngredient11, String strIngredient12, String strIngredient13, String strIngredient14,
-					 String strIngredient15, String strMeasure1, String strMeasure2, String strMeasure3,
-					 String strMeasure4, String strMeasure5, String strMeasure6, String strMeasure7,
-					 String strMeasure8, String strMeasure9, String strMeasure10, String strMeasure11,
-					 String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15) {
+					 String strInstructions, String strDrinkThumb, boolean isFavorite, String strIngredient1,
+					 String strIngredient2, String strIngredient3, String strIngredient4, String strIngredient5,
+					 String strIngredient6, String strIngredient7, String strIngredient8, String strIngredient9,
+					 String strIngredient10, String strIngredient11, String strIngredient12, String strIngredient13,
+					 String strIngredient14, String strIngredient15, String strMeasure1, String strMeasure2,
+					 String strMeasure3, String strMeasure4, String strMeasure5, String strMeasure6,
+					 String strMeasure7, String strMeasure8, String strMeasure9, String strMeasure10,
+					 String strMeasure11, String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15) {
 		this.idDrink = idDrink;
 		this.strDrink = strDrink;
 		this.strCategory = strCategory;
@@ -128,6 +131,7 @@ public class Drink {
 		this.strGlass = strGlass;
 		this.strInstructions = strInstructions;
 		this.strDrinkThumb = strDrinkThumb;
+		this.isFavorite = isFavorite;
 		this.strIngredient1 = strIngredient1;
 		this.strIngredient2 = strIngredient2;
 		this.strIngredient3 = strIngredient3;
@@ -188,8 +192,12 @@ public class Drink {
 		return strDrinkThumb;
 	}
 
-	public static long getNoId() {
-		return NO_ID;
+	public boolean isFavorite() {
+		return isFavorite;
+	}
+
+	public void inverseFavorite() {
+		this.isFavorite = !this.isFavorite;
 	}
 
 	public String getStrIngredient1() {
@@ -313,7 +321,7 @@ public class Drink {
 	}
 
 	public static Drink emptyDrink() {
-		return new Drink(NO_ID, null, null, null, null, null, null, null, null, null, null, null,
+		return new Drink(NO_ID, null, null, null, null, null, null, false, null, null, null, null, null,
 								null, null, null, null, null, null, null, null, null, null, null, null,
 								null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}

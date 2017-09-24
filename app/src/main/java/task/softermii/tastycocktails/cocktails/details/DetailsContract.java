@@ -28,7 +28,7 @@ public interface DetailsContract  {
 
 	interface View extends Contract.View {
 
-		void displayData(String name, String description);
+		void displayData(String name, String description, boolean isFavorite);
 
 		void displayImage(String url);
 
@@ -38,5 +38,7 @@ public interface DetailsContract  {
 	interface UserActionsListener extends Contract.UserActionsListener<DetailsContract.View> {
 
 		void loadDrinkById(long id);
+
+		void addToFavorites();
 	}
 }

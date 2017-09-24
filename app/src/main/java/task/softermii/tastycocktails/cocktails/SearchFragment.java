@@ -46,12 +46,17 @@ import task.softermii.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
 import task.softermii.tastycocktails.data.Prefs;
+import timber.log.Timber;
 
 /**
  * Created on 26.07.2017.
  * @author Dimowner
  */
 public class SearchFragment extends Fragment implements SearchContract.View {
+
+	public static final int TYPE_NORMAL = 1;
+	public static final int TYPE_FAVORITES = 2;
+	public static final String EXTRAS_KEY_TYPE = "search_fragment_type";
 
 	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 
@@ -61,10 +66,20 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private CocktailsRecyclerAdapter mAdapter;
 
+	private int fragmentType = TYPE_NORMAL;
+
 	@Inject
 	SearchContract.UserActionsListener mPresenter;
 
 	Prefs prefs;
+
+	public static SearchFragment newInstance(int fragmentType) {
+		SearchFragment fragment = new SearchFragment();
+		Bundle args = new Bundle();
+		args.putInt(EXTRAS_KEY_TYPE, fragmentType);
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +90,10 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 				.plus(new CocktailsModule(this)).injectCocktailsSearch(this);
 
 		prefs = Prefs.getInstance(getContext());
+
+		if (getArguments().containsKey(EXTRAS_KEY_TYPE)) {
+			fragmentType = getArguments().getInt(EXTRAS_KEY_TYPE);
+		}
 	}
 
 	@Nullable
@@ -106,7 +125,13 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			mAdapter.setItemClickListener((view1, position) ->
 					startDetailsActivity(mAdapter.getItem(position), view1));
 			mRecyclerView.setAdapter(mAdapter);
-			mPresenter.loadLastSearch();
+			if (fragmentType == TYPE_NORMAL) {
+				mPresenter.loadLastSearch();
+			} else if (fragmentType == TYPE_FAVORITES) {
+				mPresenter.loadFavorites();
+			} else {
+				Timber.e("Con't load data not correct fragment type!");
+			}
 		}
 	}
 
@@ -144,12 +169,17 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				mPresenter.startSearch(query);
+				if (fragmentType == TYPE_NORMAL) {
+					mPresenter.startSearch(query);
+				}
 				return false;
 			}
 
 			@Override
 			public boolean onQueryTextChange(final String newText) {
+				if (fragmentType == TYPE_FAVORITES && mAdapter != null) {
+					mAdapter.applyFilter(newText);
+				}
 				return false;
 			}
 		});

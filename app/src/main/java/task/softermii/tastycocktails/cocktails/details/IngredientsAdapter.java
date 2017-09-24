@@ -67,6 +67,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	private AnimationListener animationListener;
 
+	private FavoriteUpdateListener favoriteUpdateListener;
+
 	public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 		final View view;
 		final ImageView ivImage;
@@ -161,11 +163,14 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	}
 
 	@Override
-	public void displayData(String name, String description) {
+	public void displayData(String name, String description, boolean isFavorite) {
 		this.name = name;
 		this.description = description;
 		if (headerViewHolder !=  null) {
 			displayData(headerViewHolder);
+		}
+		if (favoriteUpdateListener != null) {
+			favoriteUpdateListener.onFavoriteUpdated(isFavorite);
 		}
 	}
 
@@ -329,6 +334,10 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		this.animationListener = animationListener;
 	}
 
+	public void setFavoriteUpdateListener(FavoriteUpdateListener favoriteUpdateListener) {
+		this.favoriteUpdateListener = favoriteUpdateListener;
+	}
+
 	/**
 	 * Save adapters state
 	 * @return adapter state.
@@ -408,4 +417,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	public interface AnimationListener {
 		void onAnimation();
 	}
+
+	public interface FavoriteUpdateListener {
+		void onFavoriteUpdated(boolean fav);
+	}
+
 }

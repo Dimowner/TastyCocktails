@@ -35,12 +35,13 @@
 
 		<activity
 				android:name=".login.LoginActivity"
-				android:theme="@style/AppTheme.BrandedLaunch"
-				android:noHistory="true">
+				android:noHistory="true"
+				android:theme="@style/AppTheme.BrandedLaunch">
 		</activity>
 
-		<activity android:name=".cocktails.CocktailsActivity"
-					 android:theme="@style/AppTheme.BrandedLaunch">
+		<activity
+				android:name=".cocktails.CocktailsActivity"
+				android:theme="@style/AppTheme.BrandedLaunch">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 
@@ -50,11 +51,17 @@
 
 		<activity android:name=".UserDetailsActivity"/>
 
-		<activity android:name=".random.RandomActivity"
-					 android:theme="@style/TransparentStatusBar"/>
+		<activity
+				android:name=".favorites.FavoritesActivity"
+				android:label="@string/nav_favorites"/>
 
-		<activity android:name=".cocktails.details.DetailsActivity"
-					 android:theme="@style/TransparentStatusBar"/>
+		<activity
+				android:name=".random.RandomActivity"
+				android:theme="@style/TransparentStatusBar"/>
+
+		<activity
+				android:name=".cocktails.details.DetailsActivity"
+				android:theme="@style/TransparentStatusBar"/>
 
 	</application>
 

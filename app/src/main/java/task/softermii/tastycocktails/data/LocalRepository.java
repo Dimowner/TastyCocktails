@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import task.softermii.tastycocktails.TCApplication;
@@ -61,7 +62,7 @@ public class LocalRepository implements RepositoryContract {
 
 	@Override
 	public Single<Drink> getRandomCocktail() {
-		return getRepositoriesDao().getRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
+		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 			if (count > 0) {
 				return getRepositoriesDao()
 						.getRandom()
@@ -74,7 +75,7 @@ public class LocalRepository implements RepositoryContract {
 
 	@Override
 	public Single<Drink> getCocktail(long id) {
-		return getRepositoriesDao().getRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
+		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 			if (count > 0) {
 				return getRepositoriesDao()
 						.getCocktail(id)
@@ -87,13 +88,34 @@ public class LocalRepository implements RepositoryContract {
 
 	@Override
 	public Single<List<Drink>> getLastSearch() {
-		return getRepositoriesDao().getRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
+		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 			if (count > 0) {
-				return getRepositoriesDao().getAll();
+				return getRepositoriesDao().getLastSearch();
 			} else {
 				return Single.fromCallable(Collections::emptyList);
 			}
 		});
+	}
+
+	@Override
+	public Single<List<Drink>> getFavorites() {
+		return getRepositoriesDao().getFavoritesRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
+			if (count > 0) {
+				return getRepositoriesDao().getFavorites();
+			} else {
+				return Single.fromCallable(Collections::emptyList);
+			}
+		});
+	}
+
+	@Override
+	public Completable addToFavorites(long id) {
+		return Completable.fromAction(() -> getRepositoriesDao().addToFavorites(id));
+	}
+
+	@Override
+	public Completable removeFromFavorites(long id) {
+		return Completable.fromAction(() -> getRepositoriesDao().removeFromFavorites(id));
 	}
 
 	/**
@@ -102,7 +124,8 @@ public class LocalRepository implements RepositoryContract {
 	 */
 	public void rewriteDrinks(List<Drink> items) {
 		Single.just(items).map(data -> {
-				getRepositoriesDao().deleteAll();
+//				getRepositoriesDao().deleteAll();
+				getRepositoriesDao().deleteLastSearch();
 				getRepositoriesDao().insertAll(data.toArray(new Drink[data.size()]));
 				return null;
 			})

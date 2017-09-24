@@ -22,6 +22,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -46,11 +49,13 @@ public class RandomFragment extends Fragment {
 	private RecyclerView mRecyclerView;
 	private IngredientsAdapter mAdapter;
 
+	private MenuItem itemFavorite;
+	private boolean isFavorite = false;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setHasOptionsMenu(true);
 		TCApplication.get(getContext()).applicationComponent()
 				.plus(new RandomCocktailModule(this)).injectDetailsFragment(this);
 	}
@@ -58,7 +63,7 @@ public class RandomFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-		mRecyclerView = (RecyclerView) inflater.inflate(R.layout.content_cocktail, container, false);
+		mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_details, container, false);
 		return mRecyclerView;
 	}
 
@@ -71,6 +76,10 @@ public class RandomFragment extends Fragment {
 
 		if (savedInstanceState == null) {
 			mAdapter = new IngredientsAdapter();
+			mAdapter.setFavoriteUpdateListener(fav -> {
+				isFavorite = fav;
+				updateFavorite(isFavorite);
+			});
 			mRecyclerView.setAdapter(mAdapter);
 
 			mPresenter.bindView(mAdapter);
@@ -83,8 +92,25 @@ public class RandomFragment extends Fragment {
 	}
 
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_details, menu);
+		itemFavorite = menu.findItem(R.id.action_add_to_favorites);
+		updateFavorite(isFavorite);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_add_to_favorites) {
+			mPresenter.addToFavorites();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putBoolean("is_favorite", isFavorite);
 		if (mAdapter != null) {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
 		}
@@ -94,10 +120,16 @@ public class RandomFragment extends Fragment {
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
+			isFavorite = savedInstanceState.getBoolean("is_favorite");
+			updateFavorite(isFavorite);
 			if (mAdapter == null) {
 				mAdapter = new IngredientsAdapter();
 				mRecyclerView.setAdapter(mAdapter);
 			}
+			mAdapter.setFavoriteUpdateListener(fav -> {
+				isFavorite = fav;
+				updateFavorite(isFavorite);
+			});
 			mPresenter.bindView(mAdapter);
 			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
 		}
@@ -108,5 +140,11 @@ public class RandomFragment extends Fragment {
 		super.onDestroyView();
 		mPresenter.unbindView();
 		mPresenter = null;
+	}
+
+	private void updateFavorite(boolean fav) {
+		if (itemFavorite != null) {
+			itemFavorite.setIcon(fav ? R.drawable.heart : R.drawable.heart_outline);
+		}
 	}
 }

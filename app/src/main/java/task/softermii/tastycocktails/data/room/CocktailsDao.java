@@ -18,6 +18,7 @@ package task.softermii.tastycocktails.data.room;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import java.util.List;
@@ -32,21 +33,39 @@ import task.softermii.tastycocktails.data.model.Drink;
 @Dao
 public interface CocktailsDao {
 
-	@Query("SELECT * FROM Drink")
+	@Query("SELECT * FROM drinks")
 	Single<List<Drink>> getAll();
 
-	@Query("SELECT * FROM Drink WHERE idDrink = :id")
+	@Query("SELECT * FROM drinks WHERE isFavorite <> 1")
+	Single<List<Drink>> getLastSearch();
+
+	@Query("SELECT * FROM drinks WHERE isFavorite = 1")
+	Single<List<Drink>> getFavorites();
+
+	@Query("SELECT * FROM drinks WHERE idDrink = :id")
 	Single<Drink> getCocktail(long id);
 
-	@Query("SELECT * FROM Drink ORDER BY RANDOM() LIMIT 1;")
+	@Query("UPDATE drinks SET isFavorite = 1 WHERE idDrink = :id")
+	void addToFavorites(long id);
+
+	@Query("UPDATE drinks SET isFavorite = 0 WHERE idDrink = :id")
+	void removeFromFavorites(long id);
+
+	@Query("SELECT * FROM drinks ORDER BY RANDOM() LIMIT 1;")
 	Single<Drink> getRandom();
 
-	@Query("SELECT Count(*) FROM Drink")
-	Single<Integer> getRowCount();
+	@Query("SELECT Count(*) FROM drinks WHERE isFavorite <> 1")
+	Single<Integer> getLastSearchRowCount();
 
-	@Insert
+	@Query("SELECT Count(*) FROM drinks WHERE isFavorite = 1")
+	Single<Integer> getFavoritesRowCount();
+
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insertAll(Drink... items);
 
-	@Query("DELETE FROM Drink")
+	@Query("DELETE FROM drinks")
 	void deleteAll();
+
+	@Query("DELETE FROM drinks WHERE isFavorite <> 1")
+	void deleteLastSearch();
 }

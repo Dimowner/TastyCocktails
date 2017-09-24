@@ -19,6 +19,7 @@ package task.softermii.tastycocktails.data;
 import android.support.annotation.NonNull;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.data.model.Drink;
@@ -65,5 +66,20 @@ public class Repository implements RepositoryContract {
 	@Override
 	public Single<List<Drink>> getLastSearch() {
 		return localRepository.getLastSearch();
+	}
+
+	@Override
+	public Single<List<Drink>> getFavorites() {
+		return localRepository.getFavorites();
+	}
+
+	@Override
+	public Completable addToFavorites(long id) {
+		return localRepository.addToFavorites(id);
+	}
+
+	@Override
+	public Completable removeFromFavorites(long id) {
+		return localRepository.removeFromFavorites(id);
 	}
 }

@@ -43,6 +43,7 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 
 import task.softermii.tastycocktails.cocktails.CocktailsActivity;
+import task.softermii.tastycocktails.favorites.FavoritesActivity;
 import task.softermii.tastycocktails.random.RandomActivity;
 
 import static task.softermii.tastycocktails.util.AndroidUtils.dpToPx;
@@ -51,11 +52,12 @@ import static task.softermii.tastycocktails.util.AndroidUtils.dpToPx;
  * Base activity with base functionality and drawer layout.
  * @author Dimowner
  */
-public class BaseActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {//implements IMainView {
+public abstract class BaseActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {
 
 	// symbols for navdrawer items (indices must correspond to array below). This is
 	// not a list of items that are necessarily *present* in the Nav Drawer; rather,
 	// it's a list of all possible items.
+	protected static final int NAVDRAWER_ITEM_FAVORITES   = R.id.nav_favorites;
 	protected static final int NAVDRAWER_ITEM_COCKTAILS	= R.id.nav_cocktails;
 	protected static final int NAVDRAWER_ITEM_RANDOM 		= R.id.nav_random;
 	protected static final int NAVDRAWER_ITEM_ABOUT			= R.id.nav_about;
@@ -223,6 +225,10 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 
 	private void goToNavDrawerItem(int itemID) {
 		switch (itemID) {
+			case NAVDRAWER_ITEM_FAVORITES:
+				startActivity(new Intent(getApplicationContext(), FavoritesActivity.class));
+				finish();
+				break;
 			case NAVDRAWER_ITEM_COCKTAILS:
 				startActivity(new Intent(getApplicationContext(), CocktailsActivity.class));
 				finish();

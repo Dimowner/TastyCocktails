@@ -115,6 +115,17 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 						.subscribe(this::displayData, this::handleError));
 	}
 
+	@Override
+	public void loadFavorites() {
+		view.showProgress();
+		compositeDisposable.add(
+				repository.getFavorites()
+						.map(this::convertModel)
+						.subscribeOn(Schedulers.io())
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(this::displayData, this::handleError));
+	}
+
 	private List<ListItem> convertModel(List<Drink> drinks) {
 		List<ListItem> list = new ArrayList<>(drinks.size());
 		for (int i = 0; i < drinks.size(); i++) {

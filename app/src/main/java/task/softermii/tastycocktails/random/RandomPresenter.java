@@ -24,6 +24,7 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import task.softermii.tastycocktails.ModelMapper;
 import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.cocktails.details.DetailsContract;
@@ -41,6 +42,8 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 	private RepositoryContract repository;
 
 	private DetailsContract.View view;
+
+	private Drink drink;
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -73,11 +76,27 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 
 	@Override
 	public void loadDrinkById(long id) {
-		view.showProgress();
-		compositeDisposable.add(
-				repository.getCocktail(id)
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(this::displayData, this::handleError));
+	}
+
+	@Override
+	public void addToFavorites() {
+		if (drink.isFavorite()) {
+			repository.removeFromFavorites(drink.getIdDrink())
+					.subscribeOn(Schedulers.io())
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(() -> {
+							drink.inverseFavorite();
+							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.isFavorite());
+						}, Timber::e);
+		} else {
+			repository.addToFavorites(drink.getIdDrink())
+					.subscribeOn(Schedulers.io())
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(() -> {
+							drink.inverseFavorite();
+							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.isFavorite());
+						}, Timber::e);
+		}
 	}
 
 	@Override
@@ -91,7 +110,8 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 
 	private void displayData(Drink model) {
 		if (model != null) {
-			view.displayData(model.getStrDrink(), model.getStrInstructions());
+			drink = model;
+			view.displayData(model.getStrDrink(), model.getStrInstructions(), model.isFavorite());
 			view.displayImage(model.getStrDrinkThumb());
 			if (model.getStrDrinkThumb() == null || model.getStrDrinkThumb().isEmpty()) {
 				view.hideProgress();
