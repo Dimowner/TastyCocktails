@@ -63,6 +63,9 @@
 				android:name=".cocktails.details.DetailsActivity"
 				android:theme="@style/TransparentStatusBar"/>
 
+		<activity android:name=".cocktails.details.ImagePreviewActivity"
+					 android:theme="@style/TransparentStatusBar"/>
+
 	</application>
 
 </manifest>

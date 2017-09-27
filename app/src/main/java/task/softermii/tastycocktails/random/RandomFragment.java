@@ -16,6 +16,7 @@
 
 package task.softermii.tastycocktails.random;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ import javax.inject.Inject;
 
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.TCApplication;
+import task.softermii.tastycocktails.cocktails.details.ImagePreviewActivity;
 import task.softermii.tastycocktails.cocktails.details.IngredientsAdapter;
 import task.softermii.tastycocktails.dagger.random.RandomCocktailModule;
 
@@ -75,12 +77,7 @@ public class RandomFragment extends Fragment {
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 		if (savedInstanceState == null) {
-			mAdapter = new IngredientsAdapter();
-			mAdapter.setFavoriteUpdateListener(fav -> {
-				isFavorite = fav;
-				updateFavorite(isFavorite);
-			});
-			mRecyclerView.setAdapter(mAdapter);
+			initAdapter();
 
 			mPresenter.bindView(mAdapter);
 			mPresenter.loadRandomDrink();
@@ -122,17 +119,28 @@ public class RandomFragment extends Fragment {
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
 			updateFavorite(isFavorite);
-			if (mAdapter == null) {
-				mAdapter = new IngredientsAdapter();
-				mRecyclerView.setAdapter(mAdapter);
-			}
-			mAdapter.setFavoriteUpdateListener(fav -> {
-				isFavorite = fav;
-				updateFavorite(isFavorite);
-			});
+			initAdapter();
+
 			mPresenter.bindView(mAdapter);
 			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
 		}
+	}
+
+	private void initAdapter() {
+		if (mAdapter == null) {
+			mAdapter = new IngredientsAdapter();
+			mRecyclerView.setAdapter(mAdapter);
+		}
+		mAdapter.setFavoriteUpdateListener(fav -> {
+			isFavorite = fav;
+			updateFavorite(isFavorite);
+		});
+
+		mAdapter.setOnImageClickListener(path -> {
+			Intent intent = new Intent(getContext(), ImagePreviewActivity.class);
+			intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, path);
+			startActivity(intent);
+		});
 	}
 
 	@Override

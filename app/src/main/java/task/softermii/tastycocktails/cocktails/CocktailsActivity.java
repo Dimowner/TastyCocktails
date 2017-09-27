@@ -29,6 +29,10 @@ import task.softermii.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
+	//TODO: Add dark circle mask around buttons in details to make them visible
+	//TODO: Restyle lists
+	//TODO: Add dialog that recommends like app in playstore
+	//TODO: Add cocktails wall where every one can share photo with cocktail (with moderation)
 	//TODO: Add button favorite in lists
 	//TODO: Instantly update lists when add/remove from favorites.
 	//TODO: Combine Cocktail Details and RandomCocktail in one Fragment

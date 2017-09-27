@@ -23,6 +23,8 @@
 	<color name="load_screen_gradient_dark">#b62541</color>
 	<color name="load_screen_gradient_light">#f11842</color>
 
+	<color name="image_preview_bg">#252525</color>
+
 	<color name="text_primary_dark">#de000000</color> <!-- 87% -->
 	<color name="text_secondary_dark">#8a000000</color> <!-- 54% -->
 	<color name="text_tertiary_dark">#61000000</color> <!-- 38% -->

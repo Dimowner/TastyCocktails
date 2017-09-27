@@ -32,12 +32,15 @@ ext.versions = [
 		//Timber
 		timber			  : "4.5.1",
 
+		//PhotoView
+		photoView		  : "2.0.0",
+
 		logInterceptor	  : "3.8.1"
 ]
 
 def versionMajor = 0
 def versionMinor = 5
-def versionPatch = 2
+def versionPatch = 3
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -113,6 +116,9 @@ dependencies {
 
 	//Timber
 	compile "com.jakewharton.timber:timber:$versions.timber"
+
+	//PhotoView
+	compile "com.github.chrisbanes:PhotoView:$versions.photoView"
 
 	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
 		exclude group: 'com.android.support', module: 'support-annotations'

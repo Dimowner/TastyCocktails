@@ -16,6 +16,7 @@
 
 package task.softermii.tastycocktails.cocktails.details;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -79,15 +80,7 @@ public class DetailsActivity extends AppCompatActivity {
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
 		if (savedInstanceState == null) {
-			mAdapter = new IngredientsAdapter();
-			mAdapter.setItemClickListener((view1, position) ->
-					startIngredientDetailsActivity(mAdapter.getItem(position), view1));
-//			mAdapter.setAnimationListener(this::supportStartPostponedEnterTransition);
-			mAdapter.setFavoriteUpdateListener(fav -> {
-				isFavorite = fav;
-				updateFavorite(fav);
-			});
-			mRecyclerView.setAdapter(mAdapter);
+			initAdapter();
 
 			mPresenter.bindView(mAdapter);
 
@@ -120,6 +113,26 @@ public class DetailsActivity extends AppCompatActivity {
 	private void startIngredientDetailsActivity(IngredientItem item, View view1) {
 		Timber.v("start ingredient details activity here");
 		//TODO: start ingredient details activity here
+	}
+
+	private void initAdapter() {
+		if (mAdapter == null) {
+			mAdapter = new IngredientsAdapter();
+			mRecyclerView.setAdapter(mAdapter);
+		}
+
+		mAdapter.setItemClickListener((view1, position) ->
+				startIngredientDetailsActivity(mAdapter.getItem(position), view1));
+		mAdapter.setFavoriteUpdateListener(fav -> {
+			isFavorite = fav;
+			updateFavorite(fav);
+		});
+
+		mAdapter.setOnImageClickListener(path -> {
+			Intent intent = new Intent(getApplicationContext(), ImagePreviewActivity.class);
+			intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, path);
+			startActivity(intent);
+		});
 	}
 
 //	@Override
@@ -168,17 +181,9 @@ public class DetailsActivity extends AppCompatActivity {
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
 			updateFavorite(isFavorite);
-			if (mAdapter == null) {
-				mAdapter = new IngredientsAdapter();
-				mRecyclerView.setAdapter(mAdapter);
-			}
+
+			initAdapter();
 			mPresenter.bindView(mAdapter);
-			mAdapter.setItemClickListener((view1, position) ->
-					startIngredientDetailsActivity(mAdapter.getItem(position), view1));
-			mAdapter.setFavoriteUpdateListener(fav -> {
-				isFavorite = fav;
-				updateFavorite(fav);
-			});
 			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
 		}
 	}

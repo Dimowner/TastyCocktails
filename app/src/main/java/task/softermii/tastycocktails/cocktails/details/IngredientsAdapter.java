@@ -69,6 +69,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	private FavoriteUpdateListener favoriteUpdateListener;
 
+	private OnImageClickListener onImageClickListener;
+
 	public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 		final View view;
 		final ImageView ivImage;
@@ -193,6 +195,11 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	private void displayImage(HeaderViewHolder header) {
 		if (imageUrl != null && !imageUrl.isEmpty()) {
 			header.ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			header.ivImage.setOnClickListener(view -> {
+				if (onImageClickListener != null) {
+					onImageClickListener.onImageClick(imageUrl);
+				}
+			});
 			Glide.with(header.ivImage.getContext())
 					.load(imageUrl)
 					.listener(new RequestListener<Drawable>() {
@@ -338,6 +345,10 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		this.favoriteUpdateListener = favoriteUpdateListener;
 	}
 
+	public void setOnImageClickListener(OnImageClickListener onImageClickListener) {
+		this.onImageClickListener = onImageClickListener;
+	}
+
 	/**
 	 * Save adapters state
 	 * @return adapter state.
@@ -422,4 +433,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		void onFavoriteUpdated(boolean fav);
 	}
 
+	public interface OnImageClickListener {
+		void onImageClick(String path);
+	}
 }
