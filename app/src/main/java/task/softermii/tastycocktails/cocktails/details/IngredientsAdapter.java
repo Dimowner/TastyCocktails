@@ -17,6 +17,7 @@
 package task.softermii.tastycocktails.cocktails.details;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -24,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.AbsSavedState;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +46,9 @@ import java.util.List;
 
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.util.AndroidUtils;
+import task.softermii.tastycocktails.util.ColorUtils;
+import task.softermii.tastycocktails.util.FileUtil;
+import timber.log.Timber;
 
 /**
  * Created on 14.08.2017.
@@ -70,6 +75,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	private FavoriteUpdateListener favoriteUpdateListener;
 
 	private OnImageClickListener onImageClickListener;
+
+	private OnCheckImageColorListener onCheckImageColorListener;
 
 	public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 		final View view;
@@ -210,6 +217,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 								animationListener.onAnimation();
 							}
 							hideProgress();
+							header.ivImage.setBackgroundColor(ContextCompat.getColor(header.ivImage.getContext(), R.color.colorPrimary));
+							header.ivImage.setImageResource(R.drawable.no_image);
 							header.txtError.setVisibility(View.VISIBLE);
 							return false;
 						}
@@ -220,6 +229,32 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 							if (animationListener != null) {
 								animationListener.onAnimation();
 							}
+							Bitmap bitmap = FileUtil.drawableToBitmap(resource);
+
+							Palette.from(bitmap)
+									.maximumColorCount(3)
+									.clearFilters() /* by default palette ignore certain hues
+                        (e.g. pure black/white) but we don't want this. */
+									.setRegion(0, 0, bitmap.getWidth() - 1, 150) /* - 1 to work around
+                        https://code.google.com/p/android/issues/detail?id=191013 */
+									.generate(palette -> {
+										boolean isDark;
+										@ColorUtils.Lightness int lightness = ColorUtils.isDark(palette);
+										if (lightness == ColorUtils.LIGHTNESS_UNKNOWN) {
+											isDark = ColorUtils.isDark(bitmap, bitmap.getWidth() / 2, 0);
+										} else {
+											isDark = lightness == ColorUtils.IS_DARK;
+										}
+										if (onCheckImageColorListener != null) {
+											onCheckImageColorListener.onImageColorChecked(isDark);
+										}
+
+										if (!isDark) { // make back icon dark on light images
+											Timber.d("Image is dark");
+										} else {
+											Timber.d("Image is light");
+										}
+									});
 							hideProgress();
 							return false;
 						}
@@ -229,8 +264,6 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			if (animationListener != null) {
 				animationListener.onAnimation();
 			}
-			header.ivImage.setBackgroundColor(ContextCompat.getColor(header.ivImage.getContext(), R.color.colorPrimary));
-			header.ivImage.setImageResource(R.drawable.no_image);
 			hideProgress();
 		}
 	}
@@ -349,6 +382,10 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		this.onImageClickListener = onImageClickListener;
 	}
 
+	public void setOnCheckImageColorListener(OnCheckImageColorListener onCheckImageColorListener) {
+		this.onCheckImageColorListener = onCheckImageColorListener;
+	}
+
 	/**
 	 * Save adapters state
 	 * @return adapter state.
@@ -435,5 +472,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	public interface OnImageClickListener {
 		void onImageClick(String path);
+	}
+
+	public interface OnCheckImageColorListener {
+		void onImageColorChecked(boolean isDark);
 	}
 }

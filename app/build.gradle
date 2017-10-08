@@ -40,7 +40,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 5
-def versionPatch = 3
+def versionPatch = 4
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -80,6 +80,7 @@ dependencies {
 	compile "com.android.support:design:$versions.support"
 	compile "com.android.support:support-annotations:$versions.support"
 	compile "com.android.support:support-dynamic-animation:$versions.support"
+	compile "com.android.support:palette-v7:$versions.support"
 
 	// Android: Components
 	compile "com.android.support.constraint:constraint-layout:$versions.constraintlayout"

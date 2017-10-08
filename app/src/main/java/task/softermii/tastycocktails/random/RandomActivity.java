@@ -52,6 +52,7 @@ public class RandomActivity extends BaseActivity {
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
 			fragment = new RandomFragment();
+			fragment.setActivityToolbar(mActionBarToolbar);
 			manager
 					.beginTransaction()
 					.add(R.id.fragment, fragment, "random_fragment")

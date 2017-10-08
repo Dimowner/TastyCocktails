@@ -37,7 +37,6 @@ public class CocktailsActivity extends BaseActivity {
 	//TODO: Instantly update lists when add/remove from favorites.
 	//TODO: Combine Cocktail Details and RandomCocktail in one Fragment
 	//TODO: Add mapper and replace Drink model by more readable POJO for using presenters and UI
-	//TODO: Open image on click it
 	//TODO: Use LiveData with Local database
 	//TODO: Store images in local cache storage
 	//TODO: Add Tests: Unit tests, Instrumentation tests, UI tests

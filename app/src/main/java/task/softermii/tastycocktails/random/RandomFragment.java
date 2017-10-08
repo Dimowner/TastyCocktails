@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +54,8 @@ public class RandomFragment extends Fragment {
 
 	private MenuItem itemFavorite;
 	private boolean isFavorite = false;
+	private boolean isImageDark = true;
+	private Toolbar activityToolbar;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,6 +111,7 @@ public class RandomFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("is_favorite", isFavorite);
+		outState.putBoolean("is_image_dark", isImageDark);
 		if (mAdapter != null) {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
 		}
@@ -118,6 +122,7 @@ public class RandomFragment extends Fragment {
 		super.onViewStateRestored(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
+			isImageDark = savedInstanceState.getBoolean("is_image_dark");
 			updateFavorite(isFavorite);
 			initAdapter();
 
@@ -141,6 +146,16 @@ public class RandomFragment extends Fragment {
 			intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, path);
 			startActivity(intent);
 		});
+
+		mAdapter.setOnCheckImageColorListener(isDark -> {
+			isImageDark = isDark;
+			updateFavorite(isFavorite);
+			if (isDark) {
+				activityToolbar.setNavigationIcon(R.drawable.menu);
+			} else {
+				activityToolbar.setNavigationIcon(R.drawable.menu_black);
+			}
+		});
 	}
 
 	@Override
@@ -152,7 +167,15 @@ public class RandomFragment extends Fragment {
 
 	private void updateFavorite(boolean fav) {
 		if (itemFavorite != null) {
-			itemFavorite.setIcon(fav ? R.drawable.heart : R.drawable.heart_outline);
+			if (isImageDark) {
+				itemFavorite.setIcon(fav ? R.drawable.heart : R.drawable.heart_outline);
+			} else {
+				itemFavorite.setIcon(fav ? R.drawable.heart_black : R.drawable.heart_outline_black);
+			}
 		}
+	}
+
+	public void setActivityToolbar(Toolbar activityToolbar) {
+		this.activityToolbar = activityToolbar;
 	}
 }

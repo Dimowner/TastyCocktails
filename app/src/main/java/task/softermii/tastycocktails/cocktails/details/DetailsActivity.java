@@ -58,6 +58,7 @@ public class DetailsActivity extends AppCompatActivity {
 
 	private MenuItem itemFavorite;
 	private boolean isFavorite = false;
+	private boolean isImageDark = true;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,6 +134,16 @@ public class DetailsActivity extends AppCompatActivity {
 			intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, path);
 			startActivity(intent);
 		});
+
+		mAdapter.setOnCheckImageColorListener(isDark -> {
+			isImageDark = isDark;
+			updateFavorite(isFavorite);
+			if (isDark) {
+				toolbar.setNavigationIcon(R.drawable.arrow_left);
+			} else {
+				toolbar.setNavigationIcon(R.drawable.arrow_left_black);
+			}
+		});
 	}
 
 //	@Override
@@ -173,6 +184,7 @@ public class DetailsActivity extends AppCompatActivity {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
 		}
 		outState.putBoolean("is_favorite", isFavorite);
+		outState.putBoolean("is_image_dark", isImageDark);
 	}
 
 	@Override
@@ -180,6 +192,7 @@ public class DetailsActivity extends AppCompatActivity {
 		super.onRestoreInstanceState(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
+			isImageDark = savedInstanceState.getBoolean("is_image_dark");
 			updateFavorite(isFavorite);
 
 			initAdapter();
@@ -190,7 +203,11 @@ public class DetailsActivity extends AppCompatActivity {
 
 	private void updateFavorite(boolean fav) {
 		if (itemFavorite != null) {
-			itemFavorite.setIcon(fav ? R.drawable.heart : R.drawable.heart_outline);
+			if (isImageDark) {
+				itemFavorite.setIcon(fav ? R.drawable.heart : R.drawable.heart_outline);
+			} else {
+				itemFavorite.setIcon(fav ? R.drawable.heart_black : R.drawable.heart_outline_black);
+			}
 		}
 	}
 }
