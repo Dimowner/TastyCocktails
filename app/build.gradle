@@ -5,7 +5,7 @@ ext.versions = [
 		// Android
 		targetSdkVersion : 26,
 		minSdkVersion    : 16,
-		buildtools       : "26.0.1",
+		buildtools       : "26.0.2",
 		support          : "26.1.0",
 
 		// Components
@@ -39,8 +39,8 @@ ext.versions = [
 ]
 
 def versionMajor = 0
-def versionMinor = 5
-def versionPatch = 4
+def versionMinor = 6
+def versionPatch = 0
 
 android {
 	compileSdkVersion versions.targetSdkVersion

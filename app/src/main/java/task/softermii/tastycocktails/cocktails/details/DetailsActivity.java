@@ -57,6 +57,8 @@ public class DetailsActivity extends AppCompatActivity {
 	private IngredientsAdapter mAdapter;
 
 	private MenuItem itemFavorite;
+
+	//TODO: move this into presenter
 	private boolean isFavorite = false;
 	private boolean isImageDark = true;
 
@@ -93,7 +95,6 @@ public class DetailsActivity extends AppCompatActivity {
 
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setTitle("");
 		}
 
@@ -102,7 +103,7 @@ public class DetailsActivity extends AppCompatActivity {
 			toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
 		}
 
-		AnimationUtil.physBasedRevealAnimation(toolbar.getChildAt(0));
+//		AnimationUtil.physBasedRevealAnimation(toolbar.getChildAt(0));
 	}
 
 	@Override
@@ -138,6 +139,9 @@ public class DetailsActivity extends AppCompatActivity {
 		mAdapter.setOnCheckImageColorListener(isDark -> {
 			isImageDark = isDark;
 			updateFavorite(isFavorite);
+			if (getSupportActionBar() != null) {
+				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			}
 			if (isDark) {
 				toolbar.setNavigationIcon(R.drawable.arrow_left);
 			} else {

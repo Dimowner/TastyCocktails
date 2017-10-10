@@ -196,6 +196,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		}
 		if (headerViewHolder != null) {
 			displayImage(headerViewHolder);
+		} else {
+			hideProgress();
 		}
 	}
 
@@ -228,6 +230,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 																 DataSource dataSource, boolean isFirstResource) {
 							if (animationListener != null) {
 								animationListener.onAnimation();
+							}
+							if (header.txtError.getVisibility() == View.VISIBLE) {
+								header.txtError.setVisibility(View.GONE);
 							}
 							Bitmap bitmap = FileUtil.drawableToBitmap(resource);
 
@@ -264,7 +269,6 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			if (animationListener != null) {
 				animationListener.onAnimation();
 			}
-			hideProgress();
 		}
 	}
 

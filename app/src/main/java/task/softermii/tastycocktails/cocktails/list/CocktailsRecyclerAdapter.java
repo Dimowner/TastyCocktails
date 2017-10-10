@@ -17,8 +17,10 @@
 package task.softermii.tastycocktails.cocktails.list;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.view.AbsSavedState;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +31,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,6 +93,17 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 			Glide.with(holder.view.getContext())
 					.load(mShowingData.get(pos).getAvatar_url())
 					.apply(RequestOptions.circleCropTransform())
+					.listener(new RequestListener<Drawable>() {
+						@Override public boolean onLoadFailed(@Nullable GlideException e, Object model,
+															 Target<Drawable> target, boolean isFirstResource) {
+							holder.image.setImageResource(R.drawable.no_image);
+							return false;
+						}
+						@Override public boolean onResourceReady(Drawable resource, Object model,
+										Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+							return false;
+						}
+					})
 					.into(holder.image);
 		} else {
 			holder.image.setImageResource(R.drawable.no_image);

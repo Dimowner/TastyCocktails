@@ -8,19 +8,12 @@ public class Prefs {
 	private static final String PREF_NAME = "task.softermii.tastycocktails.data.Prefs";
 
 	private static final String PREF_KEY_IS_FIRST_RUN = "is_first_run";
+	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
 
-	private static Prefs prefs;
 	private SharedPreferences sharedPreferences;
 
-	private Prefs(Context context) {
+	public Prefs(Context context) {
 		sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-	}
-
-	public static Prefs getInstance(Context context) {
-		if (prefs == null) {
-			prefs = new Prefs(context);
-		}
-		return prefs;
 	}
 
 	public boolean isFirstRun() {
@@ -30,6 +23,16 @@ public class Prefs {
 	public void firstRunExecuted() {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putBoolean(PREF_KEY_IS_FIRST_RUN, false);
+		editor.apply();
+	}
+
+	public String getLastSearchString() {
+		return sharedPreferences.getString(PREF_KEY_LAST_SEARCH_STR, null);
+	}
+
+	public void setLastSearchString(String str) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(PREF_KEY_LAST_SEARCH_STR, str);
 		editor.apply();
 	}
 }

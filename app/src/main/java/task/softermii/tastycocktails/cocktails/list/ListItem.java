@@ -82,4 +82,14 @@ public class ListItem implements Parcelable {
 		}
 	};
 	//----- END Parcelable implementation ----------
+
+	@Override
+	public String toString() {
+		return "ListItem{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
+				", avatar_url='" + avatar_url + '\'' +
+				'}';
+	}
 }

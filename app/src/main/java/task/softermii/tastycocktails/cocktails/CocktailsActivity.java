@@ -29,15 +29,19 @@ import task.softermii.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
-	//TODO: Add dark circle mask around buttons in details to make them visible
+	//TODO: Show drink category and in lists too
+	//TODO: Add filters by Ingredients, glass, alcoholic non, category
+	//TODO: Add button favorite in lists
+	//TODO: When empty favorites and last search show empty message
+	//TODO: Show progress when first run random activity
+	//TODO: Fix lags when switch activities. maybe move heavy code on post create
+	//TODO: Do not show buttons before image loaded in details and random
 	//TODO: Restyle lists
 	//TODO: Add dialog that recommends like app in playstore
 	//TODO: Add cocktails wall where every one can share photo with cocktail (with moderation)
-	//TODO: Add button favorite in lists
 	//TODO: Instantly update lists when add/remove from favorites.
 	//TODO: Combine Cocktail Details and RandomCocktail in one Fragment
 	//TODO: Add mapper and replace Drink model by more readable POJO for using presenters and UI
-	//TODO: Use LiveData with Local database
 	//TODO: Store images in local cache storage
 	//TODO: Add Tests: Unit tests, Instrumentation tests, UI tests
 	//TODO: Add Ingredient details

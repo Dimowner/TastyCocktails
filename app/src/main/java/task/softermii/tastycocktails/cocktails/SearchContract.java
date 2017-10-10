@@ -38,7 +38,7 @@ public interface SearchContract {
 
 		void cancelSearch();
 
-		void loadLastSearch();
+		void loadLastSearch(String query);
 
 		void loadFavorites();
 	}

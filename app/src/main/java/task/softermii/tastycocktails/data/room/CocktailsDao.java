@@ -20,9 +20,11 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import task.softermii.tastycocktails.data.model.Drink;
 
@@ -37,13 +39,22 @@ public interface CocktailsDao {
 	Single<List<Drink>> getAll();
 
 	@Query("SELECT * FROM drinks WHERE isFavorite <> 1")
-	Single<List<Drink>> getLastSearch();
+	Flowable<List<Drink>> getLastSearch();
 
-	@Query("SELECT * FROM drinks WHERE isFavorite = 1")
-	Single<List<Drink>> getFavorites();
+	@Query("SELECT * FROM drinks WHERE UPPER(strDrink) LIKE UPPER(:search)")
+	Flowable<List<Drink>> searchDrinksRx(String search);
+
+	@Query("SELECT * FROM drinks WHERE UPPER(strDrink) LIKE UPPER(:search)")
+	List<Drink> searchDrinks(String search);
+
+	@Query("SELECT * FROM drinks WHERE isFavorite = 1 ORDER BY strDrink")
+	Flowable<List<Drink>> getFavorites();
 
 	@Query("SELECT * FROM drinks WHERE idDrink = :id")
-	Single<Drink> getCocktail(long id);
+	Single<Drink> getDrinkRx(long id);
+
+	@Query("SELECT * FROM drinks WHERE idDrink = :id")
+	Drink getDrink(long id);
 
 	@Query("UPDATE drinks SET isFavorite = 1 WHERE idDrink = :id")
 	void addToFavorites(long id);
@@ -62,6 +73,12 @@ public interface CocktailsDao {
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insertAll(Drink... items);
+
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	void insertDrink(Drink item);
+
+	@Update
+	void updateDrink(Drink item);
 
 	@Query("DELETE FROM drinks")
 	void deleteAll();

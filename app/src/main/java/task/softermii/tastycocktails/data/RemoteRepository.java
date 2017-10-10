@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
@@ -84,17 +85,17 @@ public class RemoteRepository implements RepositoryContract {
 	}
 
 	@Override
-	public Single<List<Drink>> getLastSearch() {
+	public Flowable<List<Drink>> getLastSearch(String query) {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
 
 	@Override
-	public Single<List<Drink>> getFavorites() {
+	public Flowable<List<Drink>> getFavorites() {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
 
 	@Override
-	public Completable addToFavorites(long id) {
+	public Completable addToFavorites(Drink drink) {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
 

@@ -71,6 +71,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	@Inject
 	SearchContract.UserActionsListener mPresenter;
 
+	@Inject
 	Prefs prefs;
 
 	public static SearchFragment newInstance(int fragmentType) {
@@ -88,8 +89,6 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 		TCApplication.get(getContext()).applicationComponent()
 				.plus(new CocktailsModule(this)).injectCocktailsSearch(this);
-
-		prefs = Prefs.getInstance(getContext());
 
 		if (getArguments().containsKey(EXTRAS_KEY_TYPE)) {
 			fragmentType = getArguments().getInt(EXTRAS_KEY_TYPE);
@@ -126,7 +125,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 					startDetailsActivity(mAdapter.getItem(position), view1));
 			mRecyclerView.setAdapter(mAdapter);
 			if (fragmentType == TYPE_NORMAL) {
-				mPresenter.loadLastSearch();
+				mPresenter.loadLastSearch(prefs.getLastSearchString());
 			} else if (fragmentType == TYPE_FAVORITES) {
 				mPresenter.loadFavorites();
 			} else {
@@ -170,6 +169,9 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				if (fragmentType == TYPE_NORMAL) {
+					//Save search query string
+					prefs.setLastSearchString(query);
+
 					mPresenter.startSearch(query);
 				}
 				return false;

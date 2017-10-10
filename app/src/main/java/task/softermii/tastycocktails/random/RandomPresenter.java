@@ -89,11 +89,11 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.isFavorite());
 						}, Timber::e);
 		} else {
-			repository.addToFavorites(drink.getIdDrink())
+			repository.addToFavorites(drink)
 					.subscribeOn(Schedulers.io())
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(() -> {
-							drink.inverseFavorite();
+//							drink.inverseFavorite(); //removed intentionally
 							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.isFavorite());
 						}, Timber::e);
 		}

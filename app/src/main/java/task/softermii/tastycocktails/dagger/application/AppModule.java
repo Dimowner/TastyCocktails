@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import task.softermii.tastycocktails.data.LocalRepository;
+import task.softermii.tastycocktails.data.Prefs;
 import task.softermii.tastycocktails.data.RemoteRepository;
 import task.softermii.tastycocktails.data.Repository;
 import task.softermii.tastycocktails.data.room.AppDatabase;
@@ -44,6 +45,12 @@ public class AppModule {
 
 	@Provides
 	@Singleton
+	Prefs providePrefs(Context context) {
+		return new Prefs(context);
+	}
+
+	@Provides
+	@Singleton
 	LocalRepository provideLocalRepository(Context context) {
 		return new LocalRepository(context);
 	}
@@ -59,7 +66,7 @@ public class AppModule {
 	Repository provideRepository(LocalRepository localRepository,
 										  RemoteRepository remoteRepository) {
 		//Remote repo passes last query result into Local repo for saving.
-		remoteRepository.setOnLoadListener(localRepository::rewriteDrinks);
+		remoteRepository.setOnLoadListener(localRepository::cacheIntoLocalDatabase);
 
 		return new Repository(localRepository, remoteRepository);
 	}

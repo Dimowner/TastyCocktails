@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import task.softermii.tastycocktails.data.model.Drink;
 
@@ -34,8 +35,8 @@ public interface RepositoryContract {
 	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
 	Single<Drink> getRandomCocktail();
 	Single<Drink> getCocktail(long id);
-	Single<List<Drink>> getLastSearch();
-	Single<List<Drink>> getFavorites();
-	Completable addToFavorites(long id);
+	Flowable<List<Drink>> getLastSearch(String query);
+	Flowable<List<Drink>> getFavorites();
+	Completable addToFavorites(Drink drink);
 	Completable removeFromFavorites(long id);
 }

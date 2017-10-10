@@ -74,6 +74,9 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	@Override
 	public void startSearch(String search) {
 		view.showProgress();
+		if (compositeDisposable.size() > 0) {
+			compositeDisposable.clear();
+		}
 		compositeDisposable.add(
 				repository.searchCocktailsByName(search)
 						.map(this::convertModel)
@@ -105,10 +108,10 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	}
 
 	@Override
-	public void loadLastSearch() {
+	public void loadLastSearch(String query) {
 		view.showProgress();
 		compositeDisposable.add(
-				repository.getLastSearch()
+				repository.getLastSearch(query)
 						.map(this::convertModel)
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
