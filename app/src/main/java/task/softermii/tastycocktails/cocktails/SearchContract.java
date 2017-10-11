@@ -18,6 +18,7 @@ package task.softermii.tastycocktails.cocktails;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import task.softermii.tastycocktails.Contract;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 
@@ -41,5 +42,7 @@ public interface SearchContract {
 		void loadLastSearch(String query);
 
 		void loadFavorites();
+
+		Completable reverseFavorite(long id);
 	}
 }

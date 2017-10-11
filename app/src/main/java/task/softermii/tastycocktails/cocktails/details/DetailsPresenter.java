@@ -88,7 +88,7 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 	}
 
 	@Override
-	public void addToFavorites() {
+	public void reverseFavorite() {
 		if (drink.isFavorite()) {
 			repository.removeFromFavorites(drink.getIdDrink())
 					.subscribeOn(Schedulers.io())

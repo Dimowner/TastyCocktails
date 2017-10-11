@@ -16,13 +16,11 @@
 
 package task.softermii.tastycocktails.cocktails.list;
 
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.AbsSavedState;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,10 +55,13 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 
 	private ItemClickListener itemClickListener;
 
+	private OnFavoriteClickListener onFavoriteClickListener;
+
 	class ItemViewHolder extends RecyclerView.ViewHolder {
 		TextView name;
  		TextView description;
 		ImageView image;
+		ImageView btnFev;
  		View view;
 
 		ItemViewHolder(View itemView) {
@@ -69,6 +70,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 				this.name = itemView.findViewById(R.id.list_item_name);
 				this.description = itemView.findViewById(R.id.list_item_description);
 				this.image = itemView.findViewById(R.id.list_item_image);
+				this.btnFev = itemView.findViewById(R.id.list_item_btn_favorite);
 			}
  	}
 
@@ -109,17 +111,30 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 			holder.image.setImageResource(R.drawable.no_image);
 		}
 
+		holder.btnFev.setOnClickListener(v -> {
+			if (onFavoriteClickListener != null) {
+				onFavoriteClickListener.onFavoriteClick(
+						holder.btnFev, pos, (int) mShowingData.get(pos).getId(), -1);
+			}
+		});
+
+		if (mShowingData.get(holder.getAdapterPosition()).isFavorite()) {
+			holder.btnFev.setImageResource(R.drawable.heart_grey_pressed);
+		} else {
+			holder.btnFev.setImageResource(R.drawable.heart_outline_grey);
+		}
+
 		holder.view.setOnClickListener(v -> {
 			if (itemClickListener != null) {
 				itemClickListener.onItemClick(v, holder.getAdapterPosition());
 			}
 		});
 
-		//Set transition names
-		Resources res = holder.view.getResources();
-		ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
-		ViewCompat.setTransitionName(holder.description, res.getString(R.string.list_item_content_transition));
-		ViewCompat.setTransitionName(holder.image, res.getString(R.string.list_item_image_transition));
+//		//Set transition names
+//		Resources res = holder.view.getResources();
+//		ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
+//		ViewCompat.setTransitionName(holder.description, res.getString(R.string.list_item_content_transition));
+//		ViewCompat.setTransitionName(holder.image, res.getString(R.string.list_item_image_transition));
 	}
 
 	@Override
@@ -175,6 +190,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 
 	public void setItemClickListener(ItemClickListener itemClickListener) {
 		this.itemClickListener = itemClickListener;
+	}
+
+	public void setOnFavoriteClickListener(OnFavoriteClickListener onFavoriteClickListener) {
+		this.onFavoriteClickListener = onFavoriteClickListener;
 	}
 
 	/**
@@ -236,5 +255,9 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 
 	public interface ItemClickListener{
 		void onItemClick(View view, int position);
+	}
+
+	public interface OnFavoriteClickListener {
+		void onFavoriteClick(ImageView view, int position, int id, int action);
 	}
 }

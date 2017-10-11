@@ -20,16 +20,16 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import task.softermii.tastycocktails.ModelMapper;
 import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.data.RepositoryContract;
-import task.softermii.tastycocktails.data.model.Drink;
 import timber.log.Timber;
 
 /**
@@ -79,7 +79,7 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 		}
 		compositeDisposable.add(
 				repository.searchCocktailsByName(search)
-						.map(this::convertModel)
+						.map(ModelMapper::drinksToListItems)
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(this::displayData, this::handleError));
 	}
@@ -112,7 +112,7 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 		view.showProgress();
 		compositeDisposable.add(
 				repository.getLastSearch(query)
-						.map(this::convertModel)
+						.map(ModelMapper::drinksToListItems)
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(this::displayData, this::handleError));
@@ -123,18 +123,14 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 		view.showProgress();
 		compositeDisposable.add(
 				repository.getFavorites()
-						.map(this::convertModel)
+						.map(ModelMapper::drinksToListItems)
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(this::displayData, this::handleError));
 	}
 
-	private List<ListItem> convertModel(List<Drink> drinks) {
-		List<ListItem> list = new ArrayList<>(drinks.size());
-		for (int i = 0; i < drinks.size(); i++) {
-			Drink drink = drinks.get(i);
-			list.add(new ListItem(drink.getIdDrink(), drink.getStrDrink(), drink.getStrInstructions(), drink.getStrDrinkThumb()));
-		}
-		return list;
+	@Override
+	public Completable reverseFavorite(long id) {
+		return repository.reverseFavorite(id);
 	}
 }

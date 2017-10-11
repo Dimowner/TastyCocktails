@@ -102,7 +102,7 @@ public class RandomFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_add_to_favorites) {
-			mPresenter.addToFavorites();
+			mPresenter.reverseFavorite();
 		}
 		return super.onOptionsItemSelected(item);
 	}

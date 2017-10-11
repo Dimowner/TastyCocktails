@@ -29,10 +29,9 @@ import task.softermii.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
+	//TODO: When empty favorites and last search show empty message
 	//TODO: Show drink category and in lists too
 	//TODO: Add filters by Ingredients, glass, alcoholic non, category
-	//TODO: Add button favorite in lists
-	//TODO: When empty favorites and last search show empty message
 	//TODO: Show progress when first run random activity
 	//TODO: Fix lags when switch activities. maybe move heavy code on post create
 	//TODO: Do not show buttons before image loaded in details and random

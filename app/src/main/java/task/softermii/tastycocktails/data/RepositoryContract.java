@@ -39,4 +39,5 @@ public interface RepositoryContract {
 	Flowable<List<Drink>> getFavorites();
 	Completable addToFavorites(Drink drink);
 	Completable removeFromFavorites(long id);
+	Completable reverseFavorite(long id);
 }

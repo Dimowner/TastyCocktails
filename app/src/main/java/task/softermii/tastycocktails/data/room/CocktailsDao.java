@@ -71,6 +71,9 @@ public interface CocktailsDao {
 	@Query("SELECT Count(*) FROM drinks WHERE isFavorite = 1")
 	Single<Integer> getFavoritesRowCount();
 
+	@Query("UPDATE drinks SET isFavorite = NOT (SELECT isFavorite FROM drinks WHERE idDrink = :id) WHERE idDrink = :id")
+	void reverseFavorite(long id);
+
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insertAll(Drink... items);
 

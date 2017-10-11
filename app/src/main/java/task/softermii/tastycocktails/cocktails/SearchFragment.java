@@ -17,6 +17,7 @@
 package task.softermii.tastycocktails.cocktails;
 
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -36,9 +37,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.cocktails.details.DetailsActivity;
@@ -46,6 +50,7 @@ import task.softermii.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.dagger.cocktails.CocktailsModule;
 import task.softermii.tastycocktails.data.Prefs;
+import task.softermii.tastycocktails.util.AndroidUtils;
 import timber.log.Timber;
 
 /**
@@ -57,6 +62,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	public static final int TYPE_NORMAL = 1;
 	public static final int TYPE_FAVORITES = 2;
 	public static final String EXTRAS_KEY_TYPE = "search_fragment_type";
+
+	public static final int ADD_TO_FAVORITES_ANIMATION_DURATION = 400;
 
 	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 
@@ -123,6 +130,30 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			mAdapter = new CocktailsRecyclerAdapter();
 			mAdapter.setItemClickListener((view1, position) ->
 					startDetailsActivity(mAdapter.getItem(position), view1));
+			mAdapter.setOnFavoriteClickListener((view12, position, id, action) -> {
+				if (AndroidUtils.isAndroid5()) {
+					//Add or remove from favorites with animation
+					view12.setImageResource(R.drawable.avd_favorite_progress);
+					Animatable animatable = ((Animatable) view12.getDrawable());
+					animatable.start();
+					mPresenter.reverseFavorite(id)
+							.subscribeOn(Schedulers.io())
+							.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
+							.observeOn(AndroidSchedulers.mainThread())
+							.subscribe(animatable::stop,
+									throwable -> {
+										animatable.stop();
+										Timber.e("", throwable);
+									});
+				} else {
+					//Add or remove from favorites without animation
+					mPresenter.reverseFavorite(id)
+							.subscribeOn(Schedulers.io())
+							.observeOn(AndroidSchedulers.mainThread())
+							.subscribe(() -> {}, throwable -> Timber.e("", throwable));
+				}
+			});
+
 			mRecyclerView.setAdapter(mAdapter);
 			if (fragmentType == TYPE_NORMAL) {
 				mPresenter.loadLastSearch(prefs.getLastSearchString());

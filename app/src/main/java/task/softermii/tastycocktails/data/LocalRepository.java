@@ -119,6 +119,11 @@ public class LocalRepository implements RepositoryContract {
 		return Completable.fromAction(() -> getRepositoriesDao().removeFromFavorites(id));
 	}
 
+	@Override
+	public Completable reverseFavorite(long id) {
+		return Completable.fromAction(() -> getRepositoriesDao().reverseFavorite(id));
+	}
+
 	/**
 	 * Rewrite local cached Drinks
 	 * @param items new Drinks to save.

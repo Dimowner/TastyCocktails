@@ -79,7 +79,7 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 	}
 
 	@Override
-	public void addToFavorites() {
+	public void reverseFavorite() {
 		if (drink.isFavorite()) {
 			repository.removeFromFavorites(drink.getIdDrink())
 					.subscribeOn(Schedulers.io())

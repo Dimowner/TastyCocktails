@@ -28,12 +28,14 @@ public class ListItem implements Parcelable {
 	private final String name;
 	private final String description;
 	private final String avatar_url;
+	private final boolean isFavorite;
 
-	public ListItem(long id, String name, String description, String avatar_url) {
+	public ListItem(long id, String name, String description, String avatar_url, boolean isFavorite) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.avatar_url = avatar_url;
+		this.isFavorite = isFavorite;
 	}
 
 	public long getId() {
@@ -52,6 +54,10 @@ public class ListItem implements Parcelable {
 		return avatar_url;
 	}
 
+	public boolean isFavorite() {
+		return isFavorite;
+	}
+
 	//----- START Parcelable implementation ----------
 	private ListItem(Parcel in) {
 		id = in.readLong();
@@ -60,6 +66,9 @@ public class ListItem implements Parcelable {
 		name = data[0];
 		description = data[1];
 		avatar_url = data[2];
+		boolean[] bools = new boolean[1];
+		in.readBooleanArray(bools);
+		isFavorite = bools[0];
 	}
 
 	public int describeContents() {
@@ -69,6 +78,7 @@ public class ListItem implements Parcelable {
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeLong(id);
 		out.writeStringArray(new String[] {name, description, avatar_url});
+		out.writeBooleanArray(new boolean[] {isFavorite});
 	}
 
 	public static final Parcelable.Creator<ListItem> CREATOR
@@ -90,6 +100,7 @@ public class ListItem implements Parcelable {
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", avatar_url='" + avatar_url + '\'' +
+				", isFavorite=" + isFavorite +
 				'}';
 	}
 }

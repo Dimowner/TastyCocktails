@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import task.softermii.tastycocktails.cocktails.details.IngredientItem;
+import task.softermii.tastycocktails.cocktails.list.ListItem;
 import task.softermii.tastycocktails.data.model.Drink;
 import timber.log.Timber;
 
@@ -30,6 +31,24 @@ import timber.log.Timber;
 public class ModelMapper {
 
 	private ModelMapper() {
+	}
+
+	public static List<ListItem> drinksToListItems(List<Drink> drinks) {
+		List<ListItem> list = new ArrayList<>(drinks.size());
+		for (int i = 0; i < drinks.size(); i++) {
+			list.add(drinkToListItem(drinks.get(i)));
+		}
+		return list;
+	}
+
+	public static ListItem drinkToListItem(Drink drink) {
+		return new ListItem(
+				drink.getIdDrink(),
+				drink.getStrDrink(),
+				drink.getStrInstructions(),
+				drink.getStrDrinkThumb(),
+				drink.isFavorite()
+			);
 	}
 
 	public static List<IngredientItem> getIngredientsFromDrink(Drink drink) {

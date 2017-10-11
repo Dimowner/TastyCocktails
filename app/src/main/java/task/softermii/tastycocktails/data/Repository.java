@@ -83,4 +83,9 @@ public class Repository implements RepositoryContract {
 	public Completable removeFromFavorites(long id) {
 		return localRepository.removeFromFavorites(id);
 	}
+
+	@Override
+	public Completable reverseFavorite(long id) {
+		return localRepository.reverseFavorite(id);
+	}
 }

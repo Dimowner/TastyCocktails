@@ -39,6 +39,6 @@ public interface DetailsContract  {
 
 		void loadDrinkById(long id);
 
-		void addToFavorites();
+		void reverseFavorite();
 	}
 }

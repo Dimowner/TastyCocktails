@@ -35,7 +35,6 @@ import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.dagger.details.DetailsModule;
 import task.softermii.tastycocktails.util.AndroidUtils;
-import task.softermii.tastycocktails.util.AnimationUtil;
 import timber.log.Timber;
 
 /**
@@ -175,7 +174,7 @@ public class DetailsActivity extends AppCompatActivity {
 				}
 				break;
 			case R.id.action_add_to_favorites:
-				mPresenter.addToFavorites();
+				mPresenter.reverseFavorite();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
