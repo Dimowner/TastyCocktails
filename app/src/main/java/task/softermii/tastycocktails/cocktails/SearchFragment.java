@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -70,9 +71,11 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
 	private LinearLayout mWelcomePanel;
+	private TextView mTxtEmpty;
 
 	private CocktailsRecyclerAdapter mAdapter;
 
+	//TODO:remove this field
 	private int fragmentType = TYPE_NORMAL;
 
 	@Inject
@@ -113,6 +116,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		super.onViewCreated(view, savedInstanceState);
 
 		mWelcomePanel = view.findViewById(R.id.welcome_panel);
+		mTxtEmpty = view.findViewById(R.id.txt_empty);
 		mProgressBar = view.findViewById(R.id.progress);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
@@ -123,38 +127,13 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 		if (prefs.isFirstRun()) {
 			mWelcomePanel.setVisibility(View.VISIBLE);
+			mTxtEmpty.setVisibility(View.GONE);
 			mRecyclerView.setVisibility(View.GONE);
 		}
 
-		if (savedInstanceState == null) {
-			mAdapter = new CocktailsRecyclerAdapter();
-			mAdapter.setItemClickListener((view1, position) ->
-					startDetailsActivity(mAdapter.getItem(position), view1));
-			mAdapter.setOnFavoriteClickListener((view12, position, id, action) -> {
-				if (AndroidUtils.isAndroid5()) {
-					//Add or remove from favorites with animation
-					view12.setImageResource(R.drawable.avd_favorite_progress);
-					Animatable animatable = ((Animatable) view12.getDrawable());
-					animatable.start();
-					mPresenter.reverseFavorite(id)
-							.subscribeOn(Schedulers.io())
-							.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
-							.observeOn(AndroidSchedulers.mainThread())
-							.subscribe(animatable::stop,
-									throwable -> {
-										animatable.stop();
-										Timber.e("", throwable);
-									});
-				} else {
-					//Add or remove from favorites without animation
-					mPresenter.reverseFavorite(id)
-							.subscribeOn(Schedulers.io())
-							.observeOn(AndroidSchedulers.mainThread())
-							.subscribe(() -> {}, throwable -> Timber.e("", throwable));
-				}
-			});
+//		if (savedInstanceState == null) {
+			initAdapter();
 
-			mRecyclerView.setAdapter(mAdapter);
 			if (fragmentType == TYPE_NORMAL) {
 				mPresenter.loadLastSearch(prefs.getLastSearchString());
 			} else if (fragmentType == TYPE_FAVORITES) {
@@ -162,7 +141,39 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			} else {
 				Timber.e("Con't load data not correct fragment type!");
 			}
+//		}
+	}
+
+	private void initAdapter() {
+		if (mAdapter == null) {
+			mAdapter = new CocktailsRecyclerAdapter();
+			mRecyclerView.setAdapter(mAdapter);
 		}
+		mAdapter.setItemClickListener((view1, position) ->
+				startDetailsActivity(mAdapter.getItem(position), view1));
+		mAdapter.setOnFavoriteClickListener((view12, position, id, action) -> {
+			if (AndroidUtils.isAndroid5()) {
+				//Add or remove from favorites with animation
+				view12.setImageResource(R.drawable.avd_favorite_progress);
+				Animatable animatable = ((Animatable) view12.getDrawable());
+				animatable.start();
+				mPresenter.reverseFavorite(id)
+						.subscribeOn(Schedulers.io())
+						.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(animatable::stop,
+								throwable -> {
+									animatable.stop();
+									Timber.e("", throwable);
+								});
+			} else {
+				//Add or remove from favorites without animation
+				mPresenter.reverseFavorite(id)
+						.subscribeOn(Schedulers.io())
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(() -> {}, throwable -> Timber.e("", throwable));
+			}
+		});
 	}
 
 	private void startDetailsActivity(ListItem item, View view1) {
@@ -204,6 +215,9 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 					prefs.setLastSearchString(query);
 
 					mPresenter.startSearch(query);
+					if (prefs.isFirstRun()) {
+						prefs.firstRunExecuted();
+					}
 				}
 				return false;
 			}
@@ -235,22 +249,19 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mAdapter != null) {
-			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
-		}
+		outState.putInt("fragment_type", fragmentType);
+//		if (mAdapter != null) {
+//			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
+//		}
 	}
 
 	@Override
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
-			if (mAdapter == null) {
-				mAdapter = new CocktailsRecyclerAdapter();
-				mRecyclerView.setAdapter(mAdapter);
-			}
-			mAdapter.setItemClickListener((view1, position) ->
-					startDetailsActivity(mAdapter.getItem(position), view1));
-			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+			fragmentType = savedInstanceState.getInt("fragment_type");
+//			initAdapter();
+//			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
 		}
 	}
 
@@ -278,12 +289,23 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	@Override
 	public void displayData(List<ListItem> data) {
-		if (data.size() > 0 && prefs.isFirstRun()) {
-			prefs.firstRunExecuted();
-			mRecyclerView.setVisibility(View.VISIBLE);
+		if (prefs.isFirstRun()) {
+			mRecyclerView.setVisibility(View.GONE);
+			mWelcomePanel.setVisibility(View.VISIBLE);
+			mTxtEmpty.setVisibility(View.GONE);
+		} else if (data.size() == 0 && !prefs.isFirstRun()) {
+			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.GONE);
+			mTxtEmpty.setVisibility(View.VISIBLE);
+			if (fragmentType == TYPE_FAVORITES) {
+				mTxtEmpty.setText(R.string.no_favorites_drinks);
+			} else {
+				mTxtEmpty.setText(R.string.click_search_to_find_some_drink);
+			}
+		} else {
+			mRecyclerView.setVisibility(View.VISIBLE);
+			mTxtEmpty.setVisibility(View.GONE);
+			mAdapter.setData(data);
 		}
-
-		mAdapter.setData(data);
 	}
 }
