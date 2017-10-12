@@ -78,6 +78,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	private OnCheckImageColorListener onCheckImageColorListener;
 
+	private OnSnackBarListener onSnackBarListener;
+
 	public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 		final View view;
 		final ImageView ivImage;
@@ -278,6 +280,13 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	}
 
 	@Override
+	public void showSnackBar(String message) {
+		if (onSnackBarListener != null) {
+			onSnackBarListener.showSnackBar(message);
+		}
+	}
+
+	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		if (viewType == VIEW_TYPE_HEADER) {
 			View v = LayoutInflater.from(parent.getContext())
@@ -390,6 +399,10 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		this.onCheckImageColorListener = onCheckImageColorListener;
 	}
 
+	public void setOnSnackBarListener(OnSnackBarListener onSnackBarListener) {
+		this.onSnackBarListener = onSnackBarListener;
+	}
+
 	/**
 	 * Save adapters state
 	 * @return adapter state.
@@ -480,5 +493,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	public interface OnCheckImageColorListener {
 		void onImageColorChecked(boolean isDark);
+	}
+
+	public interface OnSnackBarListener {
+		void showSnackBar(String message);
 	}
 }

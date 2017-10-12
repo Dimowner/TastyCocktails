@@ -19,7 +19,9 @@ package task.softermii.tastycocktails.random;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 
 import task.softermii.tastycocktails.BaseActivity;
@@ -35,6 +37,7 @@ public class RandomActivity extends BaseActivity {
 
 	private RandomFragment fragment;
 	private FloatingActionButton fab;
+	private CoordinatorLayout mRoot;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class RandomActivity extends BaseActivity {
 		setContentView(R.layout.activity_random);
 
 		fab = findViewById(R.id.fab);
+		mRoot = findViewById(R.id.coordinator_root);
 
 		if (getSupportActionBar() != null) getSupportActionBar().setTitle("");
 
@@ -53,6 +57,7 @@ public class RandomActivity extends BaseActivity {
 			FragmentManager manager = getSupportFragmentManager();
 			fragment = new RandomFragment();
 			fragment.setActivityToolbar(mActionBarToolbar);
+			fragment.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 			manager
 					.beginTransaction()
 					.add(R.id.fragment, fragment, "random_fragment")

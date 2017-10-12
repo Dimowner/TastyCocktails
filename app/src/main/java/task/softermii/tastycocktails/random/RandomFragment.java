@@ -57,6 +57,8 @@ public class RandomFragment extends Fragment {
 	private boolean isImageDark = true;
 	private Toolbar activityToolbar;
 
+	private IngredientsAdapter.OnSnackBarListener onSnackBarListener;
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -156,6 +158,10 @@ public class RandomFragment extends Fragment {
 				activityToolbar.setNavigationIcon(R.drawable.menu_black);
 			}
 		});
+
+		if (onSnackBarListener != null) {
+			mAdapter.setOnSnackBarListener(onSnackBarListener);
+		}
 	}
 
 	@Override
@@ -177,5 +183,13 @@ public class RandomFragment extends Fragment {
 
 	public void setActivityToolbar(Toolbar activityToolbar) {
 		this.activityToolbar = activityToolbar;
+	}
+
+	public void setOnSnackBarListener(IngredientsAdapter.OnSnackBarListener onSnackBarListener) {
+		if (mAdapter != null) {
+			mAdapter.setOnSnackBarListener(onSnackBarListener);
+		} else {
+			this.onSnackBarListener = onSnackBarListener;
+		}
 	}
 }

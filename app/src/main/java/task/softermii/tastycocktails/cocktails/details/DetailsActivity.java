@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import javax.inject.Inject;
 
@@ -52,6 +54,7 @@ public class DetailsActivity extends AppCompatActivity {
 
 	private Toolbar toolbar;
 
+	private FrameLayout mRoot;
 	private RecyclerView mRecyclerView;
 	private IngredientsAdapter mAdapter;
 
@@ -74,6 +77,7 @@ public class DetailsActivity extends AppCompatActivity {
 
 //		supportPostponeEnterTransition();
 
+		mRoot = findViewById(R.id.coordinator_root);
 		toolbar = findViewById(R.id.toolbar);
 
 		mRecyclerView = findViewById(R.id.recycler_view);
@@ -147,6 +151,7 @@ public class DetailsActivity extends AppCompatActivity {
 				toolbar.setNavigationIcon(R.drawable.arrow_left_black);
 			}
 		});
+		mAdapter.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 	}
 
 //	@Override

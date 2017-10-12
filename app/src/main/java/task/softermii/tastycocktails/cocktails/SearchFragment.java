@@ -32,6 +32,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -72,10 +73,10 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	private ProgressBar mProgressBar;
 	private LinearLayout mWelcomePanel;
 	private TextView mTxtEmpty;
+	private FrameLayout mRoot;
 
 	private CocktailsRecyclerAdapter mAdapter;
 
-	//TODO:remove this field
 	private int fragmentType = TYPE_NORMAL;
 
 	@Inject
@@ -115,6 +116,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		mRoot = view.findViewById(R.id.coordinator_root);
 		mWelcomePanel = view.findViewById(R.id.welcome_panel);
 		mTxtEmpty = view.findViewById(R.id.txt_empty);
 		mProgressBar = view.findViewById(R.id.progress);
@@ -152,6 +154,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		mAdapter.setItemClickListener((view1, position) ->
 				startDetailsActivity(mAdapter.getItem(position), view1));
 		mAdapter.setOnFavoriteClickListener((view12, position, id, action) -> {
+			final boolean fev = mAdapter.getItem(position).isFavorite();
+			final String name = mAdapter.getItem(position).getName();
 			if (AndroidUtils.isAndroid5()) {
 				//Add or remove from favorites with animation
 				view12.setImageResource(R.drawable.avd_favorite_progress);
@@ -161,7 +165,10 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 						.subscribeOn(Schedulers.io())
 						.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
 						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(animatable::stop,
+						.subscribe(() -> {
+									animatable.stop();
+									showSnackBar(id, !fev, name);
+								},
 								throwable -> {
 									animatable.stop();
 									Timber.e("", throwable);
@@ -171,7 +178,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 				mPresenter.reverseFavorite(id)
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(() -> {}, throwable -> Timber.e("", throwable));
+						.subscribe(() -> showSnackBar(id, !fev, name), throwable -> Timber.e("", throwable));
 			}
 		});
 	}
@@ -192,6 +199,28 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 //
 //		startActivity(intent, options.toBundle());
 		startActivity(intent);
+	}
+
+	private void showSnackBar(long id, boolean isFavorite, String drinkName) {
+		if (isFavorite) {
+			Snackbar.make(mRoot, getString(R.string.added_to_favorites, drinkName), Snackbar.LENGTH_LONG).show();
+		} else {
+			if (fragmentType == TYPE_NORMAL) {
+				Snackbar.make(mRoot, getString(R.string.removed_from_favorites, drinkName), Snackbar.LENGTH_LONG).show();
+			} else {
+				Snackbar snackbar = Snackbar
+						.make(mRoot, getString(R.string.removed_from_favorites, drinkName) , Snackbar.LENGTH_LONG)
+						.setAction(R.string.undo, view ->
+								mPresenter.reverseFavorite(id)
+									.subscribeOn(Schedulers.io())
+									.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
+									.observeOn(AndroidSchedulers.mainThread())
+									.subscribe(() -> Snackbar.make(mRoot,
+											getString(R.string.added_to_favorites, drinkName), Snackbar.LENGTH_LONG).show(), Timber::e));
+
+				snackbar.show();
+			}
+		}
 	}
 
 	@Override

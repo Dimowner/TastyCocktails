@@ -33,6 +33,8 @@ public interface DetailsContract  {
 		void displayImage(String url);
 
 		void displayIngredientsList(List<IngredientItem> items);
+
+		void showSnackBar(String message);
 	}
 
 	interface UserActionsListener extends Contract.UserActionsListener<DetailsContract.View> {

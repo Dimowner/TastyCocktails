@@ -26,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import task.softermii.tastycocktails.ModelMapper;
+import task.softermii.tastycocktails.R;
 import task.softermii.tastycocktails.TCApplication;
 import task.softermii.tastycocktails.cocktails.details.DetailsContract.UserActionsListener;
 import task.softermii.tastycocktails.data.RepositoryContract;
@@ -95,6 +96,7 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(() -> {
 							drink.inverseFavorite();
+							view.showSnackBar(getApplication().getResources().getString(R.string.removed_from_favorites, drink.getStrDrink()));
 							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.isFavorite());
 						}, Timber::e);
 		} else {
@@ -103,6 +105,7 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(() -> {
 //							drink.inverseFavorite(); //Removed intentionally
+							view.showSnackBar(getApplication().getResources().getString(R.string.added_to_favorites, drink.getStrDrink()));
 							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.isFavorite());
 						}, Timber::e);
 		}
