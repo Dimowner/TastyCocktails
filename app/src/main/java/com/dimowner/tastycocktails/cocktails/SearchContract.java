@@ -43,7 +43,7 @@ public interface SearchContract {
 
 		void loadFavorites();
 
-		void loadHistory();
+		void loadHistory(int page);
 
 		void clearHistory();
 

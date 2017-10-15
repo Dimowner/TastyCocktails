@@ -26,6 +26,8 @@
 				android:layout_height="wrap_content"
 				android:background="@color/colorPrimary"
 				android:padding="@dimen/padding_standard"
+				android:textStyle="bold"
+				android:textSize="@dimen/text_size_xmedium"
 				android:text="@string/licences_description"
 				android:textColor="@color/text_primary_light"/>
 

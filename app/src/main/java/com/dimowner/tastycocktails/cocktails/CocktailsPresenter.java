@@ -130,10 +130,10 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	}
 
 	@Override
-	public void loadHistory() {
+	public void loadHistory(int page) {
 		view.showProgress();
 		compositeDisposable.add(
-				repository.getDrinksHistory()
+				repository.getDrinksHistory(page)
 						.map(ModelMapper::drinksToListItems)
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())

@@ -36,7 +36,7 @@ public class LicenceDetail extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.licence_detail);
+		setContentView(R.layout.activity_licence_detail);
 
 
 		String licenceTitle;

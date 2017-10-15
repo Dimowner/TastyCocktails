@@ -29,6 +29,7 @@ import com.dimowner.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
+	//TODO: Add Crashlytics integration
 	//TODO: Drink details viewPager between drinks
 	//TODO: Do pagination in lists
 	//TODO: Show drink category and in lists too

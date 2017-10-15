@@ -33,7 +33,7 @@ public interface RepositoryContract {
 
 	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
 	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
-	Flowable<List<Drink>> getDrinksHistory();
+	Flowable<List<Drink>> getDrinksHistory(int page);
 	Single<Drink> getRandomCocktail();
 	Single<Drink> getCocktail(long id);
 	Flowable<List<Drink>> getLastSearch(String query);

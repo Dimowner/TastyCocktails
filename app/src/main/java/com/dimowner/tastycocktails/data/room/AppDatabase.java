@@ -28,5 +28,7 @@ import com.dimowner.tastycocktails.data.model.Drink;
 @Database(entities = {Drink.class}, version = 4, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
+	public static final int DEFAULT_PER_PAGE = 10;
+
 	public abstract CocktailsDao cocktailsDao();
 }

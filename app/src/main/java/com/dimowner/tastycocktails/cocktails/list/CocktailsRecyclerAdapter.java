@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -45,7 +46,12 @@ import com.dimowner.tastycocktails.R;
  * Created on 26.07.2017.
  * @author Dimowner
  */
-public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecyclerAdapter.ItemViewHolder> {
+public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+	private final static int VIEW_TYPE_NORMAL = 1;
+	private final static int VIEW_TYPE_PROGRESS = 2;
+
+	private boolean showFooter;
 
 	private List<ListItem> mBaseData = new ArrayList<>();
 
@@ -74,62 +80,97 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 			}
  	}
 
+	static class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+		public ProgressBar progressBar;
+
+		public LoadingViewHolder(View itemView) {
+			super(itemView);
+			progressBar = itemView.findViewById(R.id.list_item_progress);
+		}
+	}
+
 	public CocktailsRecyclerAdapter() {
 		this.mShowingData = new ArrayList<>();
 	}
 
-	@Override
-	public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.list_item, parent, false);
-		return new ItemViewHolder(v);
+	public void showFooter(boolean show) {
+		if (showFooter == show) return;
+		showFooter = show;
+		if (showFooter) {
+			notifyItemInserted(mShowingData.size() + 1);
+		} else {
+			notifyItemRemoved(mShowingData.size() + 1);
+		}
 	}
 
 	@Override
-	public void onBindViewHolder(final ItemViewHolder holder, final int position1) {
-		int pos = holder.getAdapterPosition();
-		holder.name.setText(mShowingData.get(pos).getName());
-		holder.description.setText(mShowingData.get(pos).getDescription());
-
-		if (mShowingData.get(pos).getAvatar_url() != null) {
-			Glide.with(holder.view.getContext())
-					.load(mShowingData.get(pos).getAvatar_url())
-					.apply(RequestOptions.circleCropTransform())
-					.listener(new RequestListener<Drawable>() {
-						@Override public boolean onLoadFailed(@Nullable GlideException e, Object model,
-															 Target<Drawable> target, boolean isFirstResource) {
-							holder.image.setImageResource(R.drawable.no_image);
-							return false;
-						}
-						@Override public boolean onResourceReady(Drawable resource, Object model,
-										Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-							return false;
-						}
-					})
-					.into(holder.image);
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		if (viewType == VIEW_TYPE_NORMAL) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item, parent, false);
+			return new ItemViewHolder(v);
+		} else if (viewType == VIEW_TYPE_PROGRESS) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item_progress, parent, false);
+			return new LoadingViewHolder(v);
 		} else {
-			holder.image.setImageResource(R.drawable.no_image);
+			return null;
 		}
+	}
 
-		holder.btnFev.setOnClickListener(v -> {
-			if (onFavoriteClickListener != null) {
-				onFavoriteClickListener.onFavoriteClick(
-						holder.btnFev, pos, (int) mShowingData.get(pos).getId(), -1);
+	@Override
+	public void onBindViewHolder(final RecyclerView.ViewHolder h, final int position1) {
+		if (h.getItemViewType() == VIEW_TYPE_NORMAL) {
+			int pos = h.getAdapterPosition();
+			ItemViewHolder holder = (ItemViewHolder) h;
+			holder.name.setText(mShowingData.get(pos).getName());
+			holder.description.setText(mShowingData.get(pos).getDescription());
+
+			if (mShowingData.get(pos).getAvatar_url() != null) {
+				Glide.with(holder.view.getContext())
+						.load(mShowingData.get(pos).getAvatar_url())
+						.apply(RequestOptions.circleCropTransform())
+						.listener(new RequestListener<Drawable>() {
+							@Override
+							public boolean onLoadFailed(@Nullable GlideException e, Object model,
+																 Target<Drawable> target, boolean isFirstResource) {
+								holder.image.setImageResource(R.drawable.no_image);
+								return false;
+							}
+
+							@Override
+							public boolean onResourceReady(Drawable resource, Object model,
+																	 Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+								return false;
+							}
+						})
+						.into(holder.image);
+			} else {
+				holder.image.setImageResource(R.drawable.no_image);
 			}
-		});
 
-		if (mShowingData.get(holder.getAdapterPosition()).isFavorite()) {
-			holder.btnFev.setImageResource(R.drawable.heart_grey_pressed);
-		} else {
-			holder.btnFev.setImageResource(R.drawable.heart_outline_grey);
+			holder.btnFev.setOnClickListener(v -> {
+				if (onFavoriteClickListener != null) {
+					onFavoriteClickListener.onFavoriteClick(
+							holder.btnFev, pos, (int) mShowingData.get(pos).getId(), -1);
+				}
+			});
+
+			if (mShowingData.get(holder.getAdapterPosition()).isFavorite()) {
+				holder.btnFev.setImageResource(R.drawable.heart_grey_pressed);
+			} else {
+				holder.btnFev.setImageResource(R.drawable.heart_outline_grey);
+			}
+
+			holder.view.setOnClickListener(v -> {
+				if (itemClickListener != null) {
+					itemClickListener.onItemClick(v, holder.getAdapterPosition());
+				}
+			});
+		} else if (h.getItemViewType() == VIEW_TYPE_PROGRESS) {
+			//Do nothing
 		}
-
-		holder.view.setOnClickListener(v -> {
-			if (itemClickListener != null) {
-				itemClickListener.onItemClick(v, holder.getAdapterPosition());
-			}
-		});
-
 //		//Set transition names
 //		Resources res = holder.view.getResources();
 //		ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
@@ -139,11 +180,20 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 
 	@Override
 	public int getItemCount() {
-		return mShowingData.size();
+		return mShowingData.size() + (showFooter ? 1 : 0);
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		return position >= mShowingData.size() ? VIEW_TYPE_PROGRESS : VIEW_TYPE_NORMAL;
 	}
 
 	public ListItem getItem(int pos) {
-		return mShowingData.get(pos);
+		if (pos >=0 && pos < mShowingData.size()) {
+			return mShowingData.get(pos);
+		} else {
+			return null;
+		}
 	}
 
 	public void setData(List<ListItem> data) {
@@ -155,6 +205,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<CocktailsRecy
 			this.mShowingData.addAll(mBaseData);
 			notifyDataSetChanged();
 		}
+	}
+
+	public void addItems(List<ListItem> items) {
+		mShowingData.addAll(items);
+		notifyItemRangeInserted(mShowingData.size() - items.size() - 1, items.size());
 	}
 
 	/**

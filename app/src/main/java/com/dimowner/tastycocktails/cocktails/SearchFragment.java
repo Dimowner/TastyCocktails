@@ -16,6 +16,7 @@
 
 package com.dimowner.tastycocktails.cocktails;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.cocktails.details.DetailsActivity;
 import com.dimowner.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
+import com.dimowner.tastycocktails.cocktails.list.EndlessRecyclerViewScrollListener;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsModule;
 import com.dimowner.tastycocktails.data.Prefs;
@@ -127,7 +129,10 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		// use a linear layout manager
+		RecyclerView.LayoutManager mLayoutManager = new AppLinearLayoutManager(getContext());
+		mRecyclerView.setLayoutManager(mLayoutManager);
+		mRecyclerView.addOnScrollListener(new MyScrollListener(mLayoutManager));
 
 		mPresenter.bindView(this);
 
@@ -145,7 +150,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			} else if (fragmentType == TYPE_FAVORITES) {
 				mPresenter.loadFavorites();
 			} else if (fragmentType == TYPE_HISTORY) {
-				mPresenter.loadHistory();
+				mPresenter.loadHistory(1);
 			} else {
 				Timber.e("Con't load data not correct fragment type!");
 			}
@@ -367,6 +372,39 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			mRecyclerView.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mAdapter.setData(data);
+//			mRecyclerView.post(() -> mAdapter.addItems(data));
+		}
+	}
+
+
+	public class MyScrollListener extends EndlessRecyclerViewScrollListener {
+
+		public <L extends RecyclerView.LayoutManager> MyScrollListener(L layoutManager) {
+			super(layoutManager);
+		}
+
+		@Override
+		public void onLoadMore(int page, int totalItemsCount) {
+			Timber.d("onLoadMore page = " + page + " count = " + totalItemsCount);
+			if (fragmentType == TYPE_HISTORY) {
+//				mPresenter.loadHistory(page);
+			}
+		}
+	}
+
+	/**
+	 * Simple extension of LinearLayoutManager for the sole purpose of showing what happens
+	 * when predictive animations (which are enabled by default in LinearLayoutManager) are
+	 * not enabled. This behavior is toggled via a checkbox in the UI.
+	 */
+	public class AppLinearLayoutManager extends LinearLayoutManager {
+		public AppLinearLayoutManager(Context context) {
+			super(context);
+		}
+
+		@Override
+		public boolean supportsPredictiveItemAnimations() {
+			return true;
 		}
 	}
 }
