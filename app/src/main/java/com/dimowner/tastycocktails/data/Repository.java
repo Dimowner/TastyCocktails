@@ -17,6 +17,8 @@
 package com.dimowner.tastycocktails.data;
 
 import android.support.annotation.NonNull;
+
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -51,9 +53,18 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> getDrinksHistory() {
+		return localRepository.getDrinksHistory();
+	}
+
+	@Override
 	public Single<Drink> getRandomCocktail() {
 		if (TCApplication.isConnected()) {
-			return remoteRepository.getRandomCocktail();
+			return remoteRepository.getRandomCocktail()
+					.doOnSuccess(drink -> {
+						drink.setHistory(new Date().getTime());
+						localRepository.cacheIntoLocalDatabase(drink);
+					});
 		} else {
 			return localRepository.getRandomCocktail();
 		}
@@ -87,5 +98,15 @@ public class Repository implements RepositoryContract {
 	@Override
 	public Completable reverseFavorite(long id) {
 		return localRepository.reverseFavorite(id);
+	}
+
+	@Override
+	public Completable updateDrinkHistory(long id, long time) {
+		return localRepository.updateDrinkHistory(id, time);
+	}
+
+	@Override
+	public Completable clearHistory() {
+		return localRepository.clearHistory();
 	}
 }

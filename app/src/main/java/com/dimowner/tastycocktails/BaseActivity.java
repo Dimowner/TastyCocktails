@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.dimowner.tastycocktails.history.HistoryActivity;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 
@@ -57,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 	protected static final int NAVDRAWER_ITEM_FAVORITES   = R.id.nav_favorites;
 	protected static final int NAVDRAWER_ITEM_COCKTAILS	= R.id.nav_cocktails;
 	protected static final int NAVDRAWER_ITEM_RANDOM 		= R.id.nav_random;
+	protected static final int NAVDRAWER_ITEM_HISTORY     = R.id.nav_history;
 	protected static final int NAVDRAWER_ITEM_ABOUT			= R.id.nav_about;
 	protected static final int NAVDRAWER_ITEM_INVALID		= -1;
 
@@ -233,6 +235,10 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 				break;
 			case NAVDRAWER_ITEM_RANDOM:
 				startActivity(new Intent(getApplicationContext(), RandomActivity.class));
+				finish();
+				break;
+			case NAVDRAWER_ITEM_HISTORY:
+				startActivity(new Intent(getApplicationContext(), HistoryActivity.class));
 				finish();
 				break;
 			case NAVDRAWER_ITEM_ABOUT:

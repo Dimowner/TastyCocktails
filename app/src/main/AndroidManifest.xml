@@ -60,6 +60,10 @@
 				android:label="@string/nav_favorites"/>
 
 		<activity
+				android:name="com.dimowner.tastycocktails.history.HistoryActivity"
+				android:label="@string/nav_history"/>
+
+		<activity
 				android:name="com.dimowner.tastycocktails.random.RandomActivity"
 				android:theme="@style/TransparentStatusBar"/>
 

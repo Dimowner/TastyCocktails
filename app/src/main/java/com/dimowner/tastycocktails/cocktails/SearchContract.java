@@ -43,6 +43,10 @@ public interface SearchContract {
 
 		void loadFavorites();
 
+		void loadHistory();
+
+		void clearHistory();
+
 		Completable reverseFavorite(long id);
 	}
 }

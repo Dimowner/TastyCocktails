@@ -33,6 +33,7 @@ public interface RepositoryContract {
 
 	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
 	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
+	Flowable<List<Drink>> getDrinksHistory();
 	Single<Drink> getRandomCocktail();
 	Single<Drink> getCocktail(long id);
 	Flowable<List<Drink>> getLastSearch(String query);
@@ -40,4 +41,6 @@ public interface RepositoryContract {
 	Completable addToFavorites(Drink drink);
 	Completable removeFromFavorites(long id);
 	Completable reverseFavorite(long id);
+	Completable updateDrinkHistory(long id, long time);
+	Completable clearHistory();
 }

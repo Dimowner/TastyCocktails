@@ -20,6 +20,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -123,6 +124,9 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 			if (ingredientItems.size() > 0) {
 				view.displayIngredientsList(ingredientItems);
 			}
+			repository.updateDrinkHistory(model.getIdDrink(), new Date().getTime())
+					.subscribeOn(Schedulers.io())
+					.subscribe(() -> {}, Timber::e);
 		}
 	}
 

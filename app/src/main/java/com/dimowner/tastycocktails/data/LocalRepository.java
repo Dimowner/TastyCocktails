@@ -61,6 +61,11 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> getDrinksHistory() {
+		return getRepositoriesDao().getDrinksHistory();
+	}
+
+	@Override
 	public Single<Drink> getRandomCocktail() {
 		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 			if (count > 0) {
@@ -124,8 +129,18 @@ public class LocalRepository implements RepositoryContract {
 		return Completable.fromAction(() -> getRepositoriesDao().reverseFavorite(id));
 	}
 
+	@Override
+	public Completable updateDrinkHistory(long id, long time) {
+		return Completable.fromAction(() -> getRepositoriesDao().updateDrinkHistory(id, time));
+	}
+
+	@Override
+	public Completable clearHistory() {
+		return Completable.fromAction(() -> getRepositoriesDao().clearHistory());
+	}
+
 	/**
-	 * Rewrite local cached Drinks
+	 * Cache list of drinks into local database
 	 * @param items new Drinks to save.
 	 */
 	public void cacheIntoLocalDatabase(List<Drink> items) {
@@ -135,5 +150,18 @@ public class LocalRepository implements RepositoryContract {
 			})
 			.subscribeOn(Schedulers.io())
 			.subscribe((o, throwable) -> Timber.e(throwable));
+	}
+
+	/**
+	 * Cache list of drinks into local database
+	 * @param item new Drink to save.
+	 */
+	public void cacheIntoLocalDatabase(Drink item) {
+		Single.just(item).map(data -> {
+			getRepositoriesDao().insertDrink(item);
+			return null;
+		})
+				.subscribeOn(Schedulers.io())
+				.subscribe((o, throwable) -> Timber.e(throwable));
 	}
 }

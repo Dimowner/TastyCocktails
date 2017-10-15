@@ -51,7 +51,10 @@ public class Drink {
 	private final String strDrinkThumb;
 
 	@ColumnInfo(name = "isFavorite")
-	private boolean isFavorite;
+	private boolean isFavorite = false;
+
+	@ColumnInfo(name = "history")
+	private long history = 0;
 
 	@ColumnInfo(name = "strIngredient1")
 	private final String strIngredient1;
@@ -116,7 +119,7 @@ public class Drink {
 	private final String strMeasure15;
 
 	public Drink(long idDrink, String strDrink, String strCategory, String strAlcoholic, String strGlass,
-					 String strInstructions, String strDrinkThumb, boolean isFavorite, String strIngredient1,
+					 String strInstructions, String strDrinkThumb, boolean isFavorite, long history, String strIngredient1,
 					 String strIngredient2, String strIngredient3, String strIngredient4, String strIngredient5,
 					 String strIngredient6, String strIngredient7, String strIngredient8, String strIngredient9,
 					 String strIngredient10, String strIngredient11, String strIngredient12, String strIngredient13,
@@ -132,6 +135,7 @@ public class Drink {
 		this.strInstructions = strInstructions;
 		this.strDrinkThumb = strDrinkThumb;
 		this.isFavorite = isFavorite;
+		this.history = history;
 		this.strIngredient1 = strIngredient1;
 		this.strIngredient2 = strIngredient2;
 		this.strIngredient3 = strIngredient3;
@@ -198,6 +202,14 @@ public class Drink {
 
 	public void inverseFavorite() {
 		this.isFavorite = !this.isFavorite;
+	}
+
+	public long getHistory() {
+		return history;
+	}
+
+	public void setHistory(long history) {
+		this.history = history;
 	}
 
 	public String getStrIngredient1() {
@@ -321,7 +333,7 @@ public class Drink {
 	}
 
 	public static Drink emptyDrink() {
-		return new Drink(NO_ID, null, null, null, null, null, null, false, null, null, null, null, null,
+		return new Drink(NO_ID, null, null, null, null, null, null, false, 0, null, null, null, null, null,
 								null, null, null, null, null, null, null, null, null, null, null, null,
 								null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
@@ -337,6 +349,7 @@ public class Drink {
 				", strInstructions='" + strInstructions + '\'' +
 				", strDrinkThumb='" + strDrinkThumb + '\'' +
 				", isFavorite=" + isFavorite +
+				", history=" + history +
 				", strIngredient1='" + strIngredient1 + '\'' +
 				", strIngredient2='" + strIngredient2 + '\'' +
 				", strIngredient3='" + strIngredient3 + '\'' +

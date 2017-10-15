@@ -21,24 +21,28 @@
 			android:id="@+id/nav_view_primary"
 			android:checkableBehavior="single">
 		<item
-				android:id="@+id/nav_favorites"
-				android:icon="@drawable/heart_grey"
-				android:title="@string/nav_favorites"/>
-		<item
 				android:id="@+id/nav_cocktails"
 				android:icon="@drawable/glass_flute"
 				android:title="@string/nav_cocktails"/>
 		<item
+				android:id="@+id/nav_favorites"
+				android:icon="@drawable/heart_grey"
+				android:title="@string/nav_favorites"/>
+		<item
 				android:id="@+id/nav_random"
 				android:icon="@drawable/dice_6"
 				android:title="@string/nav_random"/>
+		<item
+				android:id="@+id/nav_history"
+				android:icon="@drawable/history"
+				android:title="@string/nav_history"/>
 	</group>
 
 	<group android:id="@+id/nav_view_ternary"
 			 android:checkableBehavior="single">
 		<item
 				android:id="@+id/nav_about"
-				android:icon="@drawable/information_outline"
+				android:icon="@drawable/information"
 				android:title="@string/nav_about"/>
 	</group>
 </menu>

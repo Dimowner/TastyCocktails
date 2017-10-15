@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,8 @@ import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsModule;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.dimowner.tastycocktails.util.UIUtil;
+
 import timber.log.Timber;
 
 /**
@@ -63,6 +66,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	public static final int TYPE_NORMAL = 1;
 	public static final int TYPE_FAVORITES = 2;
+	public static final int TYPE_HISTORY = 3;
 	public static final String EXTRAS_KEY_TYPE = "search_fragment_type";
 
 	public static final int ADD_TO_FAVORITES_ANIMATION_DURATION = 400;
@@ -140,6 +144,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 				mPresenter.loadLastSearch(prefs.getLastSearchString());
 			} else if (fragmentType == TYPE_FAVORITES) {
 				mPresenter.loadFavorites();
+			} else if (fragmentType == TYPE_HISTORY) {
+				mPresenter.loadHistory();
 			} else {
 				Timber.e("Con't load data not correct fragment type!");
 			}
@@ -205,7 +211,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		if (isFavorite) {
 			Snackbar.make(mRoot, getString(R.string.added_to_favorites, drinkName), Snackbar.LENGTH_LONG).show();
 		} else {
-			if (fragmentType == TYPE_NORMAL) {
+			if (fragmentType == TYPE_NORMAL || fragmentType == TYPE_HISTORY) {
 				Snackbar.make(mRoot, getString(R.string.removed_from_favorites, drinkName), Snackbar.LENGTH_LONG).show();
 			} else {
 				Snackbar snackbar = Snackbar
@@ -234,6 +240,12 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_search, menu);
+
+		if (fragmentType != TYPE_HISTORY) {
+			MenuItem clearHistory = menu.findItem(R.id.action_clear_history);
+			clearHistory.setVisible(false);
+		}
+
 		final MenuItem searchMenu = menu.findItem(R.id.action_search);
 		final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -254,7 +266,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 			@Override
 			public boolean onQueryTextChange(final String newText) {
-				if (fragmentType == TYPE_FAVORITES && mAdapter != null) {
+				if ((fragmentType == TYPE_FAVORITES || fragmentType == TYPE_HISTORY) && mAdapter != null) {
 					mAdapter.applyFilter(newText);
 				}
 				return false;
@@ -274,6 +286,23 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			//Collapse the search widget
 			searchMenu.collapseActionView();
 		});
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_clear_history) {
+			if (mAdapter.getItemCount() > 0) {
+				UIUtil.showWarningDialog(
+						getActivity(),
+						R.string.do_you_really_want_clear_history,
+						(dialogInterface, i) -> mPresenter.clearHistory(),
+						(dialogInterface, i) -> dialogInterface.dismiss()
+				);
+			} else {
+				Toast.makeText(getContext(), R.string.history_already_empty, Toast.LENGTH_LONG).show();
+			}
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -329,6 +358,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			mTxtEmpty.setVisibility(View.VISIBLE);
 			if (fragmentType == TYPE_FAVORITES) {
 				mTxtEmpty.setText(R.string.no_favorites_drinks);
+			} else if (fragmentType == TYPE_HISTORY) {
+				mTxtEmpty.setText(R.string.history_is_empty);
 			} else {
 				mTxtEmpty.setText(R.string.click_search_to_find_some_drink);
 			}

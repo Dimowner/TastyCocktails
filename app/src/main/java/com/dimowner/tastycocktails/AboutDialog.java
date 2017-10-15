@@ -94,8 +94,8 @@ public class AboutDialog extends DialogFragment {
 		Button btnLicences = new Button(getContext());
 		btnLicences.setText(R.string.open_source_licences);
 		btnLicences.setOnClickListener(view -> {
+			dismiss();
 			startActivity(new Intent(getContext(), LicenceActivity.class));
-//			dismiss();
 		});
 
 		ViewGroup.MarginLayoutParams btnLp = new ViewGroup.MarginLayoutParams(

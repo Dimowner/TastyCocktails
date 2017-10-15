@@ -50,6 +50,15 @@ public interface CocktailsDao {
 	@Query("SELECT * FROM drinks WHERE isFavorite = 1 ORDER BY strDrink")
 	Flowable<List<Drink>> getFavorites();
 
+	@Query("SELECT * FROM drinks WHERE history > 0 ORDER BY history DESC")
+	Flowable<List<Drink>> getDrinksHistory();
+
+	@Query("UPDATE drinks SET history = :time WHERE idDrink = :id")
+	void updateDrinkHistory(long id, long time);
+
+	@Query("UPDATE drinks SET history = 0")
+	void clearHistory();
+
 	@Query("SELECT * FROM drinks WHERE idDrink = :id")
 	Single<Drink> getDrinkRx(long id);
 
