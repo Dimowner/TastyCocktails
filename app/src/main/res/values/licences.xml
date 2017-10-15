@@ -1,0 +1,27 @@
+<resources>
+
+	<string-array name="licences_names">
+		<item>Android Support Libraries</item>
+		<item>Android Architecture Components</item>
+		<item>RxJava</item>
+		<item>RetroFit</item>
+		<item>OkHttp</item>
+		<item>Dagger2</item>
+		<item>Glide</item>
+		<item>Timber</item>
+		<item>PhotoView</item>
+	</string-array>
+
+	<string-array name="licences_assets_locations">
+		<item>file:///android_asset/licences/android_support_library.html</item>
+		<item>file:///android_asset/licences/android_arch_components.html</item>
+		<item>file:///android_asset/licences/rx_java.html</item>
+		<item>file:///android_asset/licences/retrofit.html</item>
+		<item>file:///android_asset/licences/okhttp.html</item>
+		<item>file:///android_asset/licences/dagger2.html</item>
+		<item>file:///android_asset/licences/glide.html</item>
+		<item>file:///android_asset/licences/timber.html</item>
+		<item>file:///android_asset/licences/photoview.html</item>
+	</string-array>
+
+</resources>

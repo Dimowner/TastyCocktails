@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -34,8 +35,11 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dimowner.tastycocktails.licences.LicenceActivity;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 
 /**
@@ -68,10 +72,17 @@ public class AboutDialog extends DialogFragment {
 		SpannableStringBuilder aboutBody = new SpannableStringBuilder();
 		aboutBody.append(Html.fromHtml(getString(R.string.about_body, versionName)));
 
+		LinearLayout container = new LinearLayout(getContext());
+		container.setOrientation(LinearLayout.VERTICAL);
+		LinearLayout.LayoutParams containerLp = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+		container.setLayoutParams(containerLp);
+
 		TextView aboutBodyView = new TextView(getContext());
 		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT);
+				ViewGroup.LayoutParams.WRAP_CONTENT);
 		aboutBodyView.setLayoutParams(lp);
 
 		aboutBodyView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_medium));
@@ -80,9 +91,26 @@ public class AboutDialog extends DialogFragment {
 		aboutBodyView.setPadding(pad, pad, pad, pad);
 		aboutBodyView.setMovementMethod(new LinkMovementMethod());
 
+		Button btnLicences = new Button(getContext());
+		btnLicences.setText(R.string.open_source_licences);
+		btnLicences.setOnClickListener(view -> {
+			startActivity(new Intent(getContext(), LicenceActivity.class));
+//			dismiss();
+		});
+
+		ViewGroup.MarginLayoutParams btnLp = new ViewGroup.MarginLayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT);
+		int margin = (int) getResources().getDimension(R.dimen.padding_standard);
+		btnLp.setMargins(margin, 0, margin, 0);
+		btnLicences.setLayoutParams(btnLp);
+
+		container.addView(aboutBodyView);
+		container.addView(btnLicences);
+
 		AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
 				.setTitle(R.string.nav_about)
-				.setView(aboutBodyView)
+				.setView(container)
 				.setPositiveButton(R.string.btn_ok, (dialog, whichButton) -> dismiss())
 				.create();
 

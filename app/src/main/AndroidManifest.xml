@@ -70,6 +70,10 @@
 		<activity android:name="com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity"
 					 android:theme="@style/TransparentStatusBar"/>
 
+		<activity android:name="com.dimowner.tastycocktails.licences.LicenceActivity"
+				android:label="@string/open_source_licences"/>
+		<activity android:name="com.dimowner.tastycocktails.licences.LicenceDetail"/>
+
 	</application>
 
 </manifest>

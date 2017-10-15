@@ -23,12 +23,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.util.Pair;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -90,8 +87,8 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 		super.onPostCreate(savedInstanceState);
 		setupNavDrawer();
 
-		userName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
-		userIconView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.user_icon);
+		userName = mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
+		userIconView = mNavigationView.getHeaderView(0).findViewById(R.id.user_icon);
 
 		Profile profile = Profile.getCurrentProfile();
 		if (profile != null) {
@@ -116,18 +113,19 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 	private void startUserDetailsActivity(@NonNull String id) {
 		Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
 		intent.putExtra(UserDetailsActivity.EXTRAS_KEY_USER_ID, id);
-		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-				BaseActivity.this,
-				Pair.create(userIconView, ViewCompat.getTransitionName(userIconView)),
-				Pair.create(userName, ViewCompat.getTransitionName(userName))
-			);
-		startActivity(intent, options.toBundle());
+//		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//				BaseActivity.this,
+//				Pair.create(userIconView, ViewCompat.getTransitionName(userIconView)),
+//				Pair.create(userName, ViewCompat.getTransitionName(userName))
+//			);
+//		startActivity(intent, options.toBundle());
+		startActivity(intent);
 	}
 
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
-		getActionBarToolbar();
+		setupActionBarToolbar();
 	}
 
 	/**
@@ -148,11 +146,11 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 		// What nav drawer item should be selected?
 		int selfItem = getSelfNavDrawerItem();
 
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerLayout = findViewById(R.id.drawer_layout);
 		if (mDrawerLayout == null) {
 			return;
 		}
-		mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+		mNavigationView = findViewById(R.id.nav_view);
 		if (mNavigationView != null) {
 			mNavigationView.setNavigationItemSelectedListener(
 					menuItem -> {
@@ -265,14 +263,13 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 	/**
 	 * Get toolbar and init if need.
 	 */
-	protected Toolbar getActionBarToolbar() {
+	protected void setupActionBarToolbar() {
 		if (mActionBarToolbar == null) {
-			mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+			mActionBarToolbar = (findViewById(R.id.toolbar));
 			if (mActionBarToolbar != null) {
 				setSupportActionBar(mActionBarToolbar);
 			}
 		}
-		return mActionBarToolbar;
 	}
 
 	@Override
