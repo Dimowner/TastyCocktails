@@ -127,7 +127,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 		mPresenter.bindView(this);
 
-		if (prefs.isFirstRun()) {
+		if (prefs.isFirstRun() && fragmentType == TYPE_NORMAL) {
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mRecyclerView.setVisibility(View.GONE);
@@ -246,6 +246,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 					mPresenter.startSearch(query);
 					if (prefs.isFirstRun()) {
 						prefs.firstRunExecuted();
+						mWelcomePanel.setVisibility(View.GONE);
 					}
 				}
 				return false;
@@ -318,11 +319,11 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	@Override
 	public void displayData(List<ListItem> data) {
-		if (prefs.isFirstRun()) {
+		if (prefs.isFirstRun() && fragmentType == TYPE_NORMAL) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
-		} else if (data.size() == 0 && !prefs.isFirstRun()) {
+		} else if (data.size() == 0) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.GONE);
 			mTxtEmpty.setVisibility(View.VISIBLE);
