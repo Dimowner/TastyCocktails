@@ -16,13 +16,13 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-			 package="task.softermii.tastycocktails">
+			 package="com.dimowner.tastycocktails">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 	<application
-			android:name=".TCApplication"
+			android:name="com.dimowner.tastycocktails.TCApplication"
 			android:allowBackup="false"
 			android:icon="@mipmap/tasty_cocktail_logo"
 			android:label="@string/app_name"
@@ -34,13 +34,13 @@
 				android:value="@string/facebook_app_id"/>
 
 		<activity
-				android:name=".login.LoginActivity"
+				android:name="com.dimowner.tastycocktails.login.LoginActivity"
 				android:noHistory="true"
 				android:theme="@style/AppTheme.BrandedLaunch">
 		</activity>
 
 		<activity
-				android:name=".cocktails.CocktailsActivity"
+				android:name="com.dimowner.tastycocktails.cocktails.CocktailsActivity"
 				android:theme="@style/AppTheme.BrandedLaunch">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -49,21 +49,21 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".UserDetailsActivity"/>
+		<activity android:name="com.dimowner.tastycocktails.UserDetailsActivity"/>
 
 		<activity
-				android:name=".favorites.FavoritesActivity"
+				android:name="com.dimowner.tastycocktails.favorites.FavoritesActivity"
 				android:label="@string/nav_favorites"/>
 
 		<activity
-				android:name=".random.RandomActivity"
+				android:name="com.dimowner.tastycocktails.random.RandomActivity"
 				android:theme="@style/TransparentStatusBar"/>
 
 		<activity
-				android:name=".cocktails.details.DetailsActivity"
+				android:name="com.dimowner.tastycocktails.cocktails.details.DetailsActivity"
 				android:theme="@style/TransparentStatusBar"/>
 
-		<activity android:name=".cocktails.details.ImagePreviewActivity"
+		<activity android:name="com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity"
 					 android:theme="@style/TransparentStatusBar"/>
 
 	</application>

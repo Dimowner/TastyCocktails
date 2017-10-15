@@ -46,7 +46,7 @@ android {
 	compileSdkVersion versions.targetSdkVersion
 	buildToolsVersion versions.buildtools
 	defaultConfig {
-		applicationId "task.softermii.tastycocktails"
+		applicationId "com.dimowner.tastycocktails"
 		minSdkVersion versions.minSdkVersion
 		targetSdkVersion versions.targetSdkVersion
 		versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
@@ -99,7 +99,7 @@ dependencies {
 	compile "com.squareup.retrofit2:adapter-rxjava2:$versions.retroFit"
 	compile "com.squareup.okhttp3:logging-interceptor:$versions.logInterceptor"
 
-//	//Dagger2
+	//Dagger2
 	compile "com.google.dagger:dagger:$versions.dagger2"
 	annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger2"
 
