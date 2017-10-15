@@ -30,7 +30,6 @@ import com.dimowner.tastycocktails.R;
 public class CocktailsActivity extends BaseActivity {
 
 	//TODO: Drink details viewPager between drinks
-	//TODO: Add Activity alias
 	//TODO: Add history with pagination
 	//TODO: Add open source licences
 	//TODO: Show drink category and in lists too
