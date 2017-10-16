@@ -23,10 +23,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
 import com.dimowner.tastycocktails.dagger.application.AppComponent;
 import com.dimowner.tastycocktails.dagger.application.AppModule;
 import com.dimowner.tastycocktails.dagger.application.DaggerAppComponent;
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 /**
@@ -51,7 +53,7 @@ public class TCApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		Fabric.with(this, new Crashlytics());
 		appComponent = prepareAppComponent().build();
 
 		if (BuildConfig.DEBUG) {

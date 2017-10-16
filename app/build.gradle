@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 //apply plugin: 'me.tatarka.retrolambda'
 
 ext.versions = [
@@ -69,6 +79,7 @@ android {
 
 repositories {
 	mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
@@ -128,4 +139,7 @@ dependencies {
 	testCompile 'org.mockito:mockito-core:2.8.47'
 	// AssertJ
 	testCompile "org.assertj:assertj-core:3.7.0"
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+        transitive = true;
+    }
 }

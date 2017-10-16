@@ -78,6 +78,9 @@
 				android:label="@string/open_source_licences"/>
 		<activity android:name="com.dimowner.tastycocktails.licences.LicenceDetail"/>
 
-	</application>
+	    <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a911efb38fc3ed01944c7ea4410acde51d847864" />
+    </application>
 
 </manifest>
