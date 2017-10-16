@@ -112,6 +112,9 @@ public class AboutDialog extends DialogFragment {
 		TextView content = view.findViewById(R.id.about_txt_content);
 		content.setText(aboutBody);
 		TextView btnLicences = view.findViewById(R.id.about_btn_licences);
+		if (AndroidUtils.isAndroid5()) {
+			btnLicences.setCompoundDrawablesWithIntrinsicBounds(R.drawable.dna, 0, 0, 0);
+		}
 		btnLicences.setOnClickListener(v -> {
 			dismiss();
 			startActivity(new Intent(getContext(), LicenceActivity.class));

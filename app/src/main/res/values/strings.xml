@@ -36,8 +36,8 @@
 	<string name="btn_close">Close</string>
 
 	<string name="msg_error_on_login">Error on login</string>
-	<string name="msg_error_on_query">Error on query</string>
-	<string name="msg_error_no_internet">No internet</string>
+	<string name="msg_error_on_query">Error on loading</string>
+	<string name="msg_error_no_internet">No connection to network</string>
 
 	<string name="did_not_find_anything">Did not find anything</string>
 	<string name="retry">RETRY</string>
@@ -53,7 +53,7 @@
 	<string name="undo">UNDO</string>
 
 	<string name="add_to_favorites">Favorites</string>
-	<string name="no_favorites_drinks">No favorites drinks</string>
+	<string name="no_favorite_drinks">No favorite drinks</string>
 	<string name="click_search_to_find_some_drink">Click search to find some drinks</string>
 	<string name="history_is_empty">History is empty</string>
 	<string name="clear_history">Clear history</string>

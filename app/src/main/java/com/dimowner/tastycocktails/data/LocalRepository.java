@@ -67,28 +67,30 @@ public class LocalRepository implements RepositoryContract {
 
 	@Override
 	public Single<Drink> getRandomCocktail() {
-		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
-			if (count > 0) {
-				return getRepositoriesDao()
-						.getRandom()
-						.subscribeOn(Schedulers.io());
-			} else {
-				return Single.fromCallable(Drink::emptyDrink);
-			}
-		});
+		return getRepositoriesDao().getRandom();
+//		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
+//			if (count > 0) {
+//				return getRepositoriesDao()
+//						.getRandom()
+//						.subscribeOn(Schedulers.io());
+//			} else {
+//				return Single.fromCallable(Drink::emptyDrink);
+//			}
+//		});
 	}
 
 	@Override
 	public Single<Drink> getCocktail(long id) {
-		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
-			if (count > 0) {
-				return getRepositoriesDao()
-						.getDrinkRx(id)
-						.subscribeOn(Schedulers.io());
-			} else {
-				return Single.fromCallable(Drink::emptyDrink);
-			}
-		});
+		return getRepositoriesDao().getDrinkRx(id);
+//		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
+//			if (count > 0) {
+//				return getRepositoriesDao()
+//						.getDrinkRx(id)
+//						.subscribeOn(Schedulers.io());
+//			} else {
+//				return Single.fromCallable(Drink::emptyDrink);
+//			}
+//		});
 	}
 
 	@Override

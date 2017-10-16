@@ -29,22 +29,6 @@ import com.dimowner.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
-	//TODO: Add Crashlytics integration
-	//TODO: Drink details viewPager between drinks
-	//TODO: Do pagination in lists
-	//TODO: Show drink category and in lists too
-	//TODO: Add filters by Ingredients, glass, alcoholic non, category
-	//TODO: Show progress when first run random activity
-	//TODO: Fix lags when switch activities. maybe move heavy code on post create
-	//TODO: Do not show buttons before image loaded in details and random
-	//TODO: Restyle lists
-	//TODO: Add dialog that recommends like app in playstore
-	//TODO: Combine Cocktail Details and RandomCocktail in one Fragment
-	//TODO: Add mapper and replace Drink model by more readable POJO for using presenters and UI
-	//TODO: Store images in local cache storage
-	//TODO: Add Tests: Unit tests, Instrumentation tests, UI tests
-	//TODO: Add Ingredient details
-
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		setTheme(R.style.AppTheme);

@@ -257,13 +257,18 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				if (fragmentType == TYPE_NORMAL) {
+//					TODO: should move this logic into presenter
 					//Save search query string
-					prefs.setLastSearchString(query);
+					if (TCApplication.isConnected()) {
+						prefs.setLastSearchString(query);
 
-					mPresenter.startSearch(query);
-					if (prefs.isFirstRun()) {
-						prefs.firstRunExecuted();
-						mWelcomePanel.setVisibility(View.GONE);
+						mPresenter.startSearch(query);
+						if (prefs.isFirstRun()) {
+							prefs.firstRunExecuted();
+							mWelcomePanel.setVisibility(View.GONE);
+						}
+					} else {
+						showNetworkError();
 					}
 				}
 				return false;
@@ -343,6 +348,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	@Override
 	public void showQueryError() {
+		mTxtEmpty.setVisibility(View.VISIBLE);
 		Snackbar.make(mRecyclerView, R.string.msg_error_on_query, Snackbar.LENGTH_LONG).show();
 	}
 
@@ -362,7 +368,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			mWelcomePanel.setVisibility(View.GONE);
 			mTxtEmpty.setVisibility(View.VISIBLE);
 			if (fragmentType == TYPE_FAVORITES) {
-				mTxtEmpty.setText(R.string.no_favorites_drinks);
+				mTxtEmpty.setText(R.string.no_favorite_drinks);
 			} else if (fragmentType == TYPE_HISTORY) {
 				mTxtEmpty.setText(R.string.history_is_empty);
 			} else {

@@ -107,6 +107,7 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 		view.showProgress();
 		compositeDisposable.add(
 				repository.getRandomCocktail()
+						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(this::displayData, this::handleError));
 	}

@@ -45,8 +45,6 @@
 			android:paddingTop="@dimen/padding_standard"
 			android:paddingBottom="@dimen/padding_standard"
 			android:drawablePadding="@dimen/padding_small"
-			android:drawableLeft="@drawable/dna"
-			android:drawableStart="@drawable/dna"
 			android:textColor="@color/blue"
 			android:textSize="@dimen/text_size_xmedium"
 			android:textStyle="bold"

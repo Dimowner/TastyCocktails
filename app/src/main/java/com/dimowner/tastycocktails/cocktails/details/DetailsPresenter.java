@@ -84,7 +84,7 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 		view.showProgress();
 		compositeDisposable.add(
 				repository.getCocktail(id)
-//						.map(this::convertModel)
+						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(this::displayData, this::handleError));
 	}
