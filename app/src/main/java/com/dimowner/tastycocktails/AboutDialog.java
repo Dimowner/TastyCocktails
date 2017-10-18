@@ -126,10 +126,10 @@ public class AboutDialog extends DialogFragment {
 				.setPositiveButton(R.string.btn_ok, (dialog, whichButton) -> dismiss())
 				.create();
 
-		if (AndroidUtils.isAndroid5() && alertDialog.getWindow() != null) {
-			View decorView = alertDialog.getWindow().getDecorView();
-			alertDialog.setOnShowListener(dialogInterface -> revealShow(decorView));
-		}
+//		if (AndroidUtils.isAndroid5() && alertDialog.getWindow() != null) {
+//			View decorView = alertDialog.getWindow().getDecorView();
+//			alertDialog.setOnShowListener(dialogInterface -> revealShow(decorView));
+//		}
 		return alertDialog;
 	}
 
@@ -142,21 +142,21 @@ public class AboutDialog extends DialogFragment {
 		}
 	}
 
-	//Reveal animation for dialog
-	@TargetApi(21)
-	private void revealShow(View view) {
-		int w = view.getWidth();
-		int h = view.getHeight();
-
-		int endRadius = (int) Math.hypot(w, h);
-
-		int cx = (int) view.getX() + w / 2;
-		int cy = (int) view.getY() + h / 2;
-
-		Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, endRadius);
-
-		view.setVisibility(View.VISIBLE);
-		revealAnimator.setDuration(REVEAL_DURATION);
-		revealAnimator.start();
-	}
+//	//Reveal animation for dialog
+//	@TargetApi(21)
+//	private void revealShow(View view) {
+//		int w = view.getWidth();
+//		int h = view.getHeight();
+//
+//		int endRadius = (int) Math.hypot(w, h);
+//
+//		int cx = (int) view.getX() + w / 2;
+//		int cy = (int) view.getY() + h / 2;
+//
+//		Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, endRadius);
+//
+//		view.setVisibility(View.VISIBLE);
+//		revealAnimator.setDuration(REVEAL_DURATION);
+//		revealAnimator.start();
+//	}
 }

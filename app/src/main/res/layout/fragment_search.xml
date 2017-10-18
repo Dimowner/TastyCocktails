@@ -64,7 +64,7 @@
 				android:textSize="@dimen/text_size_large"
 				android:textColor="@color/text_primary_light"
 				android:gravity="center_horizontal"
-				android:text="@string/type_search"/>
+				android:text="@string/tap_search"/>
 	</LinearLayout>
 
 	<TextView

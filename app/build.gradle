@@ -9,7 +9,6 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-//apply plugin: 'me.tatarka.retrolambda'
 
 ext.versions = [
 		// Android
@@ -50,7 +49,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 7
-def versionPatch = 1
+def versionPatch = 2
 
 android {
 	compileSdkVersion versions.targetSdkVersion

@@ -29,6 +29,10 @@ import com.dimowner.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
+	//TODO: Search by ingredient
+	//TODO: Create my own favorite lists
+	//TODO: Watch all cocktails
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		setTheme(R.style.AppTheme);
