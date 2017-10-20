@@ -30,11 +30,22 @@
 				  android:focusable="true"
 				  android:background="?android:attr/selectableItemBackground">
 
+	<ImageView
+			android:id="@+id/list_item_ingredient_image"
+			android:layout_width="32dp"
+			android:layout_height="32dp"
+			android:src="@drawable/no_image"
+			android:visibility="gone"
+			android:layout_marginEnd="@dimen/padding_standard"
+			android:layout_marginRight="@dimen/padding_standard"
+			android:contentDescription="@string/content_description_ingredient_image"/>
+
 	<TextView
 			style="@style/TextView.Label"
 			android:id="@+id/list_item_ingredient_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
 			android:maxLines="1"
 			android:textSize="@dimen/text_size_xmedium"
 			tools:text="Coctail name"/>
@@ -44,6 +55,7 @@
 			android:id="@+id/list_item_ingredient_measure"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
 			android:layout_weight="1"
 			android:maxLines="1"
 			android:paddingLeft="@dimen/padding_standard"

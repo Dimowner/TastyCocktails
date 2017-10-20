@@ -38,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
@@ -112,6 +113,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	class IngredientViewHolder extends RecyclerView.ViewHolder {
 		TextView txtName;
 		TextView txtMeasure;
+		ImageView ivImage;
 		View view;
 
 		IngredientViewHolder(View itemView) {
@@ -119,6 +121,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			this.view = itemView;
 			this.txtName = itemView.findViewById(R.id.list_item_ingredient_name);
 			this.txtMeasure = itemView.findViewById(R.id.list_item_ingredient_measure);
+			this.ivImage = itemView.findViewById(R.id.list_item_ingredient_image);
 		}
 	}
 
@@ -325,6 +328,26 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 					itemClickListener.onItemClick(v, holder.getAdapterPosition());
 				}
 			});
+
+			Glide.with(holder.view.getContext())
+					.load(mShowingData.get(pos).getImageUrl())
+					.apply(RequestOptions.circleCropTransform())
+					.listener(new RequestListener<Drawable>() {
+						@Override
+						public boolean onLoadFailed(@Nullable GlideException e, Object model,
+															 Target<Drawable> target, boolean isFirstResource) {
+							holder.ivImage.setImageResource(R.drawable.no_image);
+							return false;
+						}
+
+						@Override
+						public boolean onResourceReady(Drawable resource, Object model,
+																 Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+							holder.ivImage.setVisibility(View.VISIBLE);
+							return false;
+						}
+					})
+					.into(holder.ivImage);
 
 			//Set transition names
 			Resources res = holder.view.getResources();

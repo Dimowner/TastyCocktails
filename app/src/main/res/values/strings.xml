@@ -71,6 +71,7 @@
 	<string name="open_source_licences">Open source licences</string>
 	<string name="content_description_user_face">User face</string>
 	<string name="content_description_cocktail_image">Cocktail image</string>
+	<string name="content_description_ingredient_image">Ingredient image</string>
 	<string name="transition_user_face">transition_user_face</string>
 	<string name="transition_user_name">transition_user_name</string>
 

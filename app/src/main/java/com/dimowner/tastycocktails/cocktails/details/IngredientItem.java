@@ -25,19 +25,15 @@ import android.os.Parcelable;
  */
 public class IngredientItem implements Parcelable {
 
-//	private final long id;
 	private final String name;
 	private final String measure;
+	private final String imageUrl;
 
-	public IngredientItem(String name, String measure) {
-//		this.id = id;
+	public IngredientItem(String name, String measure, String imageUrl) {
 		this.name = name;
 		this.measure = measure;
+		this.imageUrl = imageUrl;
 	}
-
-//	public long getId() {
-//		return id;
-//	}
 
 	public String getName() {
 		return name;
@@ -47,13 +43,18 @@ public class IngredientItem implements Parcelable {
 		return measure;
 	}
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
 	//----- START Parcelable implementation ----------
 	private IngredientItem(Parcel in) {
 //		id = in.readLong();
-		String[] data = new String[2];
+		String[] data = new String[3];
 		in.readStringArray(data);
 		name = data[0];
 		measure = data[1];
+		imageUrl = data[2];
 	}
 
 	public int describeContents() {
@@ -61,8 +62,7 @@ public class IngredientItem implements Parcelable {
 	}
 
 	public void writeToParcel(Parcel out, int flags) {
-//		out.writeLong(id);
-		out.writeStringArray(new String[] {name, measure});
+		out.writeStringArray(new String[] {name, measure, imageUrl});
 	}
 
 	public static final Parcelable.Creator<IngredientItem> CREATOR
@@ -77,12 +77,12 @@ public class IngredientItem implements Parcelable {
 	};
 	//----- END Parcelable implementation ----------
 
-
 	@Override
 	public String toString() {
 		return "IngredientItem{" +
-				"txtName='" + name + '\'' +
-				", txtMeasure='" + measure + '\'' +
+				"name='" + name + '\'' +
+				", measure='" + measure + '\'' +
+				", imageUrl='" + imageUrl + '\'' +
 				'}';
 	}
 }

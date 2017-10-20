@@ -116,8 +116,9 @@ public class DetailsActivity extends AppCompatActivity {
 	}
 
 	private void startIngredientDetailsActivity(IngredientItem item, View view1) {
-		Timber.v("start ingredient details activity here");
-		//TODO: start ingredient details activity here
+		Intent intent = new Intent(getApplicationContext(), ImagePreviewActivity.class);
+		intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, item.getImageUrl());
+		startActivity(intent);
 	}
 
 	private void initAdapter() {
