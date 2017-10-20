@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.24.3'
     }
 }
 apply plugin: 'com.android.application'
@@ -69,6 +69,26 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
 	}
+	flavorDimensions "default"
+
+	productFlavors {
+		debugConfig {
+			dimension "default"
+			minSdkVersion 16
+			applicationId "com.dimowner.tastycocktails.debug"
+			targetSdkVersion 26
+			minSdkVersion versions.minSdkVersion
+			targetSdkVersion versions.targetSdkVersion
+		}
+		releaseConfig {
+			dimension "default"
+			minSdkVersion 16
+			applicationId "com.dimowner.tastycocktails"
+			targetSdkVersion 26
+			minSdkVersion versions.minSdkVersion
+			targetSdkVersion versions.targetSdkVersion
+		}
+	}
 
 	compileOptions {
 		sourceCompatibility JavaVersion.VERSION_1_8
@@ -81,8 +101,20 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+// Remove not needed buildVariants.
+android.variantFilter { variant ->
+	if(variant.buildType.name.equals('release')
+			&& (variant.getFlavors().get(0).name.equals('debugConfig'))) {
+		variant.setIgnore(true);
+	}
+	if(variant.buildType.name.equals('debug')
+			&& (variant.getFlavors().get(0).name.equals('releaseConfig'))) {
+		variant.setIgnore(true);
+	}
+}
+
 dependencies {
-	compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile fileTree(include: ['*.jar'], dir: 'libs')
 
 	// Android
 	compile "com.android.support:support-v4:$versions.support"
@@ -115,7 +147,6 @@ dependencies {
 
 	//Glide
 	compile "com.github.bumptech.glide:glide:$versions.glide"
-
 	compile "android.arch.lifecycle:runtime:$versions.archComp"
 	compile "android.arch.lifecycle:extensions:$versions.archComp"
 	annotationProcessor "android.arch.lifecycle:compiler:$versions.archComp"
@@ -130,15 +161,15 @@ dependencies {
 
 	//PhotoView
 	compile "com.github.chrisbanes:PhotoView:$versions.photoView"
-
 	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
 		exclude group: 'com.android.support', module: 'support-annotations'
 	})
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.mockito:mockito-core:2.8.47'
+
 	// AssertJ
-	testCompile "org.assertj:assertj-core:3.7.0"
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
-        transitive = true;
-    }
+	testCompile 'org.assertj:assertj-core:3.7.0'
+	compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+		transitive = true;
+	}
 }
