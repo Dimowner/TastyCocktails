@@ -125,7 +125,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			int pos = h.getAdapterPosition();
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
-			holder.description.setText(mShowingData.get(pos).getDescription());
+			holder.description.setText(mShowingData.get(pos).getCategory());
 
 			if (mShowingData.get(pos).getAvatar_url() != null) {
 				Glide.with(holder.view.getContext())

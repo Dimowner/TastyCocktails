@@ -28,7 +28,7 @@ public interface DetailsContract  {
 
 	interface View extends Contract.View {
 
-		void displayData(String name, String description, boolean isFavorite);
+		void displayData(String name, String description, String category, String alcoholic, String glass, boolean isFavorite);
 
 		void displayImage(String url);
 

@@ -98,7 +98,8 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 					.subscribe(() -> {
 							drink.inverseFavorite();
 							view.showSnackBar(getApplication().getResources().getString(R.string.removed_from_favorites, drink.getStrDrink()));
-							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.isFavorite());
+							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrCategory(),
+									drink.getStrAlcoholic(), drink.getStrGlass(), drink.isFavorite());
 						}, Timber::e);
 		} else {
 			repository.addToFavorites(drink)
@@ -107,7 +108,8 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 					.subscribe(() -> {
 //							drink.inverseFavorite(); //Removed intentionally
 							view.showSnackBar(getApplication().getResources().getString(R.string.added_to_favorites, drink.getStrDrink()));
-							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.isFavorite());
+						view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrCategory(),
+								drink.getStrAlcoholic(), drink.getStrGlass(), drink.isFavorite());
 						}, Timber::e);
 		}
 	}
@@ -115,7 +117,8 @@ public class DetailsPresenter extends AndroidViewModel implements UserActionsLis
 	private void displayData(Drink model) {
 		if (model != null) {
 			drink = model;
-			view.displayData(model.getStrDrink(), model.getStrInstructions(), model.isFavorite());
+			view.displayData(model.getStrDrink(), model.getStrInstructions(), model.getStrCategory(),
+					model.getStrAlcoholic(), model.getStrGlass(), model.isFavorite());
 			view.displayImage(model.getStrDrinkThumb());
 			if (model.getStrDrinkThumb() == null || model.getStrDrinkThumb().isEmpty()) {
 				view.hideProgress();

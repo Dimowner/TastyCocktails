@@ -37,12 +37,23 @@
 			tools:src="@drawable/default_cover3"
 			/>
 
+	<ProgressBar
+			android:id="@+id/progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/padding_double"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="@+id/details_image"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+
 	<TextView
 			android:id="@+id/details_name"
 			style="@style/TextView.Label"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:paddingBottom="@dimen/padding_small"
 			android:paddingEnd="@dimen/padding_double"
 			android:paddingLeft="@dimen/padding_double"
 			android:paddingRight="@dimen/padding_double"
@@ -61,7 +72,7 @@
 			style="@style/TextView.Subheader"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:paddingBottom="@dimen/padding_double"
+			android:paddingBottom="@dimen/padding_standard"
 			android:paddingEnd="@dimen/padding_double"
 			android:paddingLeft="@dimen/padding_double"
 			android:paddingRight="@dimen/padding_double"
@@ -75,6 +86,99 @@
 			tools:text="@string/app_name"/>
 
 	<TextView
+			android:id="@+id/details_category_label"
+			style="@style/TextView.Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingBottom="@dimen/padding_tiny"
+			android:paddingEnd="@dimen/padding_small"
+			android:paddingLeft="@dimen/padding_double"
+			android:paddingRight="@dimen/padding_small"
+			android:paddingStart="@dimen/padding_double"
+			android:text="@string/category"
+			android:textStyle="bold"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/details_description"
+			/>
+
+	<TextView
+			android:id="@+id/details_category_content"
+			style="@style/TextView.Subheader"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:paddingBottom="@dimen/padding_tiny"
+			android:paddingEnd="@dimen/padding_double"
+			android:paddingLeft="@dimen/padding_small"
+			android:paddingRight="@dimen/padding_double"
+			android:paddingStart="@dimen/padding_small"
+			app:layout_constraintLeft_toRightOf="@id/details_category_label"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/details_description"
+			tools:text="@string/app_name"
+			/>
+
+	<TextView
+			android:id="@+id/details_alcoholic_label"
+			style="@style/TextView.Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingBottom="@dimen/padding_tiny"
+			android:paddingEnd="@dimen/padding_small"
+			android:paddingLeft="@dimen/padding_double"
+			android:paddingRight="@dimen/padding_small"
+			android:paddingStart="@dimen/padding_double"
+			android:text="@string/alcoholic"
+			android:textStyle="bold"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/details_category_label"
+			/>
+
+	<TextView
+			android:id="@+id/details_alcoholic_content"
+			style="@style/TextView.Subheader"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:paddingBottom="@dimen/padding_tiny"
+			android:paddingEnd="@dimen/padding_double"
+			android:paddingLeft="@dimen/padding_small"
+			android:paddingRight="@dimen/padding_double"
+			android:paddingStart="@dimen/padding_small"
+			app:layout_constraintLeft_toRightOf="@id/details_alcoholic_label"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/details_category_label"
+			tools:text="@string/app_name"
+			/>
+
+	<TextView
+			android:id="@+id/details_glass_label"
+			style="@style/TextView.Label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingEnd="@dimen/padding_small"
+			android:paddingLeft="@dimen/padding_double"
+			android:paddingRight="@dimen/padding_small"
+			android:paddingStart="@dimen/padding_double"
+			android:text="@string/glass"
+			android:textStyle="bold"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/details_alcoholic_label"
+			/>
+
+	<TextView
+			android:id="@+id/details_glass_content"
+			style="@style/TextView.Subheader"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:paddingEnd="@dimen/padding_double"
+			android:paddingLeft="@dimen/padding_small"
+			android:paddingRight="@dimen/padding_double"
+			android:paddingStart="@dimen/padding_small"
+			app:layout_constraintLeft_toRightOf="@id/details_glass_label"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/details_alcoholic_label"
+			tools:text="@string/app_name"
+			/>
+	<TextView
 			android:id="@+id/details_error"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -82,18 +186,6 @@
 			android:text="@string/msg_error_on_query"
 			android:textSize="@dimen/text_size_xmedium"
 			android:textStyle="bold"
-			android:visibility="gone"
-			app:layout_constraintBottom_toBottomOf="@+id/details_image"
-			app:layout_constraintLeft_toLeftOf="parent"
-			app:layout_constraintRight_toRightOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			/>
-
-	<ProgressBar
-			android:id="@+id/progress"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/padding_double"
 			android:visibility="gone"
 			app:layout_constraintBottom_toBottomOf="@+id/details_image"
 			app:layout_constraintLeft_toLeftOf="parent"
@@ -111,6 +203,7 @@
 			android:paddingLeft="@dimen/padding_double"
 			android:paddingRight="@dimen/padding_double"
 			android:paddingStart="@dimen/padding_double"
+			android:paddingTop="@dimen/padding_standard"
 			android:text="@string/ingredients"
 			android:textSize="@dimen/text_size_large"
 			android:textStyle="bold"
@@ -118,6 +211,6 @@
 			app:layout_constraintBottom_toBottomOf="@+id/constraint_layout"
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/details_description"/>
+			app:layout_constraintTop_toBottomOf="@+id/details_glass_label"/>
 
 </android.support.constraint.ConstraintLayout>

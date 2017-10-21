@@ -27,13 +27,20 @@ public class ListItem implements Parcelable {
 	private final long id;
 	private final String name;
 	private final String description;
+	private final String category;
+	private final String alcoholic;
+	private final String glass;
 	private final String avatar_url;
 	private final boolean isFavorite;
 
-	public ListItem(long id, String name, String description, String avatar_url, boolean isFavorite) {
+	public ListItem(long id, String name, String description, String category, String alcoholic,
+						 String glass, String avatar_url, boolean isFavorite) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.category = category;
+		this.alcoholic = alcoholic;
+		this.glass = glass;
 		this.avatar_url = avatar_url;
 		this.isFavorite = isFavorite;
 	}
@@ -50,6 +57,18 @@ public class ListItem implements Parcelable {
 		return description;
 	}
 
+	public String getCategory() {
+		return category;
+	}
+
+	public String getAlcoholic() {
+		return alcoholic;
+	}
+
+	public String getGlass() {
+		return glass;
+	}
+
 	public String getAvatar_url() {
 		return avatar_url;
 	}
@@ -61,11 +80,14 @@ public class ListItem implements Parcelable {
 	//----- START Parcelable implementation ----------
 	private ListItem(Parcel in) {
 		id = in.readLong();
-		String[] data = new String[4];
+		String[] data = new String[6];
 		in.readStringArray(data);
 		name = data[0];
 		description = data[1];
-		avatar_url = data[2];
+		category = data[2];
+		alcoholic = data[3];
+		glass = data[4];
+		avatar_url = data[5];
 		boolean[] bools = new boolean[1];
 		in.readBooleanArray(bools);
 		isFavorite = bools[0];
@@ -77,7 +99,7 @@ public class ListItem implements Parcelable {
 
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeLong(id);
-		out.writeStringArray(new String[] {name, description, avatar_url});
+		out.writeStringArray(new String[] {name, description, category, alcoholic, glass, avatar_url});
 		out.writeBooleanArray(new boolean[] {isFavorite});
 	}
 
@@ -99,6 +121,9 @@ public class ListItem implements Parcelable {
 				"id=" + id +
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
+				", category='" + category + '\'' +
+				", alcoholic='" + alcoholic + '\'' +
+				", glass='" + glass+ '\'' +
 				", avatar_url='" + avatar_url + '\'' +
 				", isFavorite=" + isFavorite +
 				'}';

@@ -35,6 +35,7 @@ import javax.inject.Inject;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity;
+import com.dimowner.tastycocktails.cocktails.details.IngredientItem;
 import com.dimowner.tastycocktails.cocktails.details.IngredientsAdapter;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
 
@@ -138,6 +139,10 @@ public class RandomFragment extends Fragment {
 			mAdapter = new IngredientsAdapter();
 			mRecyclerView.setAdapter(mAdapter);
 		}
+
+		mAdapter.setItemClickListener((view1, position) ->
+				startIngredientDetailsActivity(mAdapter.getItem(position), view1));
+
 		mAdapter.setFavoriteUpdateListener(fav -> {
 			isFavorite = fav;
 			updateFavorite(isFavorite);
@@ -169,6 +174,12 @@ public class RandomFragment extends Fragment {
 		super.onDestroyView();
 		mPresenter.unbindView();
 		mPresenter = null;
+	}
+
+	private void startIngredientDetailsActivity(IngredientItem item, View view1) {
+		Intent intent = new Intent(getContext(), ImagePreviewActivity.class);
+		intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, item.getImageUrl());
+		startActivity(intent);
 	}
 
 	private void updateFavorite(boolean fav) {

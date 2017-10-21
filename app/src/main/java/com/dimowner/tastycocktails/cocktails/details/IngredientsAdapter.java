@@ -66,6 +66,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	private String name;
 	private String description;
 	private String imageUrl;
+	private String category;
+	private String alcoholic;
+	private String glass;
 
 	private HeaderViewHolder headerViewHolder;
 
@@ -86,6 +89,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		final ImageView ivImage;
 		final TextView txtName;
 		final TextView txtDescription;
+		final TextView txtCategory;
+		final TextView txtAlcoholic;
+		final TextView txtGlass;
 		final TextView ingredientsLabel;
 		final TextView txtError;
 		final ProgressBar progress;
@@ -96,6 +102,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			ivImage = itemView.findViewById(R.id.details_image);
 			txtName = itemView.findViewById(R.id.details_name);
 			txtDescription = itemView.findViewById(R.id.details_description);
+			txtCategory = itemView.findViewById(R.id.details_category_content);
+			txtAlcoholic = itemView.findViewById(R.id.details_alcoholic_content);
+			txtGlass = itemView.findViewById(R.id.details_glass_content);
 			ingredientsLabel = itemView.findViewById(R.id.ingredients_label);
 
 			txtError = itemView.findViewById(R.id.details_error);
@@ -177,9 +186,12 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	}
 
 	@Override
-	public void displayData(String name, String description, boolean isFavorite) {
+	public void displayData(String name, String description, String category, String alcoholic, String glass, boolean isFavorite) {
 		this.name = name;
 		this.description = description;
+		this.category = category;
+		this.alcoholic = alcoholic;
+		this.glass = glass;
 		if (headerViewHolder !=  null) {
 			displayData(headerViewHolder);
 		}
@@ -192,6 +204,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		holder.txtName.setText(name);
 		holder.txtDescription.setText(description);
 		holder.ingredientsLabel.setVisibility(View.VISIBLE);
+		holder.txtCategory.setText(category);
+		holder.txtAlcoholic.setText(alcoholic);
+		holder.txtGlass.setText(glass);
 	}
 
 	@Override
@@ -436,6 +451,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		ss.name = name;
 		ss.description = description;
 		ss.imageUrl = imageUrl;
+		ss.category = category;
+		ss.alcoholic = alcoholic;
+		ss.glass = glass;
 		return ss;
 	}
 
@@ -450,6 +468,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		name = ss.name;
 		description = ss.description;
 		imageUrl = ss.imageUrl;
+		category = ss.category;
+		alcoholic  = ss.alcoholic;
+		glass = ss.glass;
 		notifyDataSetChanged();
 	}
 
@@ -465,24 +486,30 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		private SavedState(Parcel in) {
 			super(in);
 			items = (IngredientItem[]) in.readParcelableArray(getClass().getClassLoader());
-			String[] strings = new String[3];
+			String[] strings = new String[6];
 			in.readStringArray(strings);
 			name = strings[0];
 			description = strings[1];
 			imageUrl = strings[2];
+			category = strings[3];
+			alcoholic = strings[4];
+			glass = strings[5];
 		}
 
 		@Override
 		public void writeToParcel(Parcel out, int flags) {
 			super.writeToParcel(out, flags);
 			out.writeParcelableArray(items, flags);
-			out.writeStringArray(new String[] {name, description, imageUrl});
+			out.writeStringArray(new String[] {name, description, imageUrl, category, alcoholic, glass});
 		}
 
 		IngredientItem[] items;
 		String name;
 		String description;
 		String imageUrl;
+		String category;
+		String alcoholic;
+		String glass;
 
 		public static final Parcelable.Creator<SavedState> CREATOR =
 				new Parcelable.Creator<SavedState>() {
