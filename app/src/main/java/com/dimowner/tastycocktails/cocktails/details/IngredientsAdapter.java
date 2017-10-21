@@ -70,6 +70,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	private String alcoholic;
 	private String glass;
 
+	private boolean showProgress = false;
+
 	private HeaderViewHolder headerViewHolder;
 
 	private ItemClickListener itemClickListener;
@@ -149,6 +151,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	@Override
 	public void showProgress() {
+		showProgress = true;
 		if (headerViewHolder !=  null) {
 			headerViewHolder.progress.setVisibility(View.VISIBLE);
 		}
@@ -156,6 +159,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	@Override
 	public void hideProgress() {
+		showProgress = false;
 		if (headerViewHolder !=  null) {
 			headerViewHolder.progress.setVisibility(View.GONE);
 		}
@@ -378,6 +382,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		super.onViewAttachedToWindow(holder);
 		if (holder.getItemViewType() == VIEW_TYPE_HEADER) {
 			headerViewHolder = (HeaderViewHolder) holder;
+			if (showProgress) {
+				headerViewHolder.progress.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
