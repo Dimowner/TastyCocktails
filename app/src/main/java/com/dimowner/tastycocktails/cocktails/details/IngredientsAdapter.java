@@ -122,17 +122,17 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	}
 
 	class IngredientViewHolder extends RecyclerView.ViewHolder {
-		TextView txtName;
-		TextView txtMeasure;
-		ImageView ivImage;
+		TextView txtIngredientName;
+		TextView txtIngredientMeasure;
+		ImageView ivIngredientImage;
 		View view;
 
 		IngredientViewHolder(View itemView) {
 			super(itemView);
 			this.view = itemView;
-			this.txtName = itemView.findViewById(R.id.list_item_ingredient_name);
-			this.txtMeasure = itemView.findViewById(R.id.list_item_ingredient_measure);
-			this.ivImage = itemView.findViewById(R.id.list_item_ingredient_image);
+			this.txtIngredientName = itemView.findViewById(R.id.list_item_ingredient_name);
+			this.txtIngredientMeasure = itemView.findViewById(R.id.list_item_ingredient_measure);
+			this.ivIngredientImage = itemView.findViewById(R.id.list_item_ingredient_image);
 		}
 	}
 
@@ -252,6 +252,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 						@Override
 						public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
 																 DataSource dataSource, boolean isFirstResource) {
+							headerViewHolder.ivImage.setVisibility(View.VISIBLE);
 							if (animationListener != null) {
 								animationListener.onAnimation();
 							}
@@ -335,11 +336,11 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		} else if (viewHolder.getItemViewType() == VIEW_TYPE_NORMAL) {
 			IngredientViewHolder holder = ((IngredientViewHolder) viewHolder);
 			int pos = holder.getAdapterPosition()-1;
-			holder.txtName.setText(mShowingData.get(pos).getName());
+			holder.txtIngredientName.setText(mShowingData.get(pos).getName());
 			if (mShowingData.get(pos).getMeasure() != null && !mShowingData.get(pos).getMeasure().trim().isEmpty()) {
-				holder.txtMeasure.setText(mShowingData.get(pos).getMeasure());
+				holder.txtIngredientMeasure.setText(mShowingData.get(pos).getMeasure());
 			} else {
-				holder.txtMeasure.setText("");
+				holder.txtIngredientMeasure.setText("");
 			}
 
 			holder.view.setOnClickListener(v -> {
@@ -355,23 +356,23 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 						@Override
 						public boolean onLoadFailed(@Nullable GlideException e, Object model,
 															 Target<Drawable> target, boolean isFirstResource) {
-							holder.ivImage.setImageResource(R.drawable.no_image);
+							holder.ivIngredientImage.setImageResource(R.drawable.no_image);
 							return false;
 						}
 
 						@Override
 						public boolean onResourceReady(Drawable resource, Object model,
 																 Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-							holder.ivImage.setVisibility(View.VISIBLE);
+							holder.ivIngredientImage.setVisibility(View.VISIBLE);
 							return false;
 						}
 					})
-					.into(holder.ivImage);
+					.into(holder.ivIngredientImage);
 
 			//Set transition names
 			Resources res = holder.view.getResources();
-			ViewCompat.setTransitionName(holder.txtName, res.getString(R.string.list_item_label_transition));
-			ViewCompat.setTransitionName(holder.txtMeasure, res.getString(R.string.list_item_content_transition));
+			ViewCompat.setTransitionName(holder.txtIngredientName, res.getString(R.string.list_item_label_transition));
+			ViewCompat.setTransitionName(holder.txtIngredientMeasure, res.getString(R.string.list_item_content_transition));
 		} else if (viewHolder.getItemViewType() == VIEW_TYPE_FOOTER) {
 			//Do nothing
 		}
