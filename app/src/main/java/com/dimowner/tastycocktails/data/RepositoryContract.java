@@ -43,4 +43,5 @@ public interface RepositoryContract {
 	Completable reverseFavorite(long id);
 	Completable updateDrinkHistory(long id, long time);
 	Completable clearHistory();
+	Completable removeFromHistory(long id);
 }

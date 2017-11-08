@@ -63,6 +63,9 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private OnFavoriteClickListener onFavoriteClickListener;
 
+	private ItemLongClickListener itemLongClickListener;
+
+
 	class ItemViewHolder extends RecyclerView.ViewHolder {
 		TextView name;
  		TextView description;
@@ -71,14 +74,14 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
  		View view;
 
 		ItemViewHolder(View itemView) {
-				super(itemView);
-				this.view = itemView;
-				this.name = itemView.findViewById(R.id.list_item_name);
-				this.description = itemView.findViewById(R.id.list_item_description);
-				this.image = itemView.findViewById(R.id.list_item_image);
-				this.btnFev = itemView.findViewById(R.id.list_item_btn_favorite);
-			}
- 	}
+			super(itemView);
+			this.view = itemView;
+			this.name = itemView.findViewById(R.id.list_item_name);
+			this.description = itemView.findViewById(R.id.list_item_description);
+			this.image = itemView.findViewById(R.id.list_item_image);
+			this.btnFev = itemView.findViewById(R.id.list_item_btn_favorite);
+		}
+	}
 
 	static class LoadingViewHolder extends RecyclerView.ViewHolder {
 
@@ -165,8 +168,15 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 			holder.view.setOnClickListener(v -> {
 				if (itemClickListener != null) {
-					itemClickListener.onItemClick(v, holder.getAdapterPosition());
+					itemClickListener.onItemClick(v, pos);
 				}
+			});
+
+			holder.view.setOnLongClickListener(v -> {
+				if (itemLongClickListener != null) {
+					itemLongClickListener.onItemLongClick(v, mShowingData.get(pos).getId(), pos);
+				}
+				return true;
 			});
 		} else if (h.getItemViewType() == VIEW_TYPE_PROGRESS) {
 			//Do nothing
@@ -251,6 +261,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		this.onFavoriteClickListener = onFavoriteClickListener;
 	}
 
+	public void setItemLongClickListener(ItemLongClickListener itemLongClickListener) {
+		this.itemLongClickListener = itemLongClickListener;
+	}
+
 	/**
 	 * Save adapters state
 	 * @return adapter state.
@@ -310,6 +324,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	public interface ItemClickListener{
 		void onItemClick(View view, int position);
+	}
+
+	public interface ItemLongClickListener{
+		void onItemLongClick(View view, long id, int position);
 	}
 
 	public interface OnFavoriteClickListener {

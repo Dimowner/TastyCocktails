@@ -172,6 +172,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 				view12.setImageResource(R.drawable.avd_favorite_progress);
 				Animatable animatable = ((Animatable) view12.getDrawable());
 				animatable.start();
+				//TODO: refactor this into presenter
 				mPresenter.reverseFavorite(id)
 						.subscribeOn(Schedulers.io())
 						.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
@@ -192,6 +193,17 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 						.subscribe(() -> showSnackBar(id, !fev, name), throwable -> Timber.e("", throwable));
 			}
 		});
+		if (fragmentType == TYPE_HISTORY) {
+			mAdapter.setItemLongClickListener((view, id, position) ->
+					UIUtil.showWarningDialog(
+							getActivity(),
+							R.drawable.delete_forever_black, //Dialog title icon
+							R.string.remove_from_history,  //Dialog title text
+							(dialogInterface, i) -> mPresenter.removeFromHistory(id), //Callback for positive button
+							(dialogInterface, i) -> dialogInterface.dismiss() //Callback for negative button
+					)
+			);
+		}
 	}
 
 	private void startDetailsActivity(ListItem item, View view1) {
@@ -304,6 +316,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			if (mAdapter.getItemCount() > 0) {
 				UIUtil.showWarningDialog(
 						getActivity(),
+						R.drawable.delete_forever_black,
 						R.string.do_you_really_want_clear_history,
 						(dialogInterface, i) -> mPresenter.clearHistory(),
 						(dialogInterface, i) -> dialogInterface.dismiss()

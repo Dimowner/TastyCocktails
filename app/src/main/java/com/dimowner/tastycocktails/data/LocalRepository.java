@@ -141,6 +141,11 @@ public class LocalRepository implements RepositoryContract {
 		return Completable.fromAction(() -> getRepositoriesDao().clearHistory());
 	}
 
+	@Override
+	public Completable removeFromHistory(long id) {
+		return Completable.fromAction(() -> getRepositoriesDao().updateDrinkHistory(id, 0));
+	}
+
 	/**
 	 * Cache list of drinks into local database
 	 * @param items new Drinks to save.

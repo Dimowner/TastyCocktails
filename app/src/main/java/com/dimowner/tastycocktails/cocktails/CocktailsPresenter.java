@@ -150,6 +150,15 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	}
 
 	@Override
+	public void removeFromHistory(long id) {
+		view.showProgress();
+		compositeDisposable.add(
+				repository.removeFromHistory(id)
+						.subscribeOn(Schedulers.io())
+						.subscribe(() -> {}, this::handleError));
+	}
+
+	@Override
 	public Completable reverseFavorite(long id) {
 		return repository.reverseFavorite(id);
 	}

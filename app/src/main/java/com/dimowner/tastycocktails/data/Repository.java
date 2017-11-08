@@ -109,4 +109,9 @@ public class Repository implements RepositoryContract {
 	public Completable clearHistory() {
 		return localRepository.clearHistory();
 	}
+
+	@Override
+	public Completable removeFromHistory(long id) {
+		return localRepository.removeFromHistory(id);
+	}
 }

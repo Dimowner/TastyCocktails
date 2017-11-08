@@ -47,6 +47,8 @@ public interface SearchContract {
 
 		void clearHistory();
 
+		void removeFromHistory(long id);
+
 		Completable reverseFavorite(long id);
 	}
 }
