@@ -65,6 +65,16 @@
 				android:textColor="@color/text_primary_light"
 				android:gravity="center_horizontal"
 				android:text="@string/tap_search"/>
+
+		<Button
+				android:id="@+id/get_started"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?android:selectableItemBackground"
+				android:textColor="@color/colorAccent"
+				android:layout_margin="@dimen/padding_standard"
+				android:textSize="@dimen/text_size_large"
+				android:text="@string/btn_get_started"/>
 	</LinearLayout>
 
 	<TextView

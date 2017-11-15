@@ -34,8 +34,9 @@ public interface RepositoryContract {
 	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
 	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
 	Flowable<List<Drink>> getDrinksHistory(int page);
+	Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value);
 	Single<Drink> getRandomCocktail();
-	Single<Drink> getCocktail(long id);
+	Flowable<Drink> getCocktailRx(long id);
 	Flowable<List<Drink>> getLastSearch(String query);
 	Flowable<List<Drink>> getFavorites();
 	Completable addToFavorites(Drink drink);

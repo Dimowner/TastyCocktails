@@ -41,6 +41,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dimowner.tastycocktails.R;
+import com.dimowner.tastycocktails.cocktails.SearchFragment;
+import com.dimowner.tastycocktails.data.Prefs;
 
 /**
  * Created on 26.07.2017.
@@ -58,6 +60,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	private String filterStr = "";
 
 	private List<ListItem> mShowingData;
+
+	private Prefs prefs;
+
+	private int searchFragmentType = SearchFragment.TYPE_NORMAL;
 
 	private ItemClickListener itemClickListener;
 
@@ -85,16 +91,18 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	static class LoadingViewHolder extends RecyclerView.ViewHolder {
 
-		public ProgressBar progressBar;
+		ProgressBar progressBar;
 
-		public LoadingViewHolder(View itemView) {
+		LoadingViewHolder(View itemView) {
 			super(itemView);
 			progressBar = itemView.findViewById(R.id.list_item_progress);
 		}
 	}
 
-	public CocktailsRecyclerAdapter() {
+	public CocktailsRecyclerAdapter(int searchFragmentType, Prefs prefs) {
 		this.mShowingData = new ArrayList<>();
+		this.searchFragmentType = searchFragmentType;
+		this.prefs = prefs;
 	}
 
 	public void showFooter(boolean show) {
@@ -128,7 +136,12 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			int pos = h.getAdapterPosition();
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
-			holder.description.setText(mShowingData.get(pos).getCategory());
+			if (searchFragmentType != SearchFragment.TYPE_NORMAL
+					|| prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
+				holder.description.setText(mShowingData.get(pos).getCategory());
+			} else {
+				holder.description.setText(prefs.getSelectedFilterValue());
+			}
 
 			if (mShowingData.get(pos).getAvatar_url() != null) {
 				Glide.with(holder.view.getContext())
@@ -270,6 +283,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	 * @return adapter state.
 	 */
 	public Parcelable onSaveInstanceState() {
+//		TODO: fix save adapters state according to it's data
 		SavedState ss = new SavedState(AbsSavedState.EMPTY_STATE);
 		ss.items = mShowingData.toArray(new ListItem[0]);
 		return ss;

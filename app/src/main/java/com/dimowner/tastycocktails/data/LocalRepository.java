@@ -19,6 +19,7 @@ package com.dimowner.tastycocktails.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -66,6 +67,11 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
+		throw new RuntimeException("This method is supported only in RemoteRepository");
+	}
+
+	@Override
 	public Single<Drink> getRandomCocktail() {
 		return getRepositoriesDao().getRandom();
 //		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
@@ -80,7 +86,9 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
-	public Single<Drink> getCocktail(long id) {
+	public Flowable<Drink> getCocktailRx(long id) {
+		//This method called here to prevent infinite loop in flowable
+		updateDrinkHistory(id, new Date().getTime());
 		return getRepositoriesDao().getDrinkRx(id);
 //		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 //			if (count > 0) {
@@ -164,7 +172,16 @@ public class LocalRepository implements RepositoryContract {
 	 * @param item new Drink to save.
 	 */
 	public void cacheIntoLocalDatabase(Drink item) {
+		item.setHistory(new Date().getTime());
 		Single.just(item).map(data -> {
+			if (getRepositoriesDao().checkDrinkExists(item.getIdDrink()) == 1) {
+				Drink d = getRepositoriesDao().getDrink(item.getIdDrink());
+				if (d.isFavorite()) {
+					item.inverseFavorite();
+				}
+			}
+			item.setHistory(new Date().getTime());
+
 			getRepositoriesDao().insertDrink(item);
 			return null;
 		})

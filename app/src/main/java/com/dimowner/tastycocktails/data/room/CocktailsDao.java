@@ -63,10 +63,13 @@ public interface CocktailsDao {
 	void clearHistory();
 
 	@Query("SELECT * FROM drinks WHERE idDrink = :id")
-	Single<Drink> getDrinkRx(long id);
+	Flowable<Drink> getDrinkRx(long id);
 
 	@Query("SELECT * FROM drinks WHERE idDrink = :id")
 	Drink getDrink(long id);
+
+	@Query("SELECT COUNT(*) FROM drinks WHERE idDrink = :id")
+	Integer checkDrinkExists(long id);
 
 	@Query("UPDATE drinks SET isFavorite = 1 WHERE idDrink = :id")
 	void addToFavorites(long id);
@@ -89,7 +92,7 @@ public interface CocktailsDao {
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insertAll(Drink... items);
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertDrink(Drink item);
 
 	@Update

@@ -20,9 +20,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -33,6 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -83,6 +87,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private CocktailsRecyclerAdapter mAdapter;
 
+	private MenuItem searchMenu;
+
 	private int fragmentType = TYPE_NORMAL;
 
 	@Inject
@@ -114,12 +120,12 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_search, container, false);
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
 		mRoot = view.findViewById(R.id.coordinator_root);
@@ -145,8 +151,24 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 //		if (savedInstanceState == null) {
 			initAdapter();
 
+			if (prefs.isFirstRun()) {
+				prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_CATEGORY);
+				prefs.saveSelectedFilterValuePos(0);
+				String[] categories = getResources().getStringArray(R.array.filter_categories);
+				prefs.saveSelectedFilterValue(categories[0]);
+				Button btnGetStarted = view.findViewById(R.id.get_started);
+				btnGetStarted.setOnClickListener(view1 -> {
+					prefs.firstRunExecuted();
+					mWelcomePanel.setVisibility(View.GONE);
+					mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+				});
+			}
 			if (fragmentType == TYPE_NORMAL) {
-				mPresenter.loadLastSearch(prefs.getLastSearchString());
+				if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
+					mPresenter.loadLastSearch(prefs.getLastSearchString());
+				} else {
+					mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+				}
 			} else if (fragmentType == TYPE_FAVORITES) {
 				mPresenter.loadFavorites();
 			} else if (fragmentType == TYPE_HISTORY) {
@@ -159,7 +181,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private void initAdapter() {
 		if (mAdapter == null) {
-			mAdapter = new CocktailsRecyclerAdapter();
+			mAdapter = new CocktailsRecyclerAdapter(fragmentType, prefs);
 			mRecyclerView.setAdapter(mAdapter);
 		}
 		mAdapter.setItemClickListener((view1, position) ->
@@ -262,8 +284,12 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			MenuItem clearHistory = menu.findItem(R.id.action_clear_history);
 			clearHistory.setVisible(false);
 		}
+		MenuItem filters = menu.findItem(R.id.action_filter);
+		if (fragmentType != TYPE_NORMAL) {
+			filters.setVisible(false);
+		}
 
-		final MenuItem searchMenu = menu.findItem(R.id.action_search);
+		searchMenu = menu.findItem(R.id.action_search);
 		final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
@@ -273,6 +299,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 					//Save search query string
 					if (TCApplication.isConnected()) {
 						prefs.setLastSearchString(query);
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
 
 						mPresenter.startSearch(query);
 						if (prefs.isFirstRun()) {
@@ -324,8 +351,33 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			} else {
 				Toast.makeText(getContext(), R.string.history_already_empty, Toast.LENGTH_LONG).show();
 			}
+		} else if (item.getItemId() == R.id.action_filter) {
+			showFilterDialog();
+			if (searchMenu.isActionViewExpanded()) {
+				searchMenu.collapseActionView();
+			}
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void showFilterDialog() {
+		FragmentManager fm = getActivity().getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		Fragment prev = fm.findFragmentByTag("dialog_filters");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+		FiltersDialog dialog = new FiltersDialog();
+		dialog.setPositiveButtonListener((dialogInterface, i) -> {
+			if (prefs.isFirstRun()) {
+				prefs.firstRunExecuted();
+				mWelcomePanel.setVisibility(View.GONE);
+			}
+			mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+		});
+
+		dialog.show(ft, "dialog_filters");
 	}
 
 	@Override
@@ -405,9 +457,9 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		@Override
 		public void onLoadMore(int page, int totalItemsCount) {
 			Timber.d("onLoadMore page = " + page + " count = " + totalItemsCount);
-			if (fragmentType == TYPE_HISTORY) {
+//			if (fragmentType == TYPE_HISTORY) {
 //				mPresenter.loadHistory(page);
-			}
+//			}
 		}
 	}
 

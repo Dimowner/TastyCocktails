@@ -186,6 +186,7 @@
 			android:text="@string/msg_error_on_query"
 			android:textSize="@dimen/text_size_xmedium"
 			android:textStyle="bold"
+			android:textColor="@color/text_primary_light"
 			android:visibility="gone"
 			app:layout_constraintBottom_toBottomOf="@+id/details_image"
 			app:layout_constraintLeft_toLeftOf="parent"

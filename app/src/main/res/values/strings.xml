@@ -24,6 +24,7 @@
 	<string name="nav_random">Random</string>
 	<string name="nav_history">History</string>
 	<string name="nav_about">About</string>
+	<string name="dialog_filters">Filters</string>
 
 	<string name="drawer_open">Main menu opened</string>
 	<string name="drawer_closed">Main menu closed</string>
@@ -34,6 +35,7 @@
 	<string name="btn_search">Search</string>
 	<string name="btn_random">Random</string>
 	<string name="btn_close">Close</string>
+	<string name="btn_get_started">Get started</string>
 
 	<string name="msg_error_on_login">Error on login</string>
 	<string name="msg_error_on_query">Error on loading</string>
@@ -49,7 +51,6 @@
 	<string name="welcome">Welcome to the Tasty Cocktails!</string>
 	<string name="tap_search">Tap search to find one</string>
 	<string name="removed_from_favorites">%s removed from favorites</string>
-	<string name="removed_from_history">%s removed from history</string>
 	<string name="added_to_favorites">%s added to favorites</string>
 	<string name="undo">UNDO</string>
 
@@ -83,4 +84,16 @@
 	<string name="list_item_image_transition">list_item_image_transition</string>
 	<string name="list_item_label_transition">list_item_label_transition</string>
 	<string name="list_item_content_transition">list_item_content_transition</string>
+
+	<string-array name="filter_categories">
+		<item>Cocktail</item>
+		<item>Ordinary Drink</item>
+		<item>Shot</item>
+		<item>Punch / Party Drink</item>
+		<item>Coffee / Tea</item>
+		<item>Milk / Float / Shake</item>
+		<item>Cocoa</item>
+		<item>Homemade Liqueur</item>
+		<item>Other/Unknown</item>
+	</string-array>
 </resources>

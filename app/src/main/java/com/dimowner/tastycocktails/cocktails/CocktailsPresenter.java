@@ -141,6 +141,17 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	}
 
 	@Override
+	public void loadBuildList(int filterType, String filterVal) {
+		view.showProgress();
+		compositeDisposable.add(
+				repository.loadDrinksWithFilter(filterType, filterVal)
+						.map(ModelMapper::drinksToListItems)
+						.subscribeOn(Schedulers.io())
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(this::displayData, this::handleError));
+	}
+
+	@Override
 	public void clearHistory() {
 		view.showProgress();
 		compositeDisposable.add(

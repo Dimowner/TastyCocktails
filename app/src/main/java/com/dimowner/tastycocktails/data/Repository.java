@@ -24,6 +24,9 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
+
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.model.Drink;
 
@@ -58,6 +61,11 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
+		return remoteRepository.loadDrinksWithFilter(filterType, value);
+	}
+
+	@Override
 	public Single<Drink> getRandomCocktail() {
 		if (TCApplication.isConnected()) {
 			return remoteRepository.getRandomCocktail()
@@ -71,8 +79,12 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
-	public Single<Drink> getCocktail(long id) {
-		return localRepository.getCocktail(id);
+	public Flowable<Drink> getCocktailRx(long id) {
+		remoteRepository.getCocktailRx(id)
+				.subscribeOn(Schedulers.io())
+				.subscribe(drink -> localRepository.cacheIntoLocalDatabase(drink), Timber::e);
+
+		return localRepository.getCocktailRx(id);
 	}
 
 	@Override

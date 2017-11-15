@@ -29,6 +29,11 @@ import com.dimowner.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
+	//TODO: show favorites in cocktails list
+	//TODO: do some refactoring and optimization
+	//TODO: fix description on some drinks
+	//TODO: update libraries versions
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		setTheme(R.style.AppTheme);

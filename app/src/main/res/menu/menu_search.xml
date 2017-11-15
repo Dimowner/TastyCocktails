@@ -30,4 +30,10 @@
 			android:icon="@drawable/delete_forever"
 			android:title="@string/clear_history"
 			app:showAsAction="ifRoom"/>
+
+	<item
+			android:id="@+id/action_filter"
+			android:icon="@drawable/filter"
+			android:title="@string/clear_history"
+			app:showAsAction="always"/>
 </menu>

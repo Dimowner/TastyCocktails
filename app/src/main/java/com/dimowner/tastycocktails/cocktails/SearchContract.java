@@ -45,6 +45,8 @@ public interface SearchContract {
 
 		void loadHistory(int page);
 
+		void loadBuildList(int filterType, String filterVal);
+
 		void clearHistory();
 
 		void removeFromHistory(long id);

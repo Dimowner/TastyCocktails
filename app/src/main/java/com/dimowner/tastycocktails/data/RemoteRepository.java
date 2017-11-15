@@ -56,7 +56,7 @@ public class RemoteRepository implements RepositoryContract {
 	public Single<List<Drink>> searchCocktailsByName(@NonNull String search) {
 		return getCocktailApi()
 					.searchByName(search)
-					.map(this::convertDrinksToList)
+					.map(this::convertDrinksToListWithCaching)
 					.subscribeOn(Schedulers.io());
 
 	}
@@ -65,13 +65,24 @@ public class RemoteRepository implements RepositoryContract {
 	public Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient) {
 		return getCocktailApi()
 					.searchByIngredient(ingredient)
-					.map(this::convertDrinksToList)
+					.map(this::convertDrinksToListWithCaching)
 					.subscribeOn(Schedulers.io());
 	}
 
 	@Override
 	public Flowable<List<Drink>> getDrinksHistory(int page) {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
+	@Override
+	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
+		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
+			return getCocktailApi().searchByCategory(value)
+					.map(this::convertDrinksToListWithCaching);
+		} else {
+//			TODO: add implementation
+			throw new UnsupportedOperationException("This is not implemented yet");
+		}
 	}
 
 	@Override
@@ -83,7 +94,7 @@ public class RemoteRepository implements RepositoryContract {
 	}
 
 	@Override
-	public Single<Drink> getCocktail(long id) {
+	public Flowable<Drink> getCocktailRx(long id) {
 		return getCocktailApi()
 				.getCocktail(id)
 				.map(this::convertDrinksToDrink)
@@ -156,14 +167,17 @@ public class RemoteRepository implements RepositoryContract {
 		@GET("filter.php")
 		Single<Drinks> searchByIngredient(@Query("i") String ingredient);
 
+		@GET("filter.php")
+		Flowable<Drinks> searchByCategory(@Query("c") String category);
+
 		@GET("lookup.php")
-		Single<Drinks> getCocktail(@Query("i") long id);
+		Flowable<Drinks> getCocktail(@Query("i") long id);
 
 		@GET("random.php")
 		Single<Drinks> getRandom();
 	}
 
-	private List<Drink> convertDrinksToList(Drinks drinks) {
+	private List<Drink> convertDrinksToListWithCaching(Drinks drinks) {
 		if (drinks.getDrinks() != null) {
 			List<Drink> list = Arrays.asList(drinks.getDrinks());
 			onLoadListener.onDrinksLoad(list);
@@ -172,6 +186,16 @@ public class RemoteRepository implements RepositoryContract {
 			return Collections.emptyList();
 		}
 	}
+//
+//	private List<Drink> convertDrinksToList(Drinks drinks) {
+//		if (drinks.getDrinks() != null) {
+//			List<Drink> list = Arrays.asList(drinks.getDrinks());
+////			onLoadListener.onDrinksLoad(list);
+//			return list;
+//		} else {
+//			return Collections.emptyList();
+//		}
+//	}
 
 	private Drink convertDrinksToDrink(Drinks drinks) {
 		return drinks.getDrinks()[0];

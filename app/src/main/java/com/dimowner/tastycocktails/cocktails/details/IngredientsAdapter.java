@@ -74,6 +74,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	private HeaderViewHolder headerViewHolder;
 
+	//TODO: fix this huge listeners list, replace them by only one
 	private ItemClickListener itemClickListener;
 
 	private AnimationListener animationListener;
@@ -246,6 +247,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 							header.ivImage.setBackgroundColor(ContextCompat.getColor(header.ivImage.getContext(), R.color.colorPrimary));
 							header.ivImage.setImageResource(R.drawable.no_image);
 							header.txtError.setVisibility(View.VISIBLE);
+							if (onCheckImageColorListener != null) {
+								onCheckImageColorListener.onImageColorChecked(true);
+							}
 							return false;
 						}
 
