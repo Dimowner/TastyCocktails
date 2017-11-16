@@ -52,8 +52,9 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
-	public Single<List<Drink>> searchCocktailsByName(@NonNull String search) {
-		throw new RuntimeException("This method is supported only in RemoteRepository");
+	public Flowable<List<Drink>> searchCocktailsByName(@NonNull String search) {
+		search = "%" + search + "%";
+		return getRepositoriesDao().searchDrinksRx(search);
 	}
 
 	@Override
@@ -68,7 +69,12 @@ public class LocalRepository implements RepositoryContract {
 
 	@Override
 	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
-		throw new RuntimeException("This method is supported only in RemoteRepository");
+		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
+			return getRepositoriesDao().searchDrinksByCategory(value);
+		} else {
+//			TODO: add implementation
+			throw new UnsupportedOperationException("This is not implemented yet");
+		}
 	}
 
 	@Override

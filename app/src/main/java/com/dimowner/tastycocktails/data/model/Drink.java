@@ -36,7 +36,7 @@ public class Drink {
 	private final String strDrink;
 
 	@ColumnInfo(name = "strCategory")
-	private final String strCategory;
+	private String strCategory;
 
 	@ColumnInfo(name = "strAlcoholic")
 	private final String strAlcoholic;
@@ -178,6 +178,10 @@ public class Drink {
 
 	public String getStrCategory() {
 		return strCategory;
+	}
+
+	public void setStrCategory(String strCategory) {
+		this.strCategory = strCategory;
 	}
 
 	public String getStrAlcoholic() {

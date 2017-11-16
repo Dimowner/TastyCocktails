@@ -46,8 +46,11 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
-	public Single<List<Drink>> searchCocktailsByName(@NonNull String search) {
-		return remoteRepository.searchCocktailsByName(search);
+	public Flowable<List<Drink>> searchCocktailsByName(@NonNull String search) {
+		remoteRepository.searchCocktailsByName(search)
+				.subscribeOn(Schedulers.io())
+				.subscribe(drinks -> {}, Timber::e);
+		return localRepository.searchCocktailsByName(search);
 	}
 
 	@Override
@@ -62,7 +65,10 @@ public class Repository implements RepositoryContract {
 
 	@Override
 	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
-		return remoteRepository.loadDrinksWithFilter(filterType, value);
+		remoteRepository.loadDrinksWithFilter(filterType, value)
+				.subscribeOn(Schedulers.io())
+				.subscribe(drinks -> {}, Timber::e);
+		return localRepository.loadDrinksWithFilter(filterType, value);
 	}
 
 	@Override

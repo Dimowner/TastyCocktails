@@ -31,7 +31,7 @@ import com.dimowner.tastycocktails.data.model.Drink;
  */
 public interface RepositoryContract {
 
-	Single<List<Drink>> searchCocktailsByName(@NonNull String search);
+	Flowable<List<Drink>> searchCocktailsByName(@NonNull String search);
 	Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient);
 	Flowable<List<Drink>> getDrinksHistory(int page);
 	Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value);

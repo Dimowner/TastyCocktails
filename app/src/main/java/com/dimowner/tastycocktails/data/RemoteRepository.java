@@ -53,7 +53,7 @@ public class RemoteRepository implements RepositoryContract {
 
 
 	@Override
-	public Single<List<Drink>> searchCocktailsByName(@NonNull String search) {
+	public Flowable<List<Drink>> searchCocktailsByName(@NonNull String search) {
 		return getCocktailApi()
 					.searchByName(search)
 					.map(this::convertDrinksToListWithCaching)
@@ -78,7 +78,13 @@ public class RemoteRepository implements RepositoryContract {
 	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
 		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
 			return getCocktailApi().searchByCategory(value)
-					.map(this::convertDrinksToListWithCaching);
+					.map(this::convertDrinksToListWithCaching)
+					.map(drinks -> {
+						for (int i = 0; i < drinks.size(); i++) {
+							drinks.get(i).setStrCategory(value);
+						}
+						return drinks;
+					});
 		} else {
 //			TODO: add implementation
 			throw new UnsupportedOperationException("This is not implemented yet");
@@ -162,7 +168,7 @@ public class RemoteRepository implements RepositoryContract {
 
 	interface CocktailApi {
 		@GET("search.php")
-		Single<Drinks> searchByName(@Query("s") String search);
+		Flowable<Drinks> searchByName(@Query("s") String search);
 
 		@GET("filter.php")
 		Single<Drinks> searchByIngredient(@Query("i") String ingredient);

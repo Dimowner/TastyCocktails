@@ -35,16 +35,19 @@ import com.dimowner.tastycocktails.data.model.Drink;
 @Dao
 public interface CocktailsDao {
 
-	@Query("SELECT * FROM drinks")
+	@Query("SELECT * FROM drinks ORDER BY strDrink")
 	Single<List<Drink>> getAll();
 
-	@Query("SELECT * FROM drinks WHERE isFavorite <> 1")
+	@Query("SELECT * FROM drinks WHERE isFavorite <> 1 ORDER BY strDrink")
 	Flowable<List<Drink>> getLastSearch();
 
-	@Query("SELECT * FROM drinks WHERE UPPER(strDrink) LIKE UPPER(:search)")
+	@Query("SELECT * FROM drinks WHERE UPPER(strDrink) LIKE UPPER(:search) ORDER BY strDrink")
 	Flowable<List<Drink>> searchDrinksRx(String search);
 
-	@Query("SELECT * FROM drinks WHERE UPPER(strDrink) LIKE UPPER(:search)")
+	@Query("SELECT * FROM drinks WHERE UPPER(strCategory) LIKE UPPER(:search) ORDER BY strDrink")
+	Flowable<List<Drink>> searchDrinksByCategory(String search);
+
+	@Query("SELECT * FROM drinks WHERE UPPER(strDrink) LIKE UPPER(:search) ORDER BY strDrink")
 	List<Drink> searchDrinks(String search);
 
 	@Query("SELECT * FROM drinks WHERE isFavorite = 1 ORDER BY strDrink")

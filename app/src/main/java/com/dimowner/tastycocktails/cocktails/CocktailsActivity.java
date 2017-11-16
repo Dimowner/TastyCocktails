@@ -29,10 +29,9 @@ import com.dimowner.tastycocktails.R;
  */
 public class CocktailsActivity extends BaseActivity {
 
-	//TODO: show favorites in cocktails list
 	//TODO: do some refactoring and optimization
-	//TODO: fix description on some drinks
-	//TODO: update libraries versions
+	//TODO: fix load by category from local db
+	//TODO: Full test app and publish
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
