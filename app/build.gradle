@@ -34,7 +34,7 @@ ext.versions = [
 		glide				  : "4.0.0-RC1",
 
 		//Architecture components
-		archComp			  : "1.0.0-alpha9-1",
+		archComp			  : "1.0.0",
 
 		//ButterKnife
 		butterKnife		  : "8.7.0",
@@ -50,7 +50,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 8
-def versionPatch = 0
+def versionPatch = 1
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -104,13 +104,13 @@ repositories {
 
 // Remove not needed buildVariants.
 android.variantFilter { variant ->
-	if(variant.buildType.name.equals('release')
-			&& (variant.getFlavors().get(0).name.equals('debugConfig'))) {
-		variant.setIgnore(true);
+	if(variant.buildType.name == 'release'
+			&& variant.getFlavors().get(0).name == 'debugConfig') {
+		variant.setIgnore(true)
 	}
-	if(variant.buildType.name.equals('debug')
-			&& (variant.getFlavors().get(0).name.equals('releaseConfig'))) {
-		variant.setIgnore(true);
+	if(variant.buildType.name == 'debug'
+			&& variant.getFlavors().get(0).name == 'releaseConfig') {
+		variant.setIgnore(true)
 	}
 }
 
@@ -130,7 +130,7 @@ dependencies {
 	compile "com.android.support.constraint:constraint-layout-solver:$versions.constraintlayout"
 
 	//Facebook sdk
-	compile 'com.facebook.android:facebook-android-sdk:4.25.0'
+//	compile 'com.facebook.android:facebook-android-sdk:4.28.0'
 
 	// Rx
 	compile "io.reactivex.rxjava2:rxjava:$versions.rxJava"
@@ -171,6 +171,6 @@ dependencies {
 	// AssertJ
 	testCompile 'org.assertj:assertj-core:3.7.0'
 	compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
-		transitive = true;
+		transitive = true
 	}
 }

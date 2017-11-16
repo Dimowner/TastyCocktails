@@ -25,10 +25,10 @@ import com.dimowner.tastycocktails.data.model.Drink;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-@Database(entities = {Drink.class}, version = 4, exportSchema = false)
+@Database(entities = {Drink.class}, version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-	public static final int DEFAULT_PER_PAGE = 10;
+	public static final int DEFAULT_PER_PAGE = 50;
 
 	public abstract CocktailsDao cocktailsDao();
 }

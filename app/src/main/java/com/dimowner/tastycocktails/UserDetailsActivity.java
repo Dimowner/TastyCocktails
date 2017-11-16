@@ -25,10 +25,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
-import com.facebook.Profile;
-import com.facebook.login.LoginManager;
+//import com.facebook.AccessToken;
+//import com.facebook.AccessTokenTracker;
+//import com.facebook.Profile;
+//import com.facebook.login.LoginManager;
 import com.dimowner.tastycocktails.login.LoginActivity;
 
 import static com.dimowner.tastycocktails.util.AndroidUtils.dpToPx;
@@ -37,7 +37,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 	public static final String EXTRAS_KEY_USER_ID = "user_id";
 
-	private AccessTokenTracker accessTokenTracker;
+//	private AccessTokenTracker accessTokenTracker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,46 +45,46 @@ public class UserDetailsActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_info);
 
-		Button button = (Button) findViewById(R.id.btn_logout);
-		button.setOnClickListener(v -> LoginManager.getInstance().logOut());
-
-		Profile profile = Profile.getCurrentProfile();
-		if (profile != null) {
-			updateUserInfo(profile);
-		}
+//		Button button = (Button) findViewById(R.id.btn_logout);
+//		button.setOnClickListener(v -> LoginManager.getInstance().logOut());
+//
+//		Profile profile = Profile.getCurrentProfile();
+//		if (profile != null) {
+//			updateUserInfo(profile);
+//		}
 	}
 
-	private void updateUserInfo(Profile profile) {
-		TextView userName = (TextView) findViewById(R.id.txt_user_name);
-		ImageView userFace = (ImageView) findViewById(R.id.iv_user_face);
-
-		userName.setText(profile.getName());
-
-		Glide.with(UserDetailsActivity.this)
-				.load(profile.getProfilePictureUri((int) dpToPx(200), (int) dpToPx(200)).toString())
-				.apply(RequestOptions.circleCropTransform())
-				.into(userFace);
-	}
+//	private void updateUserInfo(Profile profile) {
+//		TextView userName = (TextView) findViewById(R.id.txt_user_name);
+//		ImageView userFace = (ImageView) findViewById(R.id.iv_user_face);
+//
+//		userName.setText(profile.getName());
+//
+//		Glide.with(UserDetailsActivity.this)
+//				.load(profile.getProfilePictureUri((int) dpToPx(200), (int) dpToPx(200)).toString())
+//				.apply(RequestOptions.circleCropTransform())
+//				.into(userFace);
+//	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		accessTokenTracker = new AccessTokenTracker() {
-			@Override
-			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-				if (currentAccessToken == null) {
-					startLoginActivity();
-				}
-			}
-		};
-		accessTokenTracker.startTracking();
+//		accessTokenTracker = new AccessTokenTracker() {
+//			@Override
+//			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+//				if (currentAccessToken == null) {
+//					startLoginActivity();
+//				}
+//			}
+//		};
+//		accessTokenTracker.startTracking();
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		accessTokenTracker.stopTracking();
-	}
+//	@Override
+//	protected void onDestroy() {
+//		super.onDestroy();
+//		accessTokenTracker.stopTracking();
+//	}
 
 	private void startLoginActivity() {
 		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

@@ -37,8 +37,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dimowner.tastycocktails.history.HistoryActivity;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
+//import com.facebook.Profile;
+//import com.facebook.ProfileTracker;
 
 import com.dimowner.tastycocktails.cocktails.CocktailsActivity;
 import com.dimowner.tastycocktails.favorites.FavoritesActivity;
@@ -70,10 +70,10 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 	protected NavigationView mNavigationView;
 	protected ActionBarDrawerToggle mDrawerToggle;
 
-	private TextView userName;
-	private ImageView userIconView;
+//	private TextView userName;
+//	private ImageView userIconView;
 
-	private ProfileTracker profileTracker;
+//	private ProfileTracker profileTracker;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,40 +89,40 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 		super.onPostCreate(savedInstanceState);
 		setupNavDrawer();
 
-		userName = mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
-		userIconView = mNavigationView.getHeaderView(0).findViewById(R.id.user_icon);
-
-		Profile profile = Profile.getCurrentProfile();
-		if (profile != null) {
-			loadUserFace(profile);
-			setUserDetailsActivity(profile);
-		}
+//		userName = mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
+//		userIconView = mNavigationView.getHeaderView(0).findViewById(R.id.user_icon);
+//
+//		Profile profile = Profile.getCurrentProfile();
+//		if (profile != null) {
+//			loadUserFace(profile);
+//			setUserDetailsActivity(profile);
+//		}
 	}
 
-	private void loadUserFace(@NonNull Profile profile) {
-		userName.setText(profile.getName());
-		Glide.with(BaseActivity.this)
-				.load(profile.getProfilePictureUri((int) dpToPx(60), (int) dpToPx(60)).toString())
-				.apply(RequestOptions.circleCropTransform())
-				.into(userIconView);
-	}
-
-	private void setUserDetailsActivity(@NonNull Profile profile) {
-		userIconView.setOnClickListener(v -> startUserDetailsActivity(profile.getId()));
-		userName.setOnClickListener(v -> startUserDetailsActivity(profile.getId()));
-	}
-
-	private void startUserDetailsActivity(@NonNull String id) {
-		Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-		intent.putExtra(UserDetailsActivity.EXTRAS_KEY_USER_ID, id);
+//	private void loadUserFace(@NonNull Profile profile) {
+//		userName.setText(profile.getName());
+//		Glide.with(BaseActivity.this)
+//				.load(profile.getProfilePictureUri((int) dpToPx(60), (int) dpToPx(60)).toString())
+//				.apply(RequestOptions.circleCropTransform())
+//				.into(userIconView);
+//	}
+//
+//	private void setUserDetailsActivity(@NonNull Profile profile) {
+//		userIconView.setOnClickListener(v -> startUserDetailsActivity(profile.getId()));
+//		userName.setOnClickListener(v -> startUserDetailsActivity(profile.getId()));
+//	}
+//
+//	private void startUserDetailsActivity(@NonNull String id) {
+//		Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
+//		intent.putExtra(UserDetailsActivity.EXTRAS_KEY_USER_ID, id);
 //		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
 //				BaseActivity.this,
 //				Pair.create(userIconView, ViewCompat.getTransitionName(userIconView)),
 //				Pair.create(userName, ViewCompat.getTransitionName(userName))
 //			);
 //		startActivity(intent, options.toBundle());
-		startActivity(intent);
-	}
+//		startActivity(intent);
+//	}
 
 	@Override
 	public void setContentView(int layoutResID) {
@@ -194,25 +194,25 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 		}
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		profileTracker = new ProfileTracker() {
-			@Override
-			protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-				if (currentProfile != null) {
-					loadUserFace(currentProfile);
-					setUserDetailsActivity(currentProfile);
-				}
-			}
-		};
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		profileTracker.stopTracking();
-	}
+//	@Override
+//	protected void onResume() {
+//		super.onResume();
+//		profileTracker = new ProfileTracker() {
+//			@Override
+//			protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+//				if (currentProfile != null) {
+//					loadUserFace(currentProfile);
+//					setUserDetailsActivity(currentProfile);
+//				}
+//			}
+//		};
+//	}
+//
+//	@Override
+//	protected void onDestroy() {
+//		super.onDestroy();
+//		profileTracker.stopTracking();
+//	}
 
 	@Override
 	public void onBackPressed() {

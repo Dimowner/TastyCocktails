@@ -21,19 +21,19 @@
 															android:layout_height="match_parent"
 															android:gravity="bottom">
 
-	<com.facebook.login.widget.LoginButton
-			android:id="@+id/login_button"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:layout_marginBottom="@dimen/padding_double"
-			android:layout_marginLeft="@dimen/padding_standard"
-			android:layout_marginRight="@dimen/padding_standard"
-			android:paddingBottom="@dimen/padding_standard"
-			android:paddingLeft="@dimen/padding_double"
-			android:paddingRight="@dimen/padding_double"
-			android:paddingTop="@dimen/padding_standard"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintLeft_toLeftOf="parent"
-			app:layout_constraintRight_toRightOf="parent"/>
+	<!--<com.facebook.login.widget.LoginButton-->
+			<!--android:id="@+id/login_button"-->
+			<!--android:layout_width="0dp"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:layout_gravity="center_horizontal"-->
+			<!--android:layout_marginBottom="@dimen/padding_double"-->
+			<!--android:layout_marginLeft="@dimen/padding_standard"-->
+			<!--android:layout_marginRight="@dimen/padding_standard"-->
+			<!--android:paddingBottom="@dimen/padding_standard"-->
+			<!--android:paddingLeft="@dimen/padding_double"-->
+			<!--android:paddingRight="@dimen/padding_double"-->
+			<!--android:paddingTop="@dimen/padding_standard"-->
+			<!--app:layout_constraintBottom_toBottomOf="parent"-->
+			<!--app:layout_constraintLeft_toLeftOf="parent"-->
+			<!--app:layout_constraintRight_toRightOf="parent"/>-->
 </android.support.constraint.ConstraintLayout>
