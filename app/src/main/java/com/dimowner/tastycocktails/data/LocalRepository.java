@@ -160,6 +160,15 @@ public class LocalRepository implements RepositoryContract {
 		return Completable.fromAction(() -> getRepositoriesDao().updateDrinkHistory(id, 0));
 	}
 
+	void cacheDrinks(List<Drink> drinks) {
+		for (int i = 0; i < drinks.size(); i++) {
+			if (drinks.get(i).getStrInstructions() != null && !drinks.get(i).getStrInstructions().isEmpty()) {
+				drinks.get(i).setCached(true);
+			}
+		}
+		getRepositoriesDao().insertAll(drinks.toArray(new Drink[drinks.size()]));
+	}
+
 	/**
 	 * Cache list of drinks into local database
 	 * @param items new Drinks to save.
@@ -177,8 +186,9 @@ public class LocalRepository implements RepositoryContract {
 	 * Cache list of drinks into local database
 	 * @param item new Drink to save.
 	 */
-	public void cacheIntoLocalDatabase(Drink item) {
+	void cacheIntoLocalDatabase(Drink item) {
 		item.setHistory(new Date().getTime());
+		item.setCached(true);
 		Single.just(item).map(data -> {
 			if (getRepositoriesDao().checkDrinkExists(item.getIdDrink()) == 1) {
 				Drink d = getRepositoriesDao().getDrink(item.getIdDrink());

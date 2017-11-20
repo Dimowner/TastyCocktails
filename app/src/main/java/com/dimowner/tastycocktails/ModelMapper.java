@@ -17,11 +17,14 @@
 package com.dimowner.tastycocktails;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.dimowner.tastycocktails.cocktails.details.IngredientItem;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.data.model.Drink;
+import com.dimowner.tastycocktails.data.model.Drinks;
 
 /**
  * Created on 15.08.2017.
@@ -30,6 +33,18 @@ import com.dimowner.tastycocktails.data.model.Drink;
 public class ModelMapper {
 
 	private ModelMapper() {
+	}
+
+	public static List<Drink> convertDrinksToList(Drinks drinks) {
+		if (drinks.getDrinks() != null) {
+			return Arrays.asList(drinks.getDrinks());
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	public static Drink convertDrinksToDrink(Drinks drinks) {
+		return drinks.getDrinks()[0];
 	}
 
 	public static List<ListItem> drinksToListItems(List<Drink> drinks) {

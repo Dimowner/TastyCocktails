@@ -162,19 +162,21 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 					mWelcomePanel.setVisibility(View.GONE);
 					mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
 				});
-			}
-			if (fragmentType == TYPE_NORMAL) {
-				if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
-					mPresenter.loadLastSearch(prefs.getLastSearchString());
-				} else {
-					mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
-				}
-			} else if (fragmentType == TYPE_FAVORITES) {
-				mPresenter.loadFavorites();
-			} else if (fragmentType == TYPE_HISTORY) {
-				mPresenter.loadHistory(1);
 			} else {
-				Timber.e("Con't load data not correct fragment type!");
+				if (fragmentType == TYPE_NORMAL) {
+					int filter = prefs.getCurrentActiveFilter();
+					if (filter == Prefs.FILTER_TYPE_SEARCH) {
+						mPresenter.loadLastSearch(prefs.getLastSearchString());
+					} else {
+						mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+					}
+				} else if (fragmentType == TYPE_FAVORITES) {
+					mPresenter.loadFavorites();
+				} else if (fragmentType == TYPE_HISTORY) {
+					mPresenter.loadHistory(1);
+				} else {
+					Timber.e("Con't load data not correct fragment type!");
+				}
 			}
 //		}
 	}
@@ -381,7 +383,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("fragment_type", fragmentType);
 //		if (mAdapter != null) {
@@ -450,7 +452,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	public class MyScrollListener extends EndlessRecyclerViewScrollListener {
 
-		public <L extends RecyclerView.LayoutManager> MyScrollListener(L layoutManager) {
+		<L extends RecyclerView.LayoutManager> MyScrollListener(L layoutManager) {
 			super(layoutManager);
 		}
 
@@ -469,7 +471,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	 * not enabled. This behavior is toggled via a checkbox in the UI.
 	 */
 	public class AppLinearLayoutManager extends LinearLayoutManager {
-		public AppLinearLayoutManager(Context context) {
+		AppLinearLayoutManager(Context context) {
 			super(context);
 		}
 

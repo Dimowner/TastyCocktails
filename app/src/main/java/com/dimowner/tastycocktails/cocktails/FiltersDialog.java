@@ -33,8 +33,6 @@ import android.widget.Spinner;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.data.Prefs;
 
-import timber.log.Timber;
-
 /**
  * Dialog shows cocktails search settings.
  * @author Dimowner
@@ -66,6 +64,10 @@ public class FiltersDialog extends DialogFragment {
 		Prefs prefs = new Prefs(getContext());
 		spinner.setSelection(prefs.getSelectedFilterValuePos());
 
+		int prevFilter = prefs.getCurrentActiveFilter();
+		int prevPos = prefs.getSelectedFilterValuePos();
+		String prevVal = prefs.getSelectedFilterValue();
+
 		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
@@ -82,7 +84,11 @@ public class FiltersDialog extends DialogFragment {
 		AlertDialog.Builder builder= new AlertDialog.Builder(getActivity())
 				.setTitle(R.string.dialog_filters)
 				.setView(view)
-				.setNegativeButton(R.string.btn_cancel, (dialog, whichButton) -> {});
+				.setNegativeButton(R.string.btn_cancel, (dialog, whichButton) -> {
+					prefs.saveCurrentActiveFilter(prevFilter);
+					prefs.saveSelectedFilterValuePos(prevPos);
+					prefs.saveSelectedFilterValue(prevVal);
+				});
 		if (onClickListener != null) {
 			builder.setPositiveButton(R.string.btn_ok, onClickListener);
 		} else {

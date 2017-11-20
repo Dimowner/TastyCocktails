@@ -18,8 +18,6 @@ package com.dimowner.tastycocktails.data;
 
 import android.support.annotation.NonNull;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -33,6 +31,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+
+import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
 
@@ -49,14 +49,12 @@ public class RemoteRepository implements RepositoryContract {
 
 	private CocktailApi cocktailApi;
 
-	private OnLoadListener onLoadListener;
-
 
 	@Override
 	public Flowable<List<Drink>> searchCocktailsByName(@NonNull String search) {
 		return getCocktailApi()
 					.searchByName(search)
-					.map(this::convertDrinksToListWithCaching)
+					.map(ModelMapper::convertDrinksToList)
 					.subscribeOn(Schedulers.io());
 
 	}
@@ -65,7 +63,7 @@ public class RemoteRepository implements RepositoryContract {
 	public Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient) {
 		return getCocktailApi()
 					.searchByIngredient(ingredient)
-					.map(this::convertDrinksToListWithCaching)
+					.map(ModelMapper::convertDrinksToList)
 					.subscribeOn(Schedulers.io());
 	}
 
@@ -78,7 +76,7 @@ public class RemoteRepository implements RepositoryContract {
 	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
 		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
 			return getCocktailApi().searchByCategory(value)
-					.map(this::convertDrinksToListWithCaching)
+					.map(ModelMapper::convertDrinksToList)
 					.map(drinks -> {
 						for (int i = 0; i < drinks.size(); i++) {
 							drinks.get(i).setStrCategory(value);
@@ -95,7 +93,7 @@ public class RemoteRepository implements RepositoryContract {
 	public Single<Drink> getRandomCocktail() {
 		return getCocktailApi()
 				.getRandom()
-				.map(this::convertDrinksToDrink)
+				.map(ModelMapper::convertDrinksToDrink)
 				.subscribeOn(Schedulers.io());
 	}
 
@@ -103,7 +101,7 @@ public class RemoteRepository implements RepositoryContract {
 	public Flowable<Drink> getCocktailRx(long id) {
 		return getCocktailApi()
 				.getCocktail(id)
-				.map(this::convertDrinksToDrink)
+				.map(ModelMapper::convertDrinksToDrink)
 				.subscribeOn(Schedulers.io());
 	}
 
@@ -181,40 +179,5 @@ public class RemoteRepository implements RepositoryContract {
 
 		@GET("random.php")
 		Single<Drinks> getRandom();
-	}
-
-	private List<Drink> convertDrinksToListWithCaching(Drinks drinks) {
-		if (drinks.getDrinks() != null) {
-			List<Drink> list = Arrays.asList(drinks.getDrinks());
-			onLoadListener.onDrinksLoad(list);
-			return list;
-		} else {
-			return Collections.emptyList();
-		}
-	}
-//
-//	private List<Drink> convertDrinksToList(Drinks drinks) {
-//		if (drinks.getDrinks() != null) {
-//			List<Drink> list = Arrays.asList(drinks.getDrinks());
-////			onLoadListener.onDrinksLoad(list);
-//			return list;
-//		} else {
-//			return Collections.emptyList();
-//		}
-//	}
-
-	private Drink convertDrinksToDrink(Drinks drinks) {
-		return drinks.getDrinks()[0];
-	}
-
-	public void setOnLoadListener(OnLoadListener onLoadListener) {
-		this.onLoadListener = onLoadListener;
-	}
-
-	/**
-	 * Interface for transfer query results into {@link LocalRepository} for caching.
-	 */
-	public interface OnLoadListener {
-		void onDrinksLoad(List<Drink> list);
 	}
 }

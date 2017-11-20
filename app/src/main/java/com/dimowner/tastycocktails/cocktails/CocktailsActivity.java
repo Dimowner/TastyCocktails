@@ -32,6 +32,8 @@ public class CocktailsActivity extends BaseActivity {
 	//TODO: do some refactoring and optimization
 	//TODO: fix load by category from local db
 	//TODO: Full test app and publish
+	//TODO: Write database migration
+	//TODO: Drinks watched after cocktail search doesn't shows in history
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

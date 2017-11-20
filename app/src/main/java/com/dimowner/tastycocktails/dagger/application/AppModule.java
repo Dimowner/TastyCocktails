@@ -66,8 +66,7 @@ public class AppModule {
 	Repository provideRepository(LocalRepository localRepository,
 										  RemoteRepository remoteRepository) {
 		//Remote repo passes last query result into Local repo for saving.
-		remoteRepository.setOnLoadListener(localRepository::cacheIntoLocalDatabase);
-
+//		remoteRepository.setOnLoadListener(localRepository::cacheIntoLocalDatabase);
 		return new Repository(localRepository, remoteRepository);
 	}
 

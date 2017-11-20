@@ -3,8 +3,6 @@ package com.dimowner.tastycocktails.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import timber.log.Timber;
-
 public class Prefs {
 
 	private static final String PREF_NAME = "task.softermii.tastycocktails.data.Prefs";
@@ -48,7 +46,6 @@ public class Prefs {
 	}
 
 	public void saveCurrentActiveFilter(int filterType) {
-		Timber.v("saveCurrentActiveFilter = " + filterType);
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putInt(PREF_KEY_FILTER_TYPE, filterType);
 		editor.apply();
@@ -75,7 +72,6 @@ public class Prefs {
 	}
 
 	public int getCurrentActiveFilter() {
-		Timber.v("getCurrentActiveFilter= " + sharedPreferences.getInt(PREF_KEY_FILTER_TYPE, FILTER_TYPE_CATEGORY));
 		return sharedPreferences.getInt(PREF_KEY_FILTER_TYPE, FILTER_TYPE_CATEGORY);
 	}
 }

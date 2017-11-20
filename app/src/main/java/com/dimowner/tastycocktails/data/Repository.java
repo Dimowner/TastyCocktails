@@ -49,12 +49,14 @@ public class Repository implements RepositoryContract {
 	public Flowable<List<Drink>> searchCocktailsByName(@NonNull String search) {
 		remoteRepository.searchCocktailsByName(search)
 				.subscribeOn(Schedulers.io())
+				.doOnNext(drinks -> localRepository.cacheDrinks(drinks))
 				.subscribe(drinks -> {}, Timber::e);
 		return localRepository.searchCocktailsByName(search);
 	}
 
 	@Override
 	public Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient) {
+//		TODO: fix this
 		return remoteRepository.searchCocktailsByIngredient(ingredient);
 	}
 
@@ -67,6 +69,7 @@ public class Repository implements RepositoryContract {
 	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
 		remoteRepository.loadDrinksWithFilter(filterType, value)
 				.subscribeOn(Schedulers.io())
+				.doOnNext(drinks -> localRepository.cacheDrinks(drinks))
 				.subscribe(drinks -> {}, Timber::e);
 		return localRepository.loadDrinksWithFilter(filterType, value);
 	}
@@ -86,11 +89,15 @@ public class Repository implements RepositoryContract {
 
 	@Override
 	public Flowable<Drink> getCocktailRx(long id) {
-		remoteRepository.getCocktailRx(id)
-				.subscribeOn(Schedulers.io())
-				.subscribe(drink -> localRepository.cacheIntoLocalDatabase(drink), Timber::e);
-
-		return localRepository.getCocktailRx(id);
+		return localRepository.getCocktailRx(id).doOnNext(drink -> {
+			if (!drink.isCached()) {
+				remoteRepository.getCocktailRx(id)
+						.subscribeOn(Schedulers.io())
+						.subscribe(d -> localRepository.cacheIntoLocalDatabase(d), Timber::e);
+			} else {
+				localRepository.updateDrinkHistory(id, new Date().getTime());
+			}
+		});
 	}
 
 	@Override

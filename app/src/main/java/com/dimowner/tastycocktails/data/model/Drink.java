@@ -27,10 +27,11 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "drinks")
 public class Drink {
 
-	public static final long NO_ID = -1;
-
 	@PrimaryKey
 	private final long idDrink;
+
+	@ColumnInfo(name = "cached")
+	private boolean cached;
 
 	@ColumnInfo(name = "strDrink")
 	private final String strDrink;
@@ -118,7 +119,7 @@ public class Drink {
 	@ColumnInfo(name = "strMeasure15")
 	private final String strMeasure15;
 
-	public Drink(long idDrink, String strDrink, String strCategory, String strAlcoholic, String strGlass,
+	public Drink(long idDrink, boolean cached, String strDrink, String strCategory, String strAlcoholic, String strGlass,
 					 String strInstructions, String strDrinkThumb, boolean isFavorite, long history, String strIngredient1,
 					 String strIngredient2, String strIngredient3, String strIngredient4, String strIngredient5,
 					 String strIngredient6, String strIngredient7, String strIngredient8, String strIngredient9,
@@ -128,6 +129,7 @@ public class Drink {
 					 String strMeasure7, String strMeasure8, String strMeasure9, String strMeasure10,
 					 String strMeasure11, String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15) {
 		this.idDrink = idDrink;
+		this.cached = cached;
 		this.strDrink = strDrink;
 		this.strCategory = strCategory;
 		this.strAlcoholic = strAlcoholic;
@@ -170,6 +172,14 @@ public class Drink {
 
 	public long getIdDrink() {
 		return idDrink;
+	}
+
+	public boolean isCached() {
+		return cached;
+	}
+
+	public void setCached(boolean cached) {
+		this.cached = cached;
 	}
 
 	public String getStrDrink() {
@@ -336,16 +346,11 @@ public class Drink {
 		return strMeasure15;
 	}
 
-	public static Drink emptyDrink() {
-		return new Drink(NO_ID, null, null, null, null, null, null, false, 0, null, null, null, null, null,
-								null, null, null, null, null, null, null, null, null, null, null, null,
-								null, null, null, null, null, null, null, null, null, null, null, null, null);
-	}
-
 	@Override
 	public String toString() {
 		return "Drink{" +
 				"idDrink=" + idDrink +
+				", cached='" + cached + '\'' +
 				", strDrink='" + strDrink + '\'' +
 				", strCategory='" + strCategory + '\'' +
 				", strAlcoholic='" + strAlcoholic + '\'' +
