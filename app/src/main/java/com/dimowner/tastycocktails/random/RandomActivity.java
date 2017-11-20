@@ -83,6 +83,7 @@ public class RandomActivity extends BaseActivity {
 		super.onRestoreInstanceState(savedInstanceState);
 		fragment = (RandomFragment) getSupportFragmentManager()
 				.findFragmentByTag(savedInstanceState.getString("fragment_tag"));
+		fragment.setActivityToolbar(mActionBarToolbar);
 		fab.setOnClickListener(v -> fragment.loadRandomDrink());
 	}
 
