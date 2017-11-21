@@ -70,6 +70,7 @@ import timber.log.Timber;
  */
 public class SearchFragment extends Fragment implements SearchContract.View {
 
+	public static final int TYPE_UNKNOWN = 0;
 	public static final int TYPE_NORMAL = 1;
 	public static final int TYPE_FAVORITES = 2;
 	public static final int TYPE_HISTORY = 3;
@@ -89,7 +90,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private MenuItem searchMenu;
 
-	private int fragmentType = TYPE_NORMAL;
+	private int fragmentType = TYPE_UNKNOWN;
 
 	@Inject
 	SearchContract.UserActionsListener mPresenter;

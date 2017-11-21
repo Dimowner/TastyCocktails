@@ -110,6 +110,7 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	@Override
 	public void loadLastSearch(String query) {
 		view.showProgress();
+		compositeDisposable.clear();
 		compositeDisposable.add(
 				repository.getLastSearch(query)
 						.map(ModelMapper::drinksToListItems)
@@ -121,6 +122,7 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	@Override
 	public void loadFavorites() {
 		view.showProgress();
+		compositeDisposable.clear();
 		compositeDisposable.add(
 				repository.getFavorites()
 						.map(ModelMapper::drinksToListItems)
@@ -132,6 +134,7 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	@Override
 	public void loadHistory(int page) {
 		view.showProgress();
+		compositeDisposable.clear();
 		compositeDisposable.add(
 				repository.getDrinksHistory(page)
 						.map(ModelMapper::drinksToListItems)
@@ -143,6 +146,7 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	@Override
 	public void loadBuildList(int filterType, String filterVal) {
 		view.showProgress();
+		compositeDisposable.clear();
 		compositeDisposable.add(
 				repository.loadDrinksWithFilter(filterType, filterVal)
 						.map(ModelMapper::drinksToListItems)
