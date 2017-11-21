@@ -94,7 +94,9 @@ public class LocalRepository implements RepositoryContract {
 	@Override
 	public Flowable<Drink> getCocktailRx(long id) {
 		//This method called here to prevent infinite loop in flowable
-		updateDrinkHistory(id, new Date().getTime());
+		updateDrinkHistory(id, new Date().getTime())
+				.subscribeOn(Schedulers.io())
+				.subscribe(() -> {}, Timber::e);
 		return getRepositoriesDao().getDrinkRx(id);
 //		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 //			if (count > 0) {

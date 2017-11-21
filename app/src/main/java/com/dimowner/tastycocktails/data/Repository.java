@@ -94,8 +94,6 @@ public class Repository implements RepositoryContract {
 				remoteRepository.getCocktailRx(id)
 						.subscribeOn(Schedulers.io())
 						.subscribe(d -> localRepository.cacheIntoLocalDatabase(d), Timber::e);
-			} else {
-				localRepository.updateDrinkHistory(id, new Date().getTime());
 			}
 		});
 	}
