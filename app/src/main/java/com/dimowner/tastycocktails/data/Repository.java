@@ -92,7 +92,6 @@ public class Repository implements RepositoryContract {
 		return localRepository.getCocktailRx(id).doOnNext(drink -> {
 			if (!drink.isCached()) {
 				remoteRepository.getCocktailRx(id)
-						.subscribeOn(Schedulers.io())
 						.subscribe(d -> localRepository.cacheIntoLocalDatabase(d), Timber::e);
 			}
 		});

@@ -33,7 +33,6 @@ public class CocktailsActivity extends BaseActivity {
 	//TODO: fix load by category from local db
 	//TODO: Full test app and publish
 	//TODO: Write database migration
-	//TODO: Fix double query when open cocktails details
 	//TODO: Fix rebuild drinks list when open details
 
 	@Override

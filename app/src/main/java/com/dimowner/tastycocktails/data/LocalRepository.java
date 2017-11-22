@@ -97,7 +97,7 @@ public class LocalRepository implements RepositoryContract {
 		updateDrinkHistory(id, new Date().getTime())
 				.subscribeOn(Schedulers.io())
 				.subscribe(() -> {}, Timber::e);
-		return getRepositoriesDao().getDrinkRx(id);
+		return getRepositoriesDao().getDrinkRx(id).distinct();
 //		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 //			if (count > 0) {
 //				return getRepositoriesDao()
@@ -189,6 +189,7 @@ public class LocalRepository implements RepositoryContract {
 	 * @param item new Drink to save.
 	 */
 	void cacheIntoLocalDatabase(Drink item) {
+		Timber.v("cacheIntoLocalDatabase = " + item.toString());
 		item.setHistory(new Date().getTime());
 		item.setCached(true);
 		Single.just(item).map(data -> {

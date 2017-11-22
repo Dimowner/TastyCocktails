@@ -170,6 +170,24 @@ public class Drink {
 		this.strMeasure15 = strMeasure15;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Drink)) {
+			return false;
+		}
+		Drink d = (Drink) obj;
+		return   d.idDrink == idDrink
+				&& d.cached == cached
+				&& d.strDrink != null && d.strDrink.equals(strDrink)
+				&& d.isFavorite == isFavorite
+				&& d.history == history;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) idDrink;
+	}
+
 	public long getIdDrink() {
 		return idDrink;
 	}
