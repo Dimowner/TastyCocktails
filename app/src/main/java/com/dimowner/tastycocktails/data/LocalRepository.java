@@ -189,7 +189,6 @@ public class LocalRepository implements RepositoryContract {
 	 * @param item new Drink to save.
 	 */
 	void cacheIntoLocalDatabase(Drink item) {
-		Timber.v("cacheIntoLocalDatabase = " + item.toString());
 		item.setHistory(new Date().getTime());
 		item.setCached(true);
 		Single.just(item).map(data -> {

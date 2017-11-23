@@ -16,9 +16,12 @@
 
 package com.dimowner.tastycocktails.dagger.application;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import javax.inject.Singleton;
 
@@ -74,7 +77,8 @@ public class AppModule {
 	@Singleton
 	AppDatabase provideAppDatabase(Context context) {
 		return Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "cocktails_db")
-				.fallbackToDestructiveMigration()
+//				.fallbackToDestructiveMigration()
+				.addMigrations(MIGRATION_4_6)
 				.build();
 	}
 
@@ -83,4 +87,19 @@ public class AppModule {
 	Context provideContext() {
 		return appContext;
 	}
+
+	/**
+	 * Migrate from:
+	 * version 4 - using the SQLiteDatabase API
+	 * to
+	 * version 6 - using Room
+	 */
+	@VisibleForTesting
+	static final Migration MIGRATION_4_6 = new Migration(4, 6) {
+		@Override
+		public void migrate(@NonNull SupportSQLiteDatabase database) {
+			//Migration code here
+			database.execSQL("ALTER TABLE 'drinks' ADD COLUMN 'cached' INTEGER NOT NULL DEFAULT 0");
+		}
+	};
 }
