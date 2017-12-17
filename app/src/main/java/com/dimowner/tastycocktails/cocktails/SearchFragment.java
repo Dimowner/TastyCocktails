@@ -40,8 +40,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,7 +83,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
-	private LinearLayout mWelcomePanel;
+	private ScrollView mWelcomePanel;
 	private TextView mTxtEmpty;
 	private FrameLayout mRoot;
 
@@ -161,6 +161,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 				Button btnGetStarted = view.findViewById(R.id.get_started);
 				btnGetStarted.setOnClickListener(view1 -> {
 					prefs.firstRunExecuted();
+					String vals[] = getResources().getStringArray(R.array.filter_categories);
+					prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, vals[1]);
 					mWelcomePanel.setVisibility(View.GONE);
 					mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
 				});
@@ -169,7 +171,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 					int filter = prefs.getCurrentActiveFilter();
 					if (filter == Prefs.FILTER_TYPE_SEARCH) {
 						mPresenter.loadLastSearch(prefs.getLastSearchString());
-						if (getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
+						if (prefs.getLastSearchString() != null && getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
 							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
 						}
 					} else {
@@ -312,7 +314,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
 
 						mPresenter.startSearch(query);
-						if (getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+						if (prefs.getLastSearchString() != null && getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
 							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
 						}
 						if (prefs.isFirstRun()) {
@@ -390,7 +392,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 				}
 				if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
 					mPresenter.loadLastSearch(prefs.getLastSearchString());
-					if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+					if (prefs.getLastSearchString() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
 						((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
 					}
 				} else {

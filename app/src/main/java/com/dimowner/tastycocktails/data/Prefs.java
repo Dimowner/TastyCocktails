@@ -35,6 +35,14 @@ public class Prefs {
 		editor.apply();
 	}
 
+	public void setFirstRunDefaultValues(int filterType, int position, String value) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putInt(PREF_KEY_FILTER_TYPE, filterType);
+		editor.putInt(PREF_KEY_FILTER_VALUE_POS, position);
+		editor.putString(PREF_KEY_FILTER_VALUE, value);
+		editor.apply();
+	}
+
 	public String getLastSearchString() {
 		return sharedPreferences.getString(PREF_KEY_LAST_SEARCH_STR, null);
 	}
