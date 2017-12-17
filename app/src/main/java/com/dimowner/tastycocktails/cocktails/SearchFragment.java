@@ -26,6 +26,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -78,7 +79,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	public static final int ADD_TO_FAVORITES_ANIMATION_DURATION = 400;
 
-	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
+//	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
@@ -168,8 +169,14 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 					int filter = prefs.getCurrentActiveFilter();
 					if (filter == Prefs.FILTER_TYPE_SEARCH) {
 						mPresenter.loadLastSearch(prefs.getLastSearchString());
+						if (getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
+							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
+						}
 					} else {
 						mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+						if (getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
+							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+						}
 					}
 				} else if (fragmentType == TYPE_FAVORITES) {
 					mPresenter.loadFavorites();
@@ -208,14 +215,14 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 								},
 								throwable -> {
 									animatable.stop();
-									Timber.e("", throwable);
+									Timber.e(throwable);
 								});
 			} else {
 				//Add or remove from favorites without animation
 				mPresenter.reverseFavorite(id)
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(() -> showSnackBar(id, !fev, name), throwable -> Timber.e("", throwable));
+						.subscribe(() -> showSnackBar(id, !fev, name), Timber::e);
 			}
 		});
 		if (fragmentType == TYPE_HISTORY) {
@@ -305,6 +312,9 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
 
 						mPresenter.startSearch(query);
+						if (getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
+						}
 						if (prefs.isFirstRun()) {
 							prefs.firstRunExecuted();
 							mWelcomePanel.setVisibility(View.GONE);
@@ -364,23 +374,34 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	}
 
 	private void showFilterDialog() {
-		FragmentManager fm = getActivity().getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		Fragment prev = fm.findFragmentByTag("dialog_filters");
-		if (prev != null) {
-			ft.remove(prev);
-		}
-		ft.addToBackStack(null);
-		FiltersDialog dialog = new FiltersDialog();
-		dialog.setPositiveButtonListener((dialogInterface, i) -> {
-			if (prefs.isFirstRun()) {
-				prefs.firstRunExecuted();
-				mWelcomePanel.setVisibility(View.GONE);
+		if (getActivity() != null) {
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			FragmentTransaction ft = fm.beginTransaction();
+			Fragment prev = fm.findFragmentByTag("dialog_filters");
+			if (prev != null) {
+				ft.remove(prev);
 			}
-			mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
-		});
-
-		dialog.show(ft, "dialog_filters");
+			ft.addToBackStack(null);
+			FiltersDialog dialog = new FiltersDialog();
+			dialog.setPositiveButtonListener((dialogInterface, i) -> {
+				if (prefs.isFirstRun()) {
+					prefs.firstRunExecuted();
+					mWelcomePanel.setVisibility(View.GONE);
+				}
+				if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
+					mPresenter.loadLastSearch(prefs.getLastSearchString());
+					if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+						((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
+					}
+				} else {
+					mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+					if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+						((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+					}
+				}
+			});
+			dialog.show(ft, "dialog_filters");
+		}
 	}
 
 	@Override
@@ -395,7 +416,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	@Override
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
+		if (savedInstanceState != null) {
+//				&& savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			fragmentType = savedInstanceState.getInt("fragment_type");
 //			initAdapter();
 //			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));

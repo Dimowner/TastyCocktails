@@ -40,10 +40,10 @@ public class Drink {
 	private String strCategory;
 
 	@ColumnInfo(name = "strAlcoholic")
-	private final String strAlcoholic;
+	private String strAlcoholic;
 
 	@ColumnInfo(name = "strGlass")
-	private final String strGlass;
+	private String strGlass;
 
 	@ColumnInfo(name = "strInstructions")
 	private final String strInstructions;
@@ -58,7 +58,7 @@ public class Drink {
 	private long history = 0;
 
 	@ColumnInfo(name = "strIngredient1")
-	private final String strIngredient1;
+	private String strIngredient1;
 	@ColumnInfo(name = "strIngredient2")
 	private final String strIngredient2;
 	@ColumnInfo(name = "strIngredient3")
@@ -216,8 +216,16 @@ public class Drink {
 		return strAlcoholic;
 	}
 
+	public void setStrAlcoholic(String strAlcoholic) {
+		this.strAlcoholic = strAlcoholic;
+	}
+
 	public String getStrGlass() {
 		return strGlass;
+	}
+
+	public void setStrGlass(String strGlass) {
+		this.strGlass = strGlass;
 	}
 
 	public String getStrInstructions() {
@@ -242,6 +250,10 @@ public class Drink {
 
 	public void setHistory(long history) {
 		this.history = history;
+	}
+
+	public void setStrIngredient1(String strIngredient1) {
+		this.strIngredient1 = strIngredient1;
 	}
 
 	public String getStrIngredient1() {

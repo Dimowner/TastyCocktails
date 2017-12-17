@@ -47,6 +47,16 @@ public interface CocktailsDao {
 	@Query("SELECT * FROM drinks WHERE UPPER(strCategory) LIKE UPPER(:search) ORDER BY strDrink")
 	Flowable<List<Drink>> searchDrinksByCategory(String search);
 
+	@Query("SELECT * FROM drinks WHERE UPPER(strGlass) LIKE UPPER(:search) ORDER BY strDrink")
+	Flowable<List<Drink>> searchDrinksByGlass(String search);
+
+	@Query("SELECT * FROM drinks WHERE UPPER(strAlcoholic) LIKE UPPER(:search) ORDER BY strDrink")
+	Flowable<List<Drink>> searchDrinksByAlcoholic(String search);
+
+	//TODO: fix query
+	@Query("SELECT * FROM drinks WHERE UPPER(strIngredient1) LIKE UPPER(:search) ORDER BY strDrink")
+	Flowable<List<Drink>> searchDrinksByIngredient(String search);
+
 	@Query("SELECT * FROM drinks WHERE UPPER(strDrink) LIKE UPPER(:search) ORDER BY strDrink")
 	List<Drink> searchDrinks(String search);
 

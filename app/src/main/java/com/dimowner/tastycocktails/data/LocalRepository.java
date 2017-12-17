@@ -57,10 +57,10 @@ public class LocalRepository implements RepositoryContract {
 		return getRepositoriesDao().searchDrinksRx(search);
 	}
 
-	@Override
-	public Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient) {
-		throw new RuntimeException("This method is supported only in RemoteRepository");
-	}
+//	@Override
+//	public Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient) {
+//		throw new RuntimeException("This method is supported only in RemoteRepository");
+//	}
 
 	@Override
 	public Flowable<List<Drink>> getDrinksHistory(int page) {
@@ -71,6 +71,12 @@ public class LocalRepository implements RepositoryContract {
 	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
 		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
 			return getRepositoriesDao().searchDrinksByCategory(value);
+		} else if (filterType == Prefs.FILTER_TYPE_INGREDIENT) {
+			return getRepositoriesDao().searchDrinksByIngredient(value);
+		} else if (filterType == Prefs.FILTER_TYPE_GLASS) {
+			return getRepositoriesDao().searchDrinksByGlass(value);
+		} else if (filterType == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
+			return getRepositoriesDao().searchDrinksByAlcoholic(value);
 		} else {
 //			TODO: add implementation
 			throw new UnsupportedOperationException("This is not implemented yet");

@@ -60,14 +60,6 @@ public class RemoteRepository implements RepositoryContract {
 	}
 
 	@Override
-	public Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient) {
-		return getCocktailApi()
-					.searchByIngredient(ingredient)
-					.map(ModelMapper::convertDrinksToList)
-					.subscribeOn(Schedulers.io());
-	}
-
-	@Override
 	public Flowable<List<Drink>> getDrinksHistory(int page) {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
@@ -83,8 +75,34 @@ public class RemoteRepository implements RepositoryContract {
 						}
 						return drinks;
 					});
+		} else if (filterType == Prefs.FILTER_TYPE_INGREDIENT) {
+			return getCocktailApi().searchByIngredient(value)
+					.map(ModelMapper::convertDrinksToList)
+					.map(drinks -> {
+						for (int i = 0; i < drinks.size(); i++) {
+							drinks.get(i).setStrIngredient1(value);
+						}
+						return drinks;
+					});
+		} else if (filterType == Prefs.FILTER_TYPE_GLASS) {
+			return getCocktailApi().searchByGlass(value)
+					.map(ModelMapper::convertDrinksToList)
+					.map(drinks -> {
+						for (int i = 0; i < drinks.size(); i++) {
+							drinks.get(i).setStrGlass(value);
+						}
+						return drinks;
+					});
+		} else if (filterType == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
+			return getCocktailApi().searchByAlcoholic(value)
+					.map(ModelMapper::convertDrinksToList)
+					.map(drinks -> {
+						for (int i = 0; i < drinks.size(); i++) {
+							drinks.get(i).setStrAlcoholic(value);
+						}
+						return drinks;
+					});
 		} else {
-//			TODO: add implementation
 			throw new UnsupportedOperationException("This is not implemented yet");
 		}
 	}
@@ -169,10 +187,16 @@ public class RemoteRepository implements RepositoryContract {
 		Flowable<Drinks> searchByName(@Query("s") String search);
 
 		@GET("filter.php")
-		Single<Drinks> searchByIngredient(@Query("i") String ingredient);
+		Flowable<Drinks> searchByIngredient(@Query("i") String ingredient);
 
 		@GET("filter.php")
 		Flowable<Drinks> searchByCategory(@Query("c") String category);
+
+		@GET("filter.php")
+		Flowable<Drinks> searchByGlass(@Query("g") String glass);
+
+		@GET("filter.php")
+		Flowable<Drinks> searchByAlcoholic(@Query("a") String alcoholic);
 
 		@GET("lookup.php")
 		Flowable<Drinks> getCocktail(@Query("i") long id);

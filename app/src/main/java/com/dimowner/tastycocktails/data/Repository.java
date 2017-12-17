@@ -55,12 +55,6 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
-	public Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient) {
-//		TODO: fix this
-		return remoteRepository.searchCocktailsByIngredient(ingredient);
-	}
-
-	@Override
 	public Flowable<List<Drink>> getDrinksHistory(int page) {
 		return localRepository.getDrinksHistory(page);
 	}

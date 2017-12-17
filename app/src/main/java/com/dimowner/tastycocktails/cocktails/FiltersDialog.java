@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,6 +42,10 @@ public class FiltersDialog extends DialogFragment {
 
 	private DialogInterface.OnClickListener onClickListener;
 
+	private int selectedFilter = -1;
+
+	private Prefs prefs;
+
 	public FiltersDialog() {
 	}
 
@@ -52,28 +57,179 @@ public class FiltersDialog extends DialogFragment {
 				Context.LAYOUT_INFLATER_SERVICE);
 		View view = layoutInflater.inflate(R.layout.dialog_filters, null);
 
-		Spinner spinner = view.findViewById(R.id.filter_categories);
+		//Init CATEGORY filter
+		Spinner categorySpinner = view.findViewById(R.id.filter_categories);
 		// Create an ArrayAdapter using the string array and a default spinner layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-				R.array.filter_categories, android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getContext(),
+				R.array.filter_categories, R.layout.spinner_item);
 		// Specify the layout to use when the list of choices appears
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		categoryAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 		// Apply the adapter to the spinner
-		spinner.setAdapter(adapter);
+		categorySpinner.setAdapter(categoryAdapter);
 
-		Prefs prefs = new Prefs(getContext());
-		spinner.setSelection(prefs.getSelectedFilterValuePos());
+		//Init INGREDIENTS filter
+		Spinner ingredientSpinner = view.findViewById(R.id.filter_ingredients);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> ingredientAdapter = ArrayAdapter.createFromResource(getContext(),
+				R.array.filter_ingredients_alphabetical, R.layout.spinner_item);
+
+		// Specify the layout to use when the list of choices appears
+		ingredientAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		ingredientSpinner.setAdapter(ingredientAdapter);
+
+		//Init GLASS filter
+		Spinner glassSpinner = view.findViewById(R.id.filter_glass);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> glassAdapter = ArrayAdapter.createFromResource(getContext(),
+				R.array.filter_glass, R.layout.spinner_item);
+		// Specify the layout to use when the list of choices appears
+		glassAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		glassSpinner.setAdapter(glassAdapter);
+
+		//Init ALCOHOLIC filter
+		Spinner alcoholicSpinner = view.findViewById(R.id.filter_alcoholic);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> alcoholicAdapter = ArrayAdapter.createFromResource(getContext(),
+				R.array.filter_alcoholic, R.layout.spinner_item);
+		// Specify the layout to use when the list of choices appears
+		glassAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		alcoholicSpinner.setAdapter(alcoholicAdapter);
+
+		prefs = new Prefs(getContext());
+		int activeFilter = prefs.getCurrentActiveFilter();
+		if (activeFilter == Prefs.FILTER_TYPE_CATEGORY) {
+			categorySpinner.setSelection(prefs.getSelectedFilterValuePos());
+		} else if (activeFilter == Prefs.FILTER_TYPE_INGREDIENT) {
+			ingredientSpinner.setSelection(prefs.getSelectedFilterValuePos());
+		} else if (activeFilter == Prefs.FILTER_TYPE_GLASS) {
+			glassSpinner.setSelection(prefs.getSelectedFilterValuePos());
+		} else if (activeFilter == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
+			alcoholicSpinner.setSelection(prefs.getSelectedFilterValuePos());
+		}
 
 		int prevFilter = prefs.getCurrentActiveFilter();
 		int prevPos = prefs.getSelectedFilterValuePos();
 		String prevVal = prefs.getSelectedFilterValue();
 
-		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		categorySpinner.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				selectedFilter = Prefs.FILTER_TYPE_CATEGORY;
+				return false;
+			}
+		});
+
+		ingredientSpinner.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				selectedFilter = Prefs.FILTER_TYPE_INGREDIENT;
+				return false;
+			}
+		});
+
+		glassSpinner.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				selectedFilter = Prefs.FILTER_TYPE_GLASS;
+				return false;
+			}
+		});
+
+		alcoholicSpinner.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				selectedFilter = Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC;
+				return false;
+			}
+		});
+
+		categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-				prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_CATEGORY);
-				prefs.saveSelectedFilterValuePos(pos);
-				prefs.saveSelectedFilterValue(adapter.getItem(pos).toString());
+				if (selectedFilter == Prefs.FILTER_TYPE_CATEGORY) {
+					if (pos == 0) {
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
+					} else {
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_CATEGORY);
+						prefs.saveSelectedFilterValuePos(pos);
+						prefs.saveSelectedFilterValue(categoryAdapter.getItem(pos).toString());
+					}
+					ingredientSpinner.setSelection(0);
+					alcoholicSpinner.setSelection(0);
+					glassSpinner.setSelection(0);
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+			}
+		});
+
+
+		ingredientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+				if (selectedFilter == Prefs.FILTER_TYPE_INGREDIENT) {
+					if (pos == 0) {
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
+					} else {
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_INGREDIENT);
+						prefs.saveSelectedFilterValuePos(pos);
+						prefs.saveSelectedFilterValue(ingredientAdapter.getItem(pos).toString());
+						categorySpinner.setSelection(0);
+						alcoholicSpinner.setSelection(0);
+						glassSpinner.setSelection(0);
+					}
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+			}
+		});
+
+
+		glassSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+				if (selectedFilter == Prefs.FILTER_TYPE_GLASS) {
+					if (pos == 0) {
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
+					} else {
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_GLASS);
+						prefs.saveSelectedFilterValuePos(pos);
+						prefs.saveSelectedFilterValue(glassAdapter.getItem(pos).toString());
+						categorySpinner.setSelection(0);
+						alcoholicSpinner.setSelection(0);
+						ingredientSpinner.setSelection(0);
+					}
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+			}
+		});
+
+
+		alcoholicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+				if (selectedFilter == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
+					if (pos == 0) {
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
+					} else {
+						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC);
+						prefs.saveSelectedFilterValuePos(pos);
+						prefs.saveSelectedFilterValue(alcoholicAdapter.getItem(pos).toString());
+						categorySpinner.setSelection(0);
+						ingredientSpinner.setSelection(0);
+						glassSpinner.setSelection(0);
+					}
+				}
 			}
 
 			@Override

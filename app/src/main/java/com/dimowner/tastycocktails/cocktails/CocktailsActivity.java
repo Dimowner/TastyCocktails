@@ -30,10 +30,8 @@ import com.dimowner.tastycocktails.R;
 public class CocktailsActivity extends BaseActivity {
 
 	//TODO: do some refactoring and optimization
-	//TODO: fix load by category from local db
-	//TODO: Full test app and publish
-	//TODO: Write database migration
-	//TODO: Fix rebuild drinks list when open details
+	//TODO: Port Prefs
+	//TODO: History item delete on swipe
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

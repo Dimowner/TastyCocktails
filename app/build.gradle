@@ -15,8 +15,8 @@ ext.versions = [
 		// Android
 		targetSdkVersion : 27,
 		minSdkVersion    : 16,
-		buildtools       : "27.0.1",
-		support          : "27.0.1",
+		buildtools       : "27.0.2",
+		support          : "27.0.2",
 
 		// Components
 		constraintlayout : "1.0.2",
@@ -40,7 +40,7 @@ ext.versions = [
 		butterKnife		  : "8.7.0",
 
 		//Timber
-		timber			  : "4.5.1",
+		timber			  : "4.6.0",
 
 		//PhotoView
 		photoView		  : "2.0.0",
@@ -50,7 +50,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 8
-def versionPatch = 2
+def versionPatch = 4
 
 android {
 	compileSdkVersion versions.targetSdkVersion
