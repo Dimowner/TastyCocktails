@@ -64,6 +64,7 @@
 	<string name="glass">Glass</string>
 	<string name="alcoholic">Alcoholic</string>
 	<string name="category">Category</string>
+	<string name="ingredient">Ingredient</string>
 	<string name="remove_from_history">Remove from history?</string>
 	<string name="search">Search: %s</string>
 

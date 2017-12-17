@@ -11,10 +11,24 @@
 			android:padding="@dimen/padding_standard"
 			android:orientation="vertical">
 
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/padding_small"
+				android:text="@string/category"
+				/>
+
 		<Spinner
 				android:id="@+id/filter_categories"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				/>
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/padding_small"
+				android:text="@string/ingredient"
 				/>
 
 		<Spinner
@@ -23,10 +37,24 @@
 				android:layout_height="wrap_content"
 				/>
 
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/padding_small"
+				android:text="@string/glass"
+				/>
+
 		<Spinner
 				android:id="@+id/filter_glass"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				/>
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/padding_small"
+				android:text="@string/alcoholic"
 				/>
 
 		<Spinner
