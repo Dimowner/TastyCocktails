@@ -53,7 +53,7 @@
 					android:layout_height="200dp"
 					android:contentDescription="@string/app_name"
 					android:layout_gravity="center"
-					android:src="@drawable/loadscreen4"/>
+					android:src="@drawable/tasty_cocktails_start_screen"/>
 			<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"

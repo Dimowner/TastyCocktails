@@ -490,7 +490,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	/**
 	 * Object state
 	 */
-	private static class SavedState extends View.BaseSavedState {
+	public static class SavedState extends View.BaseSavedState {
 		SavedState(Parcelable superState) {
 			super(superState);
 		}
