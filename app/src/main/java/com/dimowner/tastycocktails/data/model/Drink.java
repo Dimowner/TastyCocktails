@@ -27,6 +27,8 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "drinks")
 public class Drink {
 
+	public static final String HTTPS = "https://";
+
 	@PrimaryKey
 	private final long idDrink;
 
@@ -49,7 +51,7 @@ public class Drink {
 	private final String strInstructions;
 
 	@ColumnInfo(name = "strDrinkThumb")
-	private final String strDrinkThumb;
+	private String strDrinkThumb;
 
 	@ColumnInfo(name = "isFavorite")
 	private boolean isFavorite = false;
@@ -135,7 +137,11 @@ public class Drink {
 		this.strAlcoholic = strAlcoholic;
 		this.strGlass = strGlass;
 		this.strInstructions = strInstructions;
-		this.strDrinkThumb = strDrinkThumb;
+		if (!strDrinkThumb.contains(HTTPS)) {
+			this.strDrinkThumb = HTTPS + strDrinkThumb;
+		} else {
+			this.strDrinkThumb = strDrinkThumb;
+		}
 		this.isFavorite = isFavorite;
 		this.history = history;
 		this.strIngredient1 = strIngredient1;
