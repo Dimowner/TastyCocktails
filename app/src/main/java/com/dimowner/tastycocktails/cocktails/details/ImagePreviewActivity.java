@@ -30,7 +30,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
 		Toolbar toolbar = findViewById(R.id.toolbar);
 
 		PhotoView photoView = findViewById(R.id.photo_view);
-		photoView.setImageResource(R.drawable.tasty_cocktails_start_screen);
+		photoView.setImageResource(R.drawable.loadscreen_new);
 
 		Glide.with(getApplicationContext())
 				.load(getIntent().getStringExtra(EXTRAS_KEY_IMAGE_PATH))

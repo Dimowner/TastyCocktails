@@ -49,11 +49,12 @@
 				android:orientation="vertical">
 
 			<ImageView
-					android:layout_width="200dp"
-					android:layout_height="200dp"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
 					android:contentDescription="@string/app_name"
 					android:layout_gravity="center"
-					android:src="@drawable/tasty_cocktails_start_screen"/>
+					android:src="@drawable/loadscreen_new"
+					android:layout_margin="@dimen/padding_double"/>
 			<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
