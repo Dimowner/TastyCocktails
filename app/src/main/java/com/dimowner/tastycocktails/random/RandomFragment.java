@@ -21,7 +21,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,13 +61,15 @@ public class RandomFragment extends Fragment {
 
 	private boolean isFavorite = false;
 	private boolean isImageDark = true;
+	private boolean isCreated = false;
 
 	private ImageButton btnMenu;
 	private ImageButton btnFavorite;
 	private FloatingActionButton fab;
+	private CoordinatorLayout mRoot;
 	private View.OnClickListener openMenuListener;
 
-	private IngredientsAdapter.OnSnackBarListener onSnackBarListener;
+//	private IngredientsAdapter.OnSnackBarListener onSnackBarListener;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +94,7 @@ public class RandomFragment extends Fragment {
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+		mRoot = view.findViewById(R.id.coordinator);
 		btnFavorite = view.findViewById(R.id.btn_favorite);
 		btnMenu = view.findViewById(R.id.btn_menu);
 		fab = view.findViewById(R.id.fab);
@@ -106,7 +111,6 @@ public class RandomFragment extends Fragment {
 			initAdapter();
 
 			mPresenter.bindView(mAdapter);
-			mPresenter.loadRandomDrink();
 		}
 	}
 
@@ -116,7 +120,15 @@ public class RandomFragment extends Fragment {
 		if (openMenuListener != null) {
 			btnMenu.setOnClickListener(openMenuListener);
 		}
-		AnimationUtil.physBasedRevealAnimation(fab);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (!isCreated) {
+			mPresenter.loadRandomDrink();
+//			isCreated = true;
+		}
 	}
 
 	@Override
@@ -130,6 +142,7 @@ public class RandomFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("is_favorite", isFavorite);
 		outState.putBoolean("is_image_dark", isImageDark);
+		outState.putBoolean("is_created", isCreated);
 		if (mAdapter != null) {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
 		}
@@ -141,6 +154,7 @@ public class RandomFragment extends Fragment {
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
 			isImageDark = savedInstanceState.getBoolean("is_image_dark");
+			isCreated = savedInstanceState.getBoolean("is_created");
 			updateFavorite(isFavorite);
 			initAdapter();
 
@@ -177,11 +191,13 @@ public class RandomFragment extends Fragment {
 			} else {
 				btnMenu.setImageResource(R.drawable.menu_black);
 			}
+			fab.setVisibility(View.VISIBLE);
+			if (!isCreated) {
+				AnimationUtil.physBasedRevealAnimation(fab);
+				isCreated = true;
+			}
 		});
-
-		if (onSnackBarListener != null) {
-			mAdapter.setOnSnackBarListener(onSnackBarListener);
-		}
+		mAdapter.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 	}
 
 	@Override
@@ -202,14 +218,6 @@ public class RandomFragment extends Fragment {
 			btnFavorite.setImageResource(fav ? R.drawable.heart : R.drawable.heart_outline);
 		} else {
 			btnFavorite.setImageResource(fav ? R.drawable.heart_black : R.drawable.heart_outline_black);
-		}
-	}
-
-	public void setOnSnackBarListener(IngredientsAdapter.OnSnackBarListener onSnackBarListener) {
-		if (mAdapter != null) {
-			mAdapter.setOnSnackBarListener(onSnackBarListener);
-		} else {
-			this.onSnackBarListener = onSnackBarListener;
 		}
 	}
 

@@ -405,7 +405,11 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	@Override
 	public int getItemCount() {
-		return mShowingData.size() + 2;
+		if (mShowingData.size() == 0) {
+			return 0;
+		} else {
+			return mShowingData.size() + 2;
+		}
 	}
 
 	@Override

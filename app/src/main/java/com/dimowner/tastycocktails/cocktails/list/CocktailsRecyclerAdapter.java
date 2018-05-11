@@ -19,6 +19,7 @@ package com.dimowner.tastycocktails.cocktails.list;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.AbsSavedState;
 import android.support.v7.widget.RecyclerView;
@@ -115,11 +116,12 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		}
 	}
 
+	@NonNull
 	@Override
-	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		if (viewType == VIEW_TYPE_NORMAL) {
 			View v = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.list_item, parent, false);
+					.inflate(R.layout.list_item2, parent, false);
 			return new ItemViewHolder(v);
 		} else if (viewType == VIEW_TYPE_PROGRESS) {
 			View v = LayoutInflater.from(parent.getContext())

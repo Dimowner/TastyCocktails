@@ -68,7 +68,6 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 	protected DrawerLayout mDrawerLayout;
 	protected NavigationView mNavigationView;
 	protected ActionBarDrawerToggle mDrawerToggle;
-	protected LinearLayout mRoot;
 
 	private int curActiveItem = NAVDRAWER_ITEM_COCKTAILS;
 
@@ -88,8 +87,6 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 		tracker.activityContentViewAfter();
 
 		TCApplication.get(getApplicationContext()).applicationComponent().inject(this);
-
-		mRoot = findViewById(R.id.root);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			// Set the padding to match the Status Bar height
@@ -245,6 +242,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 					mActionBarToolbar.setVisibility(View.VISIBLE);
 				}
 				startHistory();
+				curActiveItem = NAVDRAWER_ITEM_HISTORY;
 				break;
 			case NAVDRAWER_ITEM_ABOUT:
 				showAboutDialog();
@@ -287,7 +285,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 		FragmentManager manager = getSupportFragmentManager();
 		RandomFragment fragment = new RandomFragment();
 		fragment.setOpenMenuListener(v -> mDrawerLayout.openDrawer(Gravity.START));
-		fragment.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
+//		fragment.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 		manager
 				.beginTransaction()
 				.add(R.id.fragment, fragment, "random_fragment")
