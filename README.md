@@ -9,7 +9,7 @@ Features:
 - Favorites drinks
 - Watched drinks history
 
-![Tasty Cocktails Logo](https://github.com/Dimowner/TastyCocktails/blob/master/app/src/main/res/mipmap-xxxhdpi/tasty_cocktail_logo.png)
+![Tasty Cocktails Logo](https://github.com/Dimowner/TastyCocktails/blob/master/app/src/main/res/mipmap-xxxhdpi/tasty_cocktail_logo_new.png)
 
 
 ### License
