@@ -17,18 +17,20 @@
 package com.dimowner.tastycocktails.random;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import javax.inject.Inject;
 
@@ -38,6 +40,8 @@ import com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity;
 import com.dimowner.tastycocktails.cocktails.details.IngredientItem;
 import com.dimowner.tastycocktails.cocktails.details.IngredientsAdapter;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
+import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.dimowner.tastycocktails.util.AnimationUtil;
 
 /**
  * Created on 27.07.2017.
@@ -53,10 +57,13 @@ public class RandomFragment extends Fragment {
 	private RecyclerView mRecyclerView;
 	private IngredientsAdapter mAdapter;
 
-	private MenuItem itemFavorite;
 	private boolean isFavorite = false;
 	private boolean isImageDark = true;
-	private Toolbar activityToolbar;
+
+	private ImageButton btnMenu;
+	private ImageButton btnFavorite;
+	private FloatingActionButton fab;
+	private View.OnClickListener openMenuListener;
 
 	private IngredientsAdapter.OnSnackBarListener onSnackBarListener;
 
@@ -70,17 +77,30 @@ public class RandomFragment extends Fragment {
 
 	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-		mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_details, container, false);
-		return mRecyclerView;
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_random, container, false);
+		mRecyclerView = view.findViewById(R.id.recycler_view);
+		return view;
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+		btnFavorite = view.findViewById(R.id.btn_favorite);
+		btnMenu = view.findViewById(R.id.btn_menu);
+		fab = view.findViewById(R.id.fab);
+		fab.setOnClickListener(v -> mPresenter.loadRandomDrink());
+
+		btnFavorite.setOnClickListener(v -> mPresenter.reverseFavorite());
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			// Set the padding to match the Status Bar height
+			view.findViewById(R.id.title_bar).setPadding(0, AndroidUtils.getStatusBarHeight(getContext()), 0, 0);
+		}
 
 		if (savedInstanceState == null) {
 			initAdapter();
@@ -90,24 +110,19 @@ public class RandomFragment extends Fragment {
 		}
 	}
 
-	public void loadRandomDrink() {
-		mPresenter.loadRandomDrink();
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (openMenuListener != null) {
+			btnMenu.setOnClickListener(openMenuListener);
+		}
+		AnimationUtil.physBasedRevealAnimation(fab);
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_details, menu);
-		itemFavorite = menu.findItem(R.id.action_add_to_favorites);
 		updateFavorite(isFavorite);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_add_to_favorites) {
-			mPresenter.reverseFavorite();
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -158,9 +173,9 @@ public class RandomFragment extends Fragment {
 			isImageDark = isDark;
 			updateFavorite(isFavorite);
 			if (isDark) {
-				activityToolbar.setNavigationIcon(R.drawable.menu);
+				btnMenu.setImageResource(R.drawable.menu);
 			} else {
-				activityToolbar.setNavigationIcon(R.drawable.menu_black);
+				btnMenu.setImageResource(R.drawable.menu_black);
 			}
 		});
 
@@ -183,17 +198,11 @@ public class RandomFragment extends Fragment {
 	}
 
 	private void updateFavorite(boolean fav) {
-		if (itemFavorite != null) {
-			if (isImageDark) {
-				itemFavorite.setIcon(fav ? R.drawable.heart : R.drawable.heart_outline);
-			} else {
-				itemFavorite.setIcon(fav ? R.drawable.heart_black : R.drawable.heart_outline_black);
-			}
+		if (isImageDark) {
+			btnFavorite.setImageResource(fav ? R.drawable.heart : R.drawable.heart_outline);
+		} else {
+			btnFavorite.setImageResource(fav ? R.drawable.heart_black : R.drawable.heart_outline_black);
 		}
-	}
-
-	public void setActivityToolbar(Toolbar activityToolbar) {
-		this.activityToolbar = activityToolbar;
 	}
 
 	public void setOnSnackBarListener(IngredientsAdapter.OnSnackBarListener onSnackBarListener) {
@@ -203,4 +212,9 @@ public class RandomFragment extends Fragment {
 			this.onSnackBarListener = onSnackBarListener;
 		}
 	}
+
+	public void setOpenMenuListener(View.OnClickListener openMenuListener) {
+		this.openMenuListener = openMenuListener;
+	}
+
 }

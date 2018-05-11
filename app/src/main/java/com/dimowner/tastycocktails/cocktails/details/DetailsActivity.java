@@ -25,7 +25,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +36,6 @@ import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.dagger.details.DetailsModule;
 import com.dimowner.tastycocktails.util.AndroidUtils;
-import timber.log.Timber;
 
 /**
  * Created on 26.07.2017.
@@ -67,13 +65,10 @@ public class DetailsActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_container_scroll_view);
+		setContentView(R.layout.activity_details);
 
 		TCApplication.get(getApplicationContext()).applicationComponent()
 				.plus(new DetailsModule(this)).injectDetails(this);
-
-		// Inflate content and bind views.
-		LayoutInflater.from(this).inflate(R.layout.fragment_details, findViewById(R.id.container));
 
 //		supportPostponeEnterTransition();
 

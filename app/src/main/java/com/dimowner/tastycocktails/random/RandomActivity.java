@@ -56,14 +56,14 @@ public class RandomActivity extends BaseActivity {
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
 			fragment = new RandomFragment();
-			fragment.setActivityToolbar(mActionBarToolbar);
+//			fragment.setActivityToolbar(mActionBarToolbar);
 			fragment.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 			manager
 					.beginTransaction()
 					.add(R.id.fragment, fragment, "random_fragment")
 					.commit();
 		}
-		fab.setOnClickListener(v -> fragment.loadRandomDrink());
+//		fab.setOnClickListener(v -> fragment.loadRandomDrink());
 	}
 
 	@Override
@@ -83,8 +83,8 @@ public class RandomActivity extends BaseActivity {
 		super.onRestoreInstanceState(savedInstanceState);
 		fragment = (RandomFragment) getSupportFragmentManager()
 				.findFragmentByTag(savedInstanceState.getString("fragment_tag"));
-		fragment.setActivityToolbar(mActionBarToolbar);
-		fab.setOnClickListener(v -> fragment.loadRandomDrink());
+//		fragment.setActivityToolbar(mActionBarToolbar);
+//		fab.setOnClickListener(v -> fragment.loadRandomDrink());
 	}
 
 	@Override

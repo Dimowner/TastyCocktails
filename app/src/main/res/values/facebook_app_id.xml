@@ -17,6 +17,7 @@
 
 <resources>
 
-	<string name="facebook_app_id">1585644661508345</string>
+	<!--User correct id-->
+	<string name="facebook_app_id">101010101010101</string>
 
 </resources>

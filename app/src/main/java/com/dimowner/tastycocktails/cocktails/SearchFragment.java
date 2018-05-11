@@ -93,6 +93,8 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
 	private int fragmentType = TYPE_UNKNOWN;
 
+	private OnFirstRunExecutedListener onFirstRunExecutedListener;
+
 	@Inject
 	SearchContract.UserActionsListener mPresenter;
 
@@ -161,6 +163,9 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 				Button btnGetStarted = view.findViewById(R.id.get_started);
 				btnGetStarted.setOnClickListener(view1 -> {
 					prefs.firstRunExecuted();
+					if (onFirstRunExecutedListener != null) {
+						onFirstRunExecutedListener.onFirstRunExecuted();
+					}
 					String vals[] = getResources().getStringArray(R.array.filter_categories);
 					prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, vals[1]);
 					mWelcomePanel.setVisibility(View.GONE);
@@ -319,6 +324,9 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 						}
 						if (prefs.isFirstRun()) {
 							prefs.firstRunExecuted();
+							if (onFirstRunExecutedListener != null) {
+								onFirstRunExecutedListener.onFirstRunExecuted();
+							}
 							mWelcomePanel.setVisibility(View.GONE);
 						}
 					} else {
@@ -388,6 +396,9 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			dialog.setPositiveButtonListener((dialogInterface, i) -> {
 				if (prefs.isFirstRun()) {
 					prefs.firstRunExecuted();
+					if (onFirstRunExecutedListener != null) {
+						onFirstRunExecutedListener.onFirstRunExecuted();
+					}
 					mWelcomePanel.setVisibility(View.GONE);
 				}
 				if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
@@ -474,6 +485,10 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		}
 	}
 
+	public void setOnFirstRunExecutedListener(OnFirstRunExecutedListener onFirstRunExecutedListener) {
+		this.onFirstRunExecutedListener = onFirstRunExecutedListener;
+	}
+
 
 	public class MyScrollListener extends EndlessRecyclerViewScrollListener {
 
@@ -504,5 +519,9 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		public boolean supportsPredictiveItemAnimations() {
 			return true;
 		}
+	}
+
+	public interface OnFirstRunExecutedListener {
+		void onFirstRunExecuted();
 	}
 }

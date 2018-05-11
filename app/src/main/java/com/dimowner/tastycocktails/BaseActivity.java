@@ -17,12 +17,12 @@
 package com.dimowner.tastycocktails;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,26 +31,25 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.dimowner.tastycocktails.history.HistoryActivity;
-//import com.facebook.Profile;
-//import com.facebook.ProfileTracker;
+import com.dimowner.tastycocktails.cocktails.SearchFragment;
 
-import com.dimowner.tastycocktails.cocktails.CocktailsActivity;
-import com.dimowner.tastycocktails.favorites.FavoritesActivity;
-import com.dimowner.tastycocktails.random.RandomActivity;
+import com.dimowner.tastycocktails.data.Prefs;
+import com.dimowner.tastycocktails.random.RandomFragment;
+import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.dimowner.tastycocktails.util.AppStartTracker;
 
-import static com.dimowner.tastycocktails.util.AndroidUtils.dpToPx;
+import javax.inject.Inject;
+
+import timber.log.Timber;
 
 /**
  * Base activity with base functionality and drawer layout.
  * @author Dimowner
  */
-public abstract class BaseActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {
+public class BaseActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {
 
 	// symbols for navdrawer items (indices must correspond to array below). This is
 	// not a list of items that are necessarily *present* in the Nav Drawer; rather,
@@ -69,60 +68,65 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 	protected DrawerLayout mDrawerLayout;
 	protected NavigationView mNavigationView;
 	protected ActionBarDrawerToggle mDrawerToggle;
+	protected LinearLayout mRoot;
 
-//	private TextView userName;
-//	private ImageView userIconView;
+	private int curActiveItem = NAVDRAWER_ITEM_COCKTAILS;
 
-//	private ProfileTracker profileTracker;
+	private AppStartTracker tracker;
+
+	@Inject Prefs prefs;
+
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		tracker = TCApplication.getAppStartTracker(getApplicationContext());
+		tracker.activityOnCreate();
+		setTheme(R.style.AppTheme_TransparentStatusBar);
 		super.onCreate(savedInstanceState);
-	}
+		tracker.activityContentViewBefore();
+		setContentView(R.layout.base_nav_activity);
+		tracker.activityContentViewAfter();
 
-	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
-	 */
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
+		TCApplication.get(getApplicationContext()).applicationComponent().inject(this);
+
+		mRoot = findViewById(R.id.root);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			// Set the padding to match the Status Bar height
+			mActionBarToolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
+		}
+
+		if (savedInstanceState == null) {
+			FragmentManager manager = getSupportFragmentManager();
+			SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_NORMAL);
+			if (prefs.isFirstRun()) {
+				fragment.setOnFirstRunExecutedListener(this::enableMenu);
+			}
+			manager
+					.beginTransaction()
+					.add(R.id.fragment, fragment, "cocktails_fragment")
+					.commit();
+		}
 		setupNavDrawer();
+		if (prefs.isFirstRun()) {
+			disableMenu();
+		}
 
-//		userName = mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
-//		userIconView = mNavigationView.getHeaderView(0).findViewById(R.id.user_icon);
-//
-//		Profile profile = Profile.getCurrentProfile();
-//		if (profile != null) {
-//			loadUserFace(profile);
-//			setUserDetailsActivity(profile);
-//		}
+		tracker.activityOnCreateEnd();
 	}
 
-//	private void loadUserFace(@NonNull Profile profile) {
-//		userName.setText(profile.getName());
-//		Glide.with(BaseActivity.this)
-//				.load(profile.getProfilePictureUri((int) dpToPx(60), (int) dpToPx(60)).toString())
-//				.apply(RequestOptions.circleCropTransform())
-//				.into(userIconView);
-//	}
-//
-//	private void setUserDetailsActivity(@NonNull Profile profile) {
-//		userIconView.setOnClickListener(v -> startUserDetailsActivity(profile.getId()));
-//		userName.setOnClickListener(v -> startUserDetailsActivity(profile.getId()));
-//	}
-//
-//	private void startUserDetailsActivity(@NonNull String id) {
-//		Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-//		intent.putExtra(UserDetailsActivity.EXTRAS_KEY_USER_ID, id);
-//		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//				BaseActivity.this,
-//				Pair.create(userIconView, ViewCompat.getTransitionName(userIconView)),
-//				Pair.create(userName, ViewCompat.getTransitionName(userName))
-//			);
-//		startActivity(intent, options.toBundle());
-//		startActivity(intent);
-//	}
+	@Override
+	protected void onStart() {
+		super.onStart();
+		tracker.activityOnStart();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		tracker.activityOnResume();
+//		Timber.v(tracker.getResults());
+	}
 
 	@Override
 	public void setContentView(int layoutResID) {
@@ -136,7 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 	 * Return NAVDRAWER_ITEM_INVALID to mean that this Activity should not have a Nav Drawer.
 	 */
 	protected int getSelfNavDrawerItem() {
-		return NAVDRAWER_ITEM_INVALID;
+		return curActiveItem;
 	}
 
 	/**
@@ -145,8 +149,6 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 	 * event on-site vs. attending remotely.
 	 */
 	protected void setupNavDrawer() {
-		// What nav drawer item should be selected?
-		int selfItem = getSelfNavDrawerItem();
 
 		mDrawerLayout = findViewById(R.id.drawer_layout);
 		if (mDrawerLayout == null) {
@@ -162,9 +164,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 						}
 						return true;
 					});
-			if (selfItem > NAVDRAWER_ITEM_INVALID) {
-				mNavigationView.getMenu().findItem(selfItem).setChecked(true);
-			}
+			mNavigationView.setCheckedItem(R.id.nav_cocktails);
 		}
 
 		if (mActionBarToolbar != null) {
@@ -194,25 +194,21 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 		}
 	}
 
-//	@Override
-//	protected void onResume() {
-//		super.onResume();
-//		profileTracker = new ProfileTracker() {
-//			@Override
-//			protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-//				if (currentProfile != null) {
-//					loadUserFace(currentProfile);
-//					setUserDetailsActivity(currentProfile);
-//				}
-//			}
-//		};
-//	}
-//
-//	@Override
-//	protected void onDestroy() {
-//		super.onDestroy();
-//		profileTracker.stopTracking();
-//	}
+	private void disableMenu() {
+		if (mNavigationView != null) {
+			mNavigationView.getMenu().findItem(R.id.nav_favorites).setEnabled(false);
+			mNavigationView.getMenu().findItem(R.id.nav_history).setEnabled(false);
+			mNavigationView.getMenu().findItem(R.id.nav_random).setEnabled(false);
+		}
+	}
+
+	private void enableMenu() {
+		if (mNavigationView != null) {
+			mNavigationView.getMenu().findItem(R.id.nav_favorites).setEnabled(true);
+			mNavigationView.getMenu().findItem(R.id.nav_history).setEnabled(true);
+			mNavigationView.getMenu().findItem(R.id.nav_random).setEnabled(true);
+		}
+	}
 
 	@Override
 	public void onBackPressed() {
@@ -226,25 +222,76 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 	private void goToNavDrawerItem(int itemID) {
 		switch (itemID) {
 			case NAVDRAWER_ITEM_FAVORITES:
-				startActivity(new Intent(getApplicationContext(), FavoritesActivity.class));
-				finish();
+				if (mActionBarToolbar.getVisibility() == View.GONE) {
+					mActionBarToolbar.setVisibility(View.VISIBLE);
+				}
+				startFavorites();
+				curActiveItem = NAVDRAWER_ITEM_FAVORITES;
 				break;
 			case NAVDRAWER_ITEM_COCKTAILS:
-				startActivity(new Intent(getApplicationContext(), CocktailsActivity.class));
-				finish();
+				if (mActionBarToolbar.getVisibility() == View.GONE) {
+					mActionBarToolbar.setVisibility(View.VISIBLE);
+				}
+				startCocktails();
+				curActiveItem = NAVDRAWER_ITEM_COCKTAILS;
 				break;
 			case NAVDRAWER_ITEM_RANDOM:
-				startActivity(new Intent(getApplicationContext(), RandomActivity.class));
-				finish();
+				mActionBarToolbar.setVisibility(View.GONE);
+				startRandom();
+				curActiveItem = NAVDRAWER_ITEM_RANDOM;
 				break;
 			case NAVDRAWER_ITEM_HISTORY:
-				startActivity(new Intent(getApplicationContext(), HistoryActivity.class));
-				finish();
+				if (mActionBarToolbar.getVisibility() == View.GONE) {
+					mActionBarToolbar.setVisibility(View.VISIBLE);
+				}
+				startHistory();
 				break;
 			case NAVDRAWER_ITEM_ABOUT:
 				showAboutDialog();
 				break;
 		}
+	}
+
+	protected void startFavorites() {
+		Timber.d("startFavorites");
+		FragmentManager manager = getSupportFragmentManager();
+		SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_FAVORITES);
+		manager
+				.beginTransaction()
+				.replace(R.id.fragment, fragment, "favorites_fragment")
+				.commit();
+	}
+
+	protected void startHistory() {
+		Timber.d("startHistory");
+		FragmentManager manager = getSupportFragmentManager();
+		SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_HISTORY);
+		manager
+				.beginTransaction()
+				.replace(R.id.fragment, fragment, "history_fragment")
+				.commit();
+	}
+
+	protected void startCocktails() {
+		Timber.d("startCocktails");
+		FragmentManager manager = getSupportFragmentManager();
+		SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_NORMAL);
+		manager
+				.beginTransaction()
+				.replace(R.id.fragment, fragment, "cocktails_fragment")
+				.commit();
+	}
+
+	protected void startRandom() {
+		Timber.d("startRandom");
+		FragmentManager manager = getSupportFragmentManager();
+		RandomFragment fragment = new RandomFragment();
+		fragment.setOpenMenuListener(v -> mDrawerLayout.openDrawer(Gravity.START));
+		fragment.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
+		manager
+				.beginTransaction()
+				.add(R.id.fragment, fragment, "random_fragment")
+				.commit();
 	}
 
 	private void showAboutDialog() {
@@ -283,6 +330,20 @@ public abstract class BaseActivity extends AppCompatActivity implements DialogIn
 		//Update checked item in NavigationView after AboutDialog dismiss.
 		if (getSelfNavDrawerItem() > NAVDRAWER_ITEM_INVALID) {
 			mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("cur_active_item", curActiveItem);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		if (savedInstanceState != null) {
+			curActiveItem = savedInstanceState.getInt("cur_active_item");
 		}
 	}
 }

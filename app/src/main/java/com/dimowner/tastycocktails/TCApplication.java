@@ -28,6 +28,8 @@ import com.dimowner.tastycocktails.dagger.application.AppComponent;
 import com.dimowner.tastycocktails.dagger.application.AppModule;
 import com.dimowner.tastycocktails.dagger.application.DaggerAppComponent;
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.dimowner.tastycocktails.util.AppStartTracker;
+
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
@@ -41,6 +43,16 @@ public class TCApplication extends Application {
 	private NetworkStateChangeReceiver networkStateChangeReceiver;
 	private static boolean isConnectedToNetwork = false;
 
+	private AppStartTracker startTracker = new AppStartTracker();
+
+	public static AppStartTracker getAppStartTracker(Context context) {
+		return ((TCApplication) context).getStartTracker();
+	}
+
+	private AppStartTracker getStartTracker() {
+		return startTracker;
+	}
+
 	public static boolean isConnected() {
 		return isConnectedToNetwork;
 	}
@@ -52,10 +64,6 @@ public class TCApplication extends Application {
 
 	@Override
 	public void onCreate() {
-		super.onCreate();
-		Fabric.with(this, new Crashlytics());
-		appComponent = prepareAppComponent().build();
-
 		if (BuildConfig.DEBUG) {
 			//Timber initialization
 			Timber.plant(new Timber.DebugTree() {
@@ -65,6 +73,11 @@ public class TCApplication extends Application {
 				}
 			});
 		}
+		startTracker.appOnCreate();
+		super.onCreate();
+		Fabric.with(this, new Crashlytics());
+		appComponent = prepareAppComponent().build();
+
 
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(CONNECTIVITY_ACTION);

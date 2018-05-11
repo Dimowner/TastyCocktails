@@ -28,8 +28,7 @@
 		<item name="actionBarInsetStart">@dimen/padding_huge</item>
 	</style>
 
-	<style name="TransparentStatusBar" parent="AppTheme" >
-		<item name="android:windowTranslucentStatus">true</item>
+	<style name="AppTheme.TransparentStatusBar" parent="AppTheme" >
 	</style>
 
 	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

@@ -43,7 +43,7 @@
 
 		<activity-alias
 				android:name="com.dimowner.tastycocktails.cocktails.Launcher"
-				android:targetActivity="com.dimowner.tastycocktails.cocktails.CocktailsActivity" >
+				android:targetActivity="com.dimowner.tastycocktails.BaseActivity" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -51,9 +51,12 @@
 		</activity-alias>
 
 		<activity
+				android:name="com.dimowner.tastycocktails.BaseActivity"
+				android:theme="@style/AppTheme.BrandedLaunch"/>
+
+		<activity
 				android:name="com.dimowner.tastycocktails.cocktails.CocktailsActivity"
-				android:theme="@style/AppTheme.BrandedLaunch">
-		</activity>
+				android:theme="@style/AppTheme.BrandedLaunch"/>
 
 		<activity android:name="com.dimowner.tastycocktails.UserDetailsActivity"/>
 
@@ -67,14 +70,14 @@
 
 		<activity
 				android:name="com.dimowner.tastycocktails.random.RandomActivity"
-				android:theme="@style/TransparentStatusBar"/>
+				android:theme="@style/AppTheme.TransparentStatusBar"/>
 
 		<activity
 				android:name="com.dimowner.tastycocktails.cocktails.details.DetailsActivity"
-				android:theme="@style/TransparentStatusBar"/>
+				android:theme="@style/AppTheme.TransparentStatusBar"/>
 
 		<activity android:name="com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity"
-					 android:theme="@style/TransparentStatusBar"/>
+					 android:theme="@style/AppTheme.TransparentStatusBar"/>
 
 		<activity android:name="com.dimowner.tastycocktails.licences.LicenceActivity"
 				android:label="@string/open_source_licences"/>

@@ -17,6 +17,7 @@
 package com.dimowner.tastycocktails.licences;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.dimowner.tastycocktails.R;
+import com.dimowner.tastycocktails.util.AndroidUtils;
 
 /**
  * Activity shows list which contains all licences used in app.
@@ -41,6 +43,11 @@ public class LicenceActivity extends AppCompatActivity {
 
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			// Set the padding to match the Status Bar height
+			toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
+		}
 
 		String[] licenceNames = getResources().getStringArray(R.array.licences_names);
 		ListView list = findViewById(R.id.licence_list);
