@@ -256,7 +256,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 						@Override
 						public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
 																 DataSource dataSource, boolean isFirstResource) {
-							headerViewHolder.ivImage.setVisibility(View.VISIBLE);
+							if (headerViewHolder != null && headerViewHolder.ivImage != null) {
+								headerViewHolder.ivImage.setVisibility(View.VISIBLE);
+							}
 							if (animationListener != null) {
 								animationListener.onAnimation();
 							}

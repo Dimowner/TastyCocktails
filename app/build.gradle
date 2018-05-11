@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.25.1'
+        classpath 'io.fabric.tools:gradle:1.25.2'
     }
 }
 
@@ -54,7 +54,7 @@ def versionPatch = 9
 
 android {
 	compileSdkVersion versions.targetSdkVersion
-	buildToolsVersion versions.buildtools
+	buildToolsVersion = '27.0.3'
 	defaultConfig {
 		applicationId "com.dimowner.tastycocktails"
 		minSdkVersion versions.minSdkVersion
@@ -104,7 +104,8 @@ android {
 
 repositories {
 	mavenCentral()
-    maven { url 'https://maven.fabric.io/public' }
+   maven { url 'https://maven.fabric.io/public' }
+	google()
 }
 
 // Remove not needed buildVariants.
@@ -120,64 +121,63 @@ android.variantFilter { variant ->
 }
 
 dependencies {
-	compile fileTree(include: ['*.jar'], dir: 'libs')
 
 	// Android
-	compile "com.android.support:support-v4:$versions.support"
-	compile "com.android.support:appcompat-v7:$versions.support"
-	compile "com.android.support:design:$versions.support"
-	compile "com.android.support:support-annotations:$versions.support"
-	compile "com.android.support:support-dynamic-animation:$versions.support"
-	compile "com.android.support:palette-v7:$versions.support"
+	implementation "com.android.support:support-v4:$versions.support"
+	implementation "com.android.support:appcompat-v7:$versions.support"
+	implementation "com.android.support:design:$versions.support"
+	implementation "com.android.support:support-annotations:$versions.support"
+	implementation "com.android.support:support-dynamic-animation:$versions.support"
+	implementation "com.android.support:palette-v7:$versions.support"
 
 	// Android: Components
-	compile "com.android.support.constraint:constraint-layout:$versions.constraintlayout"
-	compile "com.android.support.constraint:constraint-layout-solver:$versions.constraintlayout"
+	implementation "com.android.support.constraint:constraint-layout:$versions.constraintlayout"
+	implementation "com.android.support.constraint:constraint-layout-solver:$versions.constraintlayout"
 
 	//Facebook sdk
-//	compile 'com.facebook.android:facebook-android-sdk:4.28.0'
+//	implementation 'com.facebook.android:facebook-android-sdk:4.28.0'
 
 	// Rx
-	compile "io.reactivex.rxjava2:rxjava:$versions.rxJava"
-	compile "io.reactivex.rxjava2:rxandroid:$versions.rxJava"
+	implementation "io.reactivex.rxjava2:rxjava:$versions.rxJava"
+	implementation "io.reactivex.rxjava2:rxandroid:$versions.rxJava"
 
 	//RetroFit
-	compile "com.squareup.retrofit2:retrofit:$versions.retroFit"
-	compile "com.squareup.retrofit2:converter-gson:$versions.retroFit"
-	compile "com.squareup.retrofit2:adapter-rxjava2:$versions.retroFit"
-	compile "com.squareup.okhttp3:logging-interceptor:$versions.logInterceptor"
+	implementation "com.squareup.retrofit2:retrofit:$versions.retroFit"
+	implementation "com.squareup.retrofit2:converter-gson:$versions.retroFit"
+	implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retroFit"
+	implementation "com.squareup.okhttp3:logging-interceptor:$versions.logInterceptor"
 
 	//Dagger2
-	compile "com.google.dagger:dagger:$versions.dagger2"
+	implementation "com.google.dagger:dagger:$versions.dagger2"
 	annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger2"
 
 	//Glide
 	implementation "com.github.bumptech.glide:glide:$versions.glide"
-
 	annotationProcessor "com.github.bumptech.glide:compiler:$versions.glide"
-	compile "android.arch.lifecycle:runtime:$versions.archComp"
-	compile "android.arch.lifecycle:extensions:$versions.archComp"
+
+	implementation "android.arch.lifecycle:runtime:$versions.archComp"
+	implementation "android.arch.lifecycle:extensions:$versions.archComp"
 	annotationProcessor "android.arch.lifecycle:compiler:$versions.archComp"
 
 	//Room
-	compile "android.arch.persistence.room:runtime:$versions.archComp"
-	compile "android.arch.persistence.room:rxjava2:$versions.archComp"
+	implementation "android.arch.persistence.room:runtime:$versions.archComp"
+	implementation "android.arch.persistence.room:rxjava2:$versions.archComp"
 	annotationProcessor "android.arch.persistence.room:compiler:$versions.archComp"
 
 	//Timber
-	compile "com.jakewharton.timber:timber:$versions.timber"
+	implementation "com.jakewharton.timber:timber:$versions.timber"
 
 	//PhotoView
-	compile "com.github.chrisbanes:PhotoView:$versions.photoView"
-	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+	implementation "com.github.chrisbanes:PhotoView:$versions.photoView"
+	androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
 		exclude group: 'com.android.support', module: 'support-annotations'
 	})
-	testCompile 'junit:junit:4.12'
-	testCompile 'org.mockito:mockito-core:2.9.0'
+	testImplementation 'junit:junit:4.12'
+	testImplementation 'org.mockito:mockito-core:2.9.0'
 
 	// AssertJ
-	testCompile 'org.assertj:assertj-core:3.7.0'
-	compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+	testImplementation 'org.assertj:assertj-core:3.7.0'
+	implementation ('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
 		transitive = true
 	}
 }
