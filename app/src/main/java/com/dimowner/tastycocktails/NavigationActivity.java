@@ -22,7 +22,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,9 +31,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.LinearLayout;
 
-import com.dimowner.tastycocktails.cocktails.SearchFragment;
+import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.random.RandomFragment;
@@ -49,7 +47,7 @@ import timber.log.Timber;
  * Base activity with base functionality and drawer layout.
  * @author Dimowner
  */
-public class BaseActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {
+public class NavigationActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {
 
 	// symbols for navdrawer items (indices must correspond to array below). This is
 	// not a list of items that are necessarily *present* in the Nav Drawer; rather,
@@ -95,7 +93,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
-			SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_NORMAL);
+			CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_NORMAL);
 			if (prefs.isFirstRun()) {
 				fragment.setOnFirstRunExecutedListener(this::enableMenu);
 			}
@@ -133,7 +131,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 
 	/**
 	 * Returns the navigation drawer item that corresponds to this Activity. Subclasses
-	 * of BaseActivity override this to indicate what nav drawer item corresponds to them
+	 * of NavigationActivity override this to indicate what nav drawer item corresponds to them
 	 * Return NAVDRAWER_ITEM_INVALID to mean that this Activity should not have a Nav Drawer.
 	 */
 	protected int getSelfNavDrawerItem() {
@@ -253,7 +251,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 	protected void startFavorites() {
 		Timber.d("startFavorites");
 		FragmentManager manager = getSupportFragmentManager();
-		SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_FAVORITES);
+		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_FAVORITES);
 		manager
 				.beginTransaction()
 				.replace(R.id.fragment, fragment, "favorites_fragment")
@@ -263,7 +261,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 	protected void startHistory() {
 		Timber.d("startHistory");
 		FragmentManager manager = getSupportFragmentManager();
-		SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_HISTORY);
+		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_HISTORY);
 		manager
 				.beginTransaction()
 				.replace(R.id.fragment, fragment, "history_fragment")
@@ -273,7 +271,7 @@ public class BaseActivity extends AppCompatActivity implements DialogInterface.O
 	protected void startCocktails() {
 		Timber.d("startCocktails");
 		FragmentManager manager = getSupportFragmentManager();
-		SearchFragment fragment = SearchFragment.newInstance(SearchFragment.TYPE_NORMAL);
+		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_NORMAL);
 		manager
 				.beginTransaction()
 				.replace(R.id.fragment, fragment, "cocktails_fragment")

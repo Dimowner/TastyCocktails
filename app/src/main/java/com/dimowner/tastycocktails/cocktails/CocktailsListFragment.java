@@ -71,7 +71,7 @@ import timber.log.Timber;
  * Created on 26.07.2017.
  * @author Dimowner
  */
-public class SearchFragment extends Fragment implements SearchContract.View {
+public class CocktailsListFragment extends Fragment implements CocktailsListContract.View {
 
 	public static final int TYPE_UNKNOWN = 0;
 	public static final int TYPE_NORMAL = 1;
@@ -98,13 +98,13 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 	private OnFirstRunExecutedListener onFirstRunExecutedListener;
 
 	@Inject
-	SearchContract.UserActionsListener mPresenter;
+	CocktailsListContract.UserActionsListener mPresenter;
 
 	@Inject
 	Prefs prefs;
 
-	public static SearchFragment newInstance(int fragmentType) {
-		SearchFragment fragment = new SearchFragment();
+	public static CocktailsListFragment newInstance(int fragmentType) {
+		CocktailsListFragment fragment = new CocktailsListFragment();
 		Bundle args = new Bundle();
 		args.putInt(EXTRAS_KEY_TYPE, fragmentType);
 		fragment.setArguments(args);
@@ -283,7 +283,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 //		View txtDescription = view1.findViewById(R.id.list_item_description);
 //		View ivImage = view1.findViewById(R.id.list_item_image);
 //
-//		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(SearchFragment.this.getActivity(),
+//		ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(CocktailsListFragment.this.getActivity(),
 //				Pair.create(txtName, getResources().getString(R.string.list_item_label_transition)),
 //				Pair.create(txtDescription, getResources().getString(R.string.list_item_content_transition)),
 //				Pair.create(ivImage, getResources().getString(R.string.list_item_image_transition)));

@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
-import com.dimowner.tastycocktails.BaseActivity;
+import com.dimowner.tastycocktails.NavigationActivity;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsComponent;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsModule;
 import com.dimowner.tastycocktails.dagger.details.DetailsComponent;
@@ -41,5 +41,5 @@ public interface AppComponent {
 	RandomCocktailComponent plus(RandomCocktailModule detailsModule);
 	DetailsComponent plus(DetailsModule detailsModule);
 	void inject(LocalRepository repository);
-	void inject(BaseActivity activity);
+	void inject(NavigationActivity activity);
 }

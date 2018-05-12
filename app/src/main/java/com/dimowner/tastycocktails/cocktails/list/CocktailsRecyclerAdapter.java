@@ -42,7 +42,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dimowner.tastycocktails.R;
-import com.dimowner.tastycocktails.cocktails.SearchFragment;
+import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 import com.dimowner.tastycocktails.data.Prefs;
 
 /**
@@ -64,7 +64,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private Prefs prefs;
 
-	private int searchFragmentType = SearchFragment.TYPE_NORMAL;
+	private int searchFragmentType = CocktailsListFragment.TYPE_NORMAL;
 
 	private ItemClickListener itemClickListener;
 
@@ -121,7 +121,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		if (viewType == VIEW_TYPE_NORMAL) {
 			View v = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.list_item2, parent, false);
+					.inflate(R.layout.list_item, parent, false);
 			return new ItemViewHolder(v);
 		} else if (viewType == VIEW_TYPE_PROGRESS) {
 			View v = LayoutInflater.from(parent.getContext())
@@ -138,7 +138,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			int pos = h.getAdapterPosition();
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
-			if (searchFragmentType != SearchFragment.TYPE_NORMAL
+			if (searchFragmentType != CocktailsListFragment.TYPE_NORMAL
 					|| prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
 				holder.description.setText(mShowingData.get(pos).getCategory());
 			} else {

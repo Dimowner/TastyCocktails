@@ -17,7 +17,7 @@
 package com.dimowner.tastycocktails.dagger.cocktails;
 
 import dagger.Subcomponent;
-import com.dimowner.tastycocktails.cocktails.SearchFragment;
+import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 
 /**
  * Created on 27.07.2017.
@@ -27,5 +27,5 @@ import com.dimowner.tastycocktails.cocktails.SearchFragment;
 @CocktailsScope
 public interface CocktailsComponent {
 
-	void injectCocktailsSearch(SearchFragment searchFragment);
+	void injectCocktailsSearch(CocktailsListFragment cocktailsListFragment);
 }

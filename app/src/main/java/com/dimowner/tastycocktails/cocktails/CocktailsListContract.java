@@ -26,14 +26,14 @@ import com.dimowner.tastycocktails.cocktails.list.ListItem;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public interface SearchContract {
+public interface CocktailsListContract {
 
 	interface View extends Contract.View {
 
 		void displayData(List<ListItem> data);
 	}
 
-	interface UserActionsListener extends Contract.UserActionsListener<SearchContract.View> {
+	interface UserActionsListener extends Contract.UserActionsListener<CocktailsListContract.View> {
 
 		void startSearch(String search);
 

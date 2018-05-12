@@ -31,19 +31,10 @@
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme"
 			tools:ignore="GoogleAppIndexingWarning">
-		<meta-data
-				android:name="com.facebook.sdk.ApplicationId"
-				android:value="@string/facebook_app_id"/>
-
-		<activity
-				android:name="com.dimowner.tastycocktails.login.LoginActivity"
-				android:noHistory="true"
-				android:theme="@style/AppTheme.BrandedLaunch">
-		</activity>
 
 		<activity-alias
 				android:name="com.dimowner.tastycocktails.cocktails.Launcher"
-				android:targetActivity="com.dimowner.tastycocktails.BaseActivity" >
+				android:targetActivity="com.dimowner.tastycocktails.NavigationActivity" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -51,26 +42,8 @@
 		</activity-alias>
 
 		<activity
-				android:name="com.dimowner.tastycocktails.BaseActivity"
+				android:name="com.dimowner.tastycocktails.NavigationActivity"
 				android:theme="@style/AppTheme.BrandedLaunch"/>
-
-		<activity
-				android:name="com.dimowner.tastycocktails.cocktails.CocktailsActivity"
-				android:theme="@style/AppTheme.BrandedLaunch"/>
-
-		<activity android:name="com.dimowner.tastycocktails.UserDetailsActivity"/>
-
-		<activity
-				android:name="com.dimowner.tastycocktails.favorites.FavoritesActivity"
-				android:label="@string/nav_favorites"/>
-
-		<activity
-				android:name="com.dimowner.tastycocktails.history.HistoryActivity"
-				android:label="@string/nav_history"/>
-
-		<activity
-				android:name="com.dimowner.tastycocktails.random.RandomActivity"
-				android:theme="@style/AppTheme.TransparentStatusBar"/>
 
 		<activity
 				android:name="com.dimowner.tastycocktails.cocktails.details.DetailsActivity"

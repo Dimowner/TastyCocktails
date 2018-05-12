@@ -21,8 +21,8 @@ import android.support.v4.app.Fragment;
 
 import dagger.Module;
 import dagger.Provides;
-import com.dimowner.tastycocktails.cocktails.CocktailsPresenter;
-import com.dimowner.tastycocktails.cocktails.SearchContract;
+import com.dimowner.tastycocktails.cocktails.CocktailsListPresenter;
+import com.dimowner.tastycocktails.cocktails.CocktailsListContract;
 import com.dimowner.tastycocktails.data.Repository;
 
 /**
@@ -40,8 +40,8 @@ public class CocktailsModule {
 
 	@Provides
 	@CocktailsScope
-	SearchContract.UserActionsListener provideCocktailsPresenter(Repository repository) {
-		CocktailsPresenter presenter = ViewModelProviders.of(fragment).get(CocktailsPresenter.class);
+	CocktailsListContract.UserActionsListener provideCocktailsPresenter(Repository repository) {
+		CocktailsListPresenter presenter = ViewModelProviders.of(fragment).get(CocktailsListPresenter.class);
 		presenter.setRepository(repository);
 		return presenter;
 	}

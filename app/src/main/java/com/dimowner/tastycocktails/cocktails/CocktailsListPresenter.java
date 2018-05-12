@@ -36,15 +36,15 @@ import timber.log.Timber;
  * Created on 27.07.2017.
  * @author Dimowner
  */
-public class CocktailsPresenter extends AndroidViewModel implements SearchContract.UserActionsListener {
+public class CocktailsListPresenter extends AndroidViewModel implements CocktailsListContract.UserActionsListener {
 
 	private RepositoryContract repository;
 
-	private SearchContract.View view;
+	private CocktailsListContract.View view;
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-	public CocktailsPresenter(Application application) {
+	public CocktailsListPresenter(Application application) {
 		super(application);
 	}
 
@@ -53,7 +53,7 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	}
 
 	@Override
-	public void bindView(@NonNull SearchContract.View view) {
+	public void bindView(@NonNull CocktailsListContract.View view) {
 		this.view = view;
 	}
 
