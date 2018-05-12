@@ -88,6 +88,32 @@ public class UIUtil {
 	/**
 	 * Show warning dialog with OK and Cancel buttons.
 	 *
+	 * @param activity                 Application context.
+	 * @param mesStr                   Message string to show in dialog.
+	 * @param iconRes                  Resource id of header icon to show in dialog.
+	 * @param positiveBtnClickListener Listener for positive button click.
+	 * @param negativeBtnClickListener Listener for negative button click.
+	 */
+	public static void showWarningDialog(
+			Activity activity, int iconRes, String mesStr,
+			DialogInterface.OnClickListener positiveBtnClickListener,
+			DialogInterface.OnClickListener negativeBtnClickListener) {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setTitle(R.string.title_warning)
+				.setMessage(mesStr)
+				.setIcon(iconRes)
+				.setCancelable(false)
+				.setPositiveButton(R.string.btn_ok, positiveBtnClickListener)
+				.setNegativeButton(R.string.btn_cancel, negativeBtnClickListener);
+
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	/**
+	 * Show warning dialog with OK and Cancel buttons.
+	 *
 	 * @param activity Application context.
 	 * @param mesRes   Resource id of message to show in dialog.
 	 */

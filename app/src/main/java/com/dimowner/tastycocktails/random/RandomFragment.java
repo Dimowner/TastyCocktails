@@ -224,5 +224,4 @@ public class RandomFragment extends Fragment {
 	public void setOpenMenuListener(View.OnClickListener openMenuListener) {
 		this.openMenuListener = openMenuListener;
 	}
-
 }

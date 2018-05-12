@@ -18,6 +18,7 @@ package com.dimowner.tastycocktails.cocktails;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +32,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -117,7 +119,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 		TCApplication.get(getContext()).applicationComponent()
 				.plus(new CocktailsModule(this)).injectCocktailsSearch(this);
 
-		if (getArguments().containsKey(EXTRAS_KEY_TYPE)) {
+		if (getArguments() != null && getArguments().containsKey(EXTRAS_KEY_TYPE)) {
 			fragmentType = getArguments().getInt(EXTRAS_KEY_TYPE);
 		}
 	}
@@ -150,6 +152,33 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mRecyclerView.setVisibility(View.GONE);
+		}
+
+		if (fragmentType == TYPE_HISTORY) {
+			ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
+					new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+						@Override
+						public boolean onMove(RecyclerView recyclerView,
+													 RecyclerView.ViewHolder viewHolder,
+													 RecyclerView.ViewHolder target) {
+							return false;
+						}
+
+						@Override
+						public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+							ListItem item = mAdapter.getItem(viewHolder.getAdapterPosition());
+							mPresenter.removeFromHistory(item.getId());
+							showSnackBarRemoveFromHistory(item.getId(), item.getName(), item.getHistory());
+						}
+
+						@Override
+						public void onChildDraw(Canvas c, RecyclerView recyclerView,
+														RecyclerView.ViewHolder viewHolder, float dX, float dY,
+														int actionState, boolean isCurrentlyActive) {
+							getDefaultUIUtil().onDraw(c, recyclerView, viewHolder.itemView, dX, dY, actionState, isCurrentlyActive);
+						}
+					};
+			new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 		}
 
 //		if (savedInstanceState == null) {
@@ -237,7 +266,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 					UIUtil.showWarningDialog(
 							getActivity(),
 							R.drawable.delete_forever_black, //Dialog title icon
-							R.string.remove_from_history,  //Dialog title text
+							getString(R.string.remove_from_history, mAdapter.getItem(position).getName()),  //Dialog title text
 							(dialogInterface, i) -> mPresenter.removeFromHistory(id), //Callback for positive button
 							(dialogInterface, i) -> dialogInterface.dismiss() //Callback for negative button
 					)
@@ -283,6 +312,13 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 				snackbar.show();
 			}
 		}
+	}
+
+	private void showSnackBarRemoveFromHistory(long id, String drinkName, long history) {
+		Snackbar snackbar = Snackbar
+				.make(mRoot, getString(R.string.removed_from_history, drinkName) , Snackbar.LENGTH_LONG)
+				.setAction(R.string.undo, view -> mPresenter.returnToHistory(id, history));
+		snackbar.show();
 	}
 
 	@Override

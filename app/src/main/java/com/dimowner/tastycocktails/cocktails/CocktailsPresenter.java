@@ -165,6 +165,13 @@ public class CocktailsPresenter extends AndroidViewModel implements SearchContra
 	}
 
 	@Override
+	public void returnToHistory(long id, long time) {
+		compositeDisposable.add(repository.updateDrinkHistory(id, time)
+				.subscribeOn(Schedulers.io())
+				.subscribe(() -> {}, Timber::e));
+	}
+
+	@Override
 	public void removeFromHistory(long id) {
 		view.showProgress();
 		compositeDisposable.add(

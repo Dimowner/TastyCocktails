@@ -64,6 +64,7 @@ public class ModelMapper {
 				drink.getStrAlcoholic(),
 				drink.getStrGlass(),
 				drink.getStrDrinkThumb(),
+				drink.getHistory(),
 				drink.isFavorite()
 			);
 	}
