@@ -31,22 +31,14 @@
 
 	<string name="btn_ok">OK</string>
 	<string name="btn_cancel">Cancel</string>
-	<string name="btn_logout">Logout</string>
 	<string name="btn_search">Search</string>
-	<string name="btn_random">Random</string>
 	<string name="btn_close">Close</string>
 	<string name="btn_get_started">Get started</string>
 
-	<string name="msg_error_on_login">Error on login</string>
 	<string name="msg_error_on_query">Error on loading</string>
 	<string name="msg_error_no_internet">No connection to network</string>
 
-	<string name="did_not_find_anything">Did not find anything</string>
-	<string name="retry">RETRY</string>
-
 	<string name="ingredients">Ingredients:</string>
-	<string name="query_error">Query error happen here</string>
-	<string name="network_error">Network error happen here</string>
 
 	<string name="welcome">Welcome to the Tasty Cocktails!</string>
 	<string name="tap_search">Tap search to find one</string>
@@ -141,164 +133,6 @@
 		<item>Other/Unknown</item>
 		<item>Beer</item>
 		<item>Soft Drink / Soda</item>
-	</string-array>
-
-	<string-array name="filter_ingredients">
-		<item>Not selected</item>
-		<item>Light rum</item>
-		<item>Applejack</item>
-		<item>Gin</item>
-		<item>Dark rum</item>
-		<item>Sweet Vermouth</item>
-		<item>Strawberry schnapps</item>
-		<item>Scotch</item>
-		<item>Apricot brandy</item>
-		<item>Triple sec</item>
-		<item>Southern Comfort</item>
-		<item>Orange bitters</item>
-		<item>Brandy</item>
-		<item>Lemon vodka</item>
-		<item>Blended whiskey</item>
-		<item>Dry Vermouth</item>
-		<item>Amaretto</item>
-		<item>Tea</item>
-		<item>Champagne</item>
-		<item>Coffee liqueur</item>
-		<item>Bourbon</item>
-		<item>Tequila</item>
-		<item>Vodka</item>
-		<item>Añejo rum</item>
-		<item>Bitters</item>
-		<item>Sugar</item>
-		<item>Kahlua</item>
-		<item>demerara Sugar</item>
-		<item>Dubonnet Rouge</item>
-		<item>Lime juice</item>
-		<item>Irish whiskey</item>
-		<item>Apple brandy</item>
-		<item>Carbonated water</item>
-		<item>Cherry brandy</item>
-		<item>Creme de Cacao</item>
-		<item>Grenadine</item>
-		<item>Port</item>
-		<item>Coffee brandy</item>
-		<item>Red wine</item>
-		<item>Rum</item>
-		<item>Grapefruit juice</item>
-		<item>Ricard</item>
-		<item>Sherry</item>
-		<item>Cognac</item>
-		<item>Sloe gin</item>
-		<item>Apple juice</item>
-		<item>Pineapple juice</item>
-		<item>Lemon juice</item>
-		<item>Sugar syrup</item>
-		<item>Milk</item>
-		<item>Strawberries</item>
-		<item>Chocolate syrup</item>
-		<item>Yoghurt</item>
-		<item>Mango</item>
-		<item>Ginger</item>
-		<item>Lime</item>
-		<item>Cantaloupe</item>
-		<item>Berries</item>
-		<item>Grapes</item>
-		<item>Kiwi</item>
-		<item>Tomato juice</item>
-		<item>Cocoa powder</item>
-		<item>Chocolate</item>
-		<item>Heavy cream</item>
-		<item>Galliano</item>
-		<item>Peach Vodka</item>
-		<item>Ouzo</item>
-		<item>Coffee</item>
-		<item>Spiced rum</item>
-		<item>Water</item>
-		<item>Espresso</item>
-		<item>Angelica root</item>
-		<item>Orange</item>
-		<item>Cranberries</item>
-		<item>Johnnie Walker</item>
-		<item>Apple cider</item>
-		<item>Everclear</item>
-		<item>Cranberry juice</item>
-		<item>Egg yolk</item>
-		<item>Egg</item>
-		<item>Grape juic</item>
-		<item>Peach nectar</item>
-		<item>Lemon</item>
-		<item>Firewater</item>
-		<item>Lemonade</item>
-		<item>Lager</item>
-		<item>Whiskey</item>
-		<item>Absolut Citron</item>
-		<item>Pisco</item>
-		<item>Irish cream</item>
-		<item>Ale</item>
-		<item>Chocolate liqueur</item>
-		<item>Chocolate liqueur</item>
-		<item>Sambuca</item>
-		<item>Cider</item>
-		<item>Sprite</item>
-		<item>7-Up</item>
-		<item>Blackberry brandy</item>
-		<item>Peppermint schnapps</item>
-		<item>Creme de Cassis</item>
-		<item>Jack Daniels</item>
-		<item>Bailey\'s irish cream</item>
-		<item>151 proof rum</item>
-		<item>Absolut Vodka</item>
-		<item>Goldschlager</item>
-		<item>Crown Royal</item>
-		<item>Cointreau</item>
-		<item>Vermouth</item>
-		<item>Advocaat</item>
-		<item>Absolut Kurant</item>
-		<item>Beer</item>
-		<item>Kool-Aid</item>
-		<item>Cherry Heering</item>
-		<item>White Creme de Menthe</item>
-		<item>Malibu rum</item>
-		<item>Vanilla vodka</item>
-		<item>Jägermeister</item>
-		<item>Kiwi liqueur</item>
-		<item>Grand Marnier</item>
-		<item>Cachaca</item>
-		<item>Peachtree schnapps</item>
-		<item>Wild Turkey</item>
-		<item>Cranberry vodka</item>
-		<item>Corona</item>
-		<item>Orange juice</item>
-		<item>Yukon Jack</item>
-		<item>Chocolate ice-cream</item>
-		<item>Coconut rum</item>
-		<item>Banana liqueur</item>
-		<item>Black Sambuca</item>
-		<item>Hot Damn</item>
-		<item>Mint</item>
-		<item>Campari</item>
-		<item>Ice</item>
-		<item>Sour mix</item>
-		<item>Absinthe</item>
-		<item>Whisky</item>
-		<item>Guinness stout</item>
-		<item>Vanilla ice-cream</item>
-		<item>Chambord raspberry liqueur</item>
-		<item>Jim Beam</item>
-		<item>Godiva liqueur</item>
-		<item>Fruit punch</item>
-		<item>Baileys irish cream</item>
-		<item>Zima</item>
-		<item>Blue Curacao</item>
-		<item>Coca-Cola</item>
-		<item>Maui</item>
-		<item>Frangelico</item>
-		<item>Bacardi Limon</item>
-		<item>Raspberry vodka</item>
-		<item>Green Creme de Menthe</item>
-		<item>Lemon peel</item>
-		<item>Prosecco</item>
-		<item>White Rum</item>
 	</string-array>
 
 	<string-array name="filter_ingredients_alphabetical">

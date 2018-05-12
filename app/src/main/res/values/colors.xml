@@ -27,17 +27,10 @@
 
 	<color name="text_primary_dark">#de000000</color> <!-- 87% -->
 	<color name="text_secondary_dark">#8a000000</color> <!-- 54% -->
-	<color name="text_tertiary_dark">#61000000</color> <!-- 38% -->
+	<!-- 38% -->
 	<color name="text_primary_light">#ffffffff</color>
-	<color name="text_secondary_light">#b3ffffff</color> <!-- 70% -->
-	<color name="text_disabled_light">#4dffffff</color> <!-- 30% -->
-
-	<color name="blue_grey_50">#eceff1</color>
-	<color name="blue_grey_400">#78909c</color>
-	<color name="blue_grey_600">#546e7a</color>
-
-	<color name="light_cyan">#E6F5F3</color>
-	<color name="light_red">#ffeaee</color>
+	<!-- 70% -->
+	<!-- 30% -->
 
 	<color name="blue">#3f51b5</color>
 	<color name="white">#f9f9f9</color>
