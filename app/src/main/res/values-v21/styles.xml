@@ -16,6 +16,7 @@
 
 <resources>
 
+
 	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -26,35 +27,18 @@
 		<item name="android:windowActionBarOverlay">true</item>
 
 		<item name="actionBarInsetStart">@dimen/padding_huge</item>
+
+		<!--<item name="android:navigationBarColor">@color/background</item>-->
+		<!--<item name="android:windowLightNavigationBar">true</item>-->
 	</style>
-
-	<style name="AppTheme.TransparentStatusBar" parent="AppTheme" >
-	</style>
-
-	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 	<style name="AppTheme.BrandedLaunch" parent="AppTheme">
 		<item name="android:windowBackground">@drawable/branded_logo</item>
-	</style>
-
-	<!-- TextView -->
-	<style name="TextView" />
-
-	<style name="TextView.Subheader">
-		<item name="android:gravity">center_vertical</item>
-		<item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
-		<item name="android:textColor">?android:attr/textColorSecondary</item>
-	</style>
-
-	<style name="TextView.Label">
-		<item name="android:gravity">center_vertical</item>
-		<item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+		<item name="android:navigationBarColor">@color/load_screen_gradient_dark</item>
 	</style>
 
 	<!--<style name="DefaultImageButton">-->
-		<!--<item name="android:background">?android:selectableItemBackground</item>-->
+		<!--<item name="android:background">?android:selectableItemBackgroundBorderless</item>-->
 	<!--</style>-->
 
 </resources>

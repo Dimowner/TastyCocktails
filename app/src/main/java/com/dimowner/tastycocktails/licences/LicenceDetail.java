@@ -16,7 +16,6 @@
 
 package com.dimowner.tastycocktails.licences;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +24,6 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import com.dimowner.tastycocktails.R;
-import com.dimowner.tastycocktails.util.AndroidUtils;
 
 /**
  * Activity shows licence details.
@@ -65,10 +63,6 @@ public class LicenceDetail extends AppCompatActivity {
 		}
 
 		Toolbar toolbar = findViewById(R.id.toolbar);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			// Set the padding to match the Status Bar height
-			toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
-		}
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -36,6 +36,7 @@ public interface RepositoryContract {
 	Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value);
 	Single<Drink> getRandomCocktail();
 	Flowable<Drink> getCocktailRx(long id);
+	Single<Drink> getLocalCocktailRx(long id);
 	Flowable<List<Drink>> getLastSearch(String query);
 	Flowable<List<Drink>> getFavorites();
 	Completable addToFavorites(Drink drink);

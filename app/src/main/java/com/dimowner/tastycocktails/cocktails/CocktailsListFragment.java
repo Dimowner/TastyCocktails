@@ -47,6 +47,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -57,6 +58,8 @@ import io.reactivex.schedulers.Schedulers;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.cocktails.details.DetailsActivity;
+import com.dimowner.tastycocktails.cocktails.details.DetailsPagerAdapter;
+import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
 import com.dimowner.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import com.dimowner.tastycocktails.cocktails.list.EndlessRecyclerViewScrollListener;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
@@ -99,6 +102,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	@Inject
 	CocktailsListContract.UserActionsListener mPresenter;
+
+	private ArrayList<Integer> ids;
 
 	@Inject
 	Prefs prefs;
@@ -231,7 +236,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mRecyclerView.setAdapter(mAdapter);
 		}
 		mAdapter.setItemClickListener((view1, position) ->
-				startDetailsActivity(mAdapter.getItem(position), view1));
+				startActivity(PagerDetailsActivity.getStartIntent(getContext(), ids, position)));
+//				startDetailsActivity(mAdapter.getItem(position), view1));
 		mAdapter.setOnFavoriteClickListener((view12, position, id, action) -> {
 			final boolean fev = mAdapter.getItem(position).isFavorite();
 			final String name = mAdapter.getItem(position).getName();
@@ -275,8 +281,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	private void startDetailsActivity(ListItem item, View view1) {
-		Intent intent = new Intent(getContext(), DetailsActivity.class);
-		intent.putExtra(DetailsActivity.EXTRAS_KEY_ID, item.getId());
+		Intent intent = new Intent(getContext(), PagerDetailsActivity.class);
+		intent.putExtra(PagerDetailsActivity.EXTRAS_KEY_ID, item.getId());
 
 		//Transition
 //		View txtName = view1.findViewById(R.id.list_item_name);
@@ -498,6 +504,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	@Override
 	public void displayData(List<ListItem> data) {
+		extractIds(data);
 		if (prefs.isFirstRun() && fragmentType == TYPE_NORMAL) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.VISIBLE);
@@ -519,6 +526,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mAdapter.setData(data);
 //			mRecyclerView.post(() -> mAdapter.addItems(data));
 		}
+	}
+
+	private void extractIds(List<ListItem> data) {
+		if (ids == null) {
+			ids = new ArrayList<>();
+		} else {
+			ids.clear();
+		}
+		for (int i = 0; i < data.size(); i++) {
+			//TODO: Cast long to int, potential errors here.
+			ids.add((int) data.get(i).getId());
+		}
+		Timber.v("ids = " + ids.toString());
 	}
 
 	public void setOnFirstRunExecutedListener(OnFirstRunExecutedListener onFirstRunExecutedListener) {

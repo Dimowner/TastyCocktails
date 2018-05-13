@@ -88,6 +88,9 @@ public interface CocktailsDao {
 	Flowable<Drink> getDrinkRx(long id);
 
 	@Query("SELECT * FROM drinks WHERE idDrink = :id")
+	Single<Drink> getDrinkSingle(long id);
+
+	@Query("SELECT * FROM drinks WHERE idDrink = :id")
 	Drink getDrink(long id);
 
 	@Query("SELECT COUNT(*) FROM drinks WHERE idDrink = :id")

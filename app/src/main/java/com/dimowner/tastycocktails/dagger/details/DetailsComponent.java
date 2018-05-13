@@ -18,6 +18,7 @@ package com.dimowner.tastycocktails.dagger.details;
 
 import dagger.Subcomponent;
 import com.dimowner.tastycocktails.cocktails.details.DetailsActivity;
+import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
 
 /**
  * Created on 15.08.2017.
@@ -28,4 +29,6 @@ import com.dimowner.tastycocktails.cocktails.details.DetailsActivity;
 public interface DetailsComponent {
 
 	void injectDetails(DetailsActivity activity);
+
+	void injectPagerDetails(PagerDetailsActivity activity);
 }

@@ -124,6 +124,11 @@ public class RemoteRepository implements RepositoryContract {
 	}
 
 	@Override
+	public Single<Drink> getLocalCocktailRx(long id) {
+		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
+	@Override
 	public Flowable<List<Drink>> getLastSearch(String query) {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}

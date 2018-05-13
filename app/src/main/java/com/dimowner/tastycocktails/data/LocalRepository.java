@@ -116,6 +116,12 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
+	public Single<Drink> getLocalCocktailRx(long id) {
+		//TODO: add history update.
+		return getRepositoriesDao().getDrinkSingle(id);
+	}
+
+	@Override
 	public Flowable<List<Drink>> getLastSearch(String query) {
 		if (query == null) {
 			//When last query empty return empty list

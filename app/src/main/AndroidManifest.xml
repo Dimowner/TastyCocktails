@@ -49,6 +49,10 @@
 				android:name="com.dimowner.tastycocktails.cocktails.details.DetailsActivity"
 				android:theme="@style/AppTheme.TransparentStatusBar"/>
 
+		<activity
+				android:name="com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity"
+				android:theme="@style/AppTheme.TransparentStatusBar"/>
+
 		<activity android:name="com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity"
 					 android:theme="@style/AppTheme.TransparentStatusBar"/>
 

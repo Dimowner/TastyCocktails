@@ -92,6 +92,11 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
+	public Single<Drink> getLocalCocktailRx(long id) {
+		return localRepository.getLocalCocktailRx(id);
+	}
+
+	@Override
 	public Flowable<List<Drink>> getLastSearch(String query) {
 		return localRepository.getLastSearch(query);
 	}

@@ -23,6 +23,8 @@ import dagger.Module;
 import dagger.Provides;
 import com.dimowner.tastycocktails.cocktails.details.DetailsContract;
 import com.dimowner.tastycocktails.cocktails.details.DetailsPresenter;
+import com.dimowner.tastycocktails.cocktails.details.DetailsViewModel;
+import com.dimowner.tastycocktails.cocktails.details.DetailsViewModelImpl;
 import com.dimowner.tastycocktails.data.Repository;
 
 /**
@@ -42,6 +44,14 @@ public class DetailsModule {
 	@DetailsScoupe
 	DetailsContract.UserActionsListener provideDetailsPresenter(Repository repository) {
 		DetailsPresenter presenter = ViewModelProviders.of(activity).get(DetailsPresenter.class);
+		presenter.setRepository(repository);
+		return presenter;
+	}
+
+	@Provides
+	@DetailsScoupe
+	DetailsViewModel provideDetailsViewModel(Repository repository) {
+		DetailsViewModelImpl presenter = ViewModelProviders.of(activity).get(DetailsViewModelImpl.class);
 		presenter.setRepository(repository);
 		return presenter;
 	}
