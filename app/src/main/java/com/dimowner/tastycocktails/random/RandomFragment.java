@@ -60,7 +60,6 @@ public class RandomFragment extends Fragment {
 	private IngredientsAdapter mAdapter;
 
 	private boolean isFavorite = false;
-	private boolean isImageDark = true;
 	private boolean isCreated = false;
 
 	private ImageButton btnMenu;
@@ -68,8 +67,6 @@ public class RandomFragment extends Fragment {
 	private FloatingActionButton fab;
 	private CoordinatorLayout mRoot;
 	private View.OnClickListener openMenuListener;
-
-//	private IngredientsAdapter.OnSnackBarListener onSnackBarListener;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,7 +124,9 @@ public class RandomFragment extends Fragment {
 		super.onResume();
 		if (!isCreated) {
 			mPresenter.loadRandomDrink();
-//			isCreated = true;
+			fab.setVisibility(View.VISIBLE);
+			AnimationUtil.physBasedRevealAnimation(fab);
+			isCreated = true;
 		}
 	}
 
@@ -138,10 +137,9 @@ public class RandomFragment extends Fragment {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("is_favorite", isFavorite);
-		outState.putBoolean("is_image_dark", isImageDark);
 		outState.putBoolean("is_created", isCreated);
 		if (mAdapter != null) {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
@@ -153,7 +151,6 @@ public class RandomFragment extends Fragment {
 		super.onViewStateRestored(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
-			isImageDark = savedInstanceState.getBoolean("is_image_dark");
 			isCreated = savedInstanceState.getBoolean("is_created");
 			updateFavorite(isFavorite);
 			initAdapter();
@@ -170,7 +167,7 @@ public class RandomFragment extends Fragment {
 		}
 
 		mAdapter.setItemClickListener((view1, position) ->
-				startIngredientDetailsActivity(mAdapter.getItem(position), view1));
+				startIngredientDetailsActivity(mAdapter.getItem(position)));
 
 		mAdapter.setFavoriteUpdateListener(fav -> {
 			isFavorite = fav;
@@ -183,20 +180,9 @@ public class RandomFragment extends Fragment {
 			startActivity(intent);
 		});
 
-		mAdapter.setOnCheckImageColorListener(isDark -> {
-			isImageDark = isDark;
-			updateFavorite(isFavorite);
-			if (isDark) {
-				btnMenu.setImageResource(R.drawable.menu);
-			} else {
-				btnMenu.setImageResource(R.drawable.menu_black);
-			}
-			fab.setVisibility(View.VISIBLE);
-			if (!isCreated) {
-				AnimationUtil.physBasedRevealAnimation(fab);
-				isCreated = true;
-			}
-		});
+		btnMenu.setImageResource(R.drawable.circle_drawable_menu);
+		btnFavorite.setImageResource(isFavorite ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
+
 		mAdapter.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 	}
 
@@ -207,18 +193,14 @@ public class RandomFragment extends Fragment {
 		mPresenter = null;
 	}
 
-	private void startIngredientDetailsActivity(IngredientItem item, View view1) {
+	private void startIngredientDetailsActivity(IngredientItem item) {
 		Intent intent = new Intent(getContext(), ImagePreviewActivity.class);
 		intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, item.getImageUrl());
 		startActivity(intent);
 	}
 
 	private void updateFavorite(boolean fav) {
-		if (isImageDark) {
-			btnFavorite.setImageResource(fav ? R.drawable.heart : R.drawable.heart_outline);
-		} else {
-			btnFavorite.setImageResource(fav ? R.drawable.heart_black : R.drawable.heart_outline_black);
-		}
+		btnFavorite.setImageResource(fav ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
 	}
 
 	public void setOpenMenuListener(View.OnClickListener openMenuListener) {

@@ -45,12 +45,13 @@
 	<style name="TextView.Subheader">
 		<item name="android:gravity">center_vertical</item>
 		<item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
-		<item name="android:textColor">?android:attr/textColorSecondary</item>
+		<item name="android:textColor">@color/text_secondary_dark</item>
 	</style>
 
 	<style name="TextView.Label">
 		<item name="android:gravity">center_vertical</item>
 		<item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+		<item name="android:textColor">@color/text_primary_dark</item>
 	</style>
 
 	<!--<style name="DefaultImageButton">-->

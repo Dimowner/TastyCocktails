@@ -35,7 +35,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	//TODO: Add horizontal layout support;
 	//TODO: Replace list and constraint layout by LinearLayout.
 
-
 	public static final int TYPE_SEARCH = 1;
 	public static final int TYPE_FILETERS= 2;
 	public static final int TYPE_FAVORITES= 3;
@@ -184,20 +183,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		Intent intent = new Intent(getApplicationContext(), ImagePreviewActivity.class);
 		intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, path);
 		startActivity(intent);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				if (AndroidUtils.isAndroid5()) {
-					finishAfterTransition();
-				} else {
-					finish();
-				}
-				break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 //	@Override

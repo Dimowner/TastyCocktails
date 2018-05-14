@@ -17,15 +17,14 @@
 package com.dimowner.tastycocktails.cocktails.details;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.AbsSavedState;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,9 +48,6 @@ import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
-import com.dimowner.tastycocktails.util.ColorUtils;
-import com.dimowner.tastycocktails.util.FileUtil;
-import timber.log.Timber;
 
 /**
  * Created on 13.05.2018.
@@ -84,8 +80,6 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 	private FavoriteUpdateListener favoriteUpdateListener;
 
 	private OnImageClickListener onImageClickListener;
-
-	private OnCheckImageColorListener onCheckImageColorListener;
 
 	private OnSnackBarListener onSnackBarListener;
 
@@ -256,9 +250,6 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 							header.ivImage.setBackgroundColor(ContextCompat.getColor(header.ivImage.getContext(), R.color.colorPrimary));
 							header.ivImage.setImageResource(R.drawable.no_image);
 							header.txtError.setVisibility(View.VISIBLE);
-							if (onCheckImageColorListener != null) {
-								onCheckImageColorListener.onImageColorChecked(true);
-							}
 							return false;
 						}
 
@@ -274,32 +265,6 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 							if (header.txtError.getVisibility() == View.VISIBLE) {
 								header.txtError.setVisibility(View.GONE);
 							}
-							Bitmap bitmap = FileUtil.drawableToBitmap(resource);
-
-							Palette.from(bitmap)
-									.maximumColorCount(3)
-									.clearFilters() /* by default palette ignore certain hues
-                        (e.g. pure black/white) but we don't want this. */
-									.setRegion(0, 0, bitmap.getWidth() - 1, 150) /* - 1 to work around
-                        https://code.google.com/p/android/issues/detail?id=191013 */
-									.generate(palette -> {
-										boolean isDark;
-										@ColorUtils.Lightness int lightness = ColorUtils.isDark(palette);
-										if (lightness == ColorUtils.LIGHTNESS_UNKNOWN) {
-											isDark = ColorUtils.isDark(bitmap, bitmap.getWidth() / 2, 0);
-										} else {
-											isDark = lightness == ColorUtils.IS_DARK;
-										}
-										if (onCheckImageColorListener != null) {
-											onCheckImageColorListener.onImageColorChecked(isDark);
-										}
-
-										if (!isDark) { // make back icon dark on light images
-											Timber.d("Image is dark");
-										} else {
-											Timber.d("Image is light");
-										}
-									});
 							hideProgress();
 							return false;
 						}
@@ -322,26 +287,27 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 		}
 	}
 
+	@NonNull
 	@Override
-	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		if (viewType == VIEW_TYPE_HEADER) {
 			View v = LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.list_item_details_header, parent, false);
 			return new HeaderViewHolder(v);
-		} else if (viewType == VIEW_TYPE_NORMAL) {
-			View v = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.list_item_ingredient, parent, false);
-			return new IngredientViewHolder(v);
 		} else if (viewType == VIEW_TYPE_FOOTER) {
 			View v = LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.list_item_details_footer, parent, false);
 			return new FooterViewHolder(v);
+		} else {
+//		if (viewType == VIEW_TYPE_NORMAL) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item_ingredient, parent, false);
+			return new IngredientViewHolder(v);
 		}
-		return null;
 	}
 
 	@Override
-	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+	public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 		if (viewHolder.getItemViewType() == VIEW_TYPE_HEADER) {
 			//Do nothing
 			displayData((HeaderViewHolder) viewHolder);
@@ -392,7 +358,7 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 	}
 
 	@Override
-	public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+	public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
 		super.onViewAttachedToWindow(holder);
 		if (holder.getItemViewType() == VIEW_TYPE_HEADER) {
 			headerViewHolder = (HeaderViewHolder) holder;
@@ -403,7 +369,7 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 	}
 
 	@Override
-	public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+	public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
 		super.onViewDetachedFromWindow(holder);
 		if (holder.getItemViewType() == VIEW_TYPE_HEADER) {
 			headerViewHolder = null;
@@ -456,10 +422,6 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 
 	public void setOnImageClickListener(OnImageClickListener onImageClickListener) {
 		this.onImageClickListener = onImageClickListener;
-	}
-
-	public void setOnCheckImageColorListener(OnCheckImageColorListener onCheckImageColorListener) {
-		this.onCheckImageColorListener = onCheckImageColorListener;
 	}
 
 	public void setOnSnackBarListener(OnSnackBarListener onSnackBarListener) {
@@ -564,10 +526,6 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 
 	public interface OnImageClickListener {
 		void onImageClick(String path);
-	}
-
-	public interface OnCheckImageColorListener {
-		void onImageColorChecked(boolean isDark);
 	}
 
 	public interface OnSnackBarListener {

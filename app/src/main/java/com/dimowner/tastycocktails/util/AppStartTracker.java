@@ -94,6 +94,24 @@ public class AppStartTracker {
 				timeFormat.format(new Date(time)));
 	}
 
+	public void prefsInitBefore() {
+		long time = System.currentTimeMillis();
+		startTimes.setPrefsInitBefore(time);
+		Timber.v("diff = %s, time = %s, formatted: %s - prefsInitBefore",
+				(time - startTimes.getAppOnCreate()),
+				time,
+				timeFormat.format(new Date(time)));
+	}
+
+	public void prefsInitAfter() {
+		long time = System.currentTimeMillis();
+		startTimes.setPrefsInitAfter(time);
+		Timber.v("diff = %s, time = %s, formatted: %s - prefsInitAfter",
+				(time - startTimes.getAppOnCreate()),
+				time,
+				timeFormat.format(new Date(time)));
+	}
+
 	public String getResults() {
 		return startTimes.toString();
 	}
@@ -106,7 +124,8 @@ public class AppStartTracker {
 		private long activityOnCreateEnd;
 		private long activityOnStart;
 		private long activityOnResume;
-
+		private long prefsInitBefore;
+		private long prefsInitAfter;
 
 		long getAppOnCreate() {
 			return appOnCreate;
@@ -164,6 +183,22 @@ public class AppStartTracker {
 			this.activityOnResume = activityOnResume;
 		}
 
+		public long getPrefsInitBefore() {
+			return prefsInitBefore;
+		}
+
+		public void setPrefsInitBefore(long prefsInitBefore) {
+			this.prefsInitBefore = prefsInitBefore;
+		}
+
+		public long getPrefsInitAfter() {
+			return prefsInitAfter;
+		}
+
+		public void setPrefsInitAfter(long prefsInitAfter) {
+			this.prefsInitAfter = prefsInitAfter;
+		}
+
 		@Override
 		public String toString() {
 			return "StartTimes{" +
@@ -182,6 +217,9 @@ public class AppStartTracker {
 					",\n formatted: " + timeFormat.format(new Date(activityOnCreateEnd)) + " activityOnCreateEnd" +
 					",\n formatted: " + timeFormat.format(new Date(activityOnStart)) + " activityOnStart" +
 					",\n formatted: " + timeFormat.format(new Date(activityOnResume)) + " activityOnResume" +
+
+					",\n formatted: " + timeFormat.format(new Date(prefsInitBefore)) + " prefsInitBefore" +
+					",\n formatted: " + timeFormat.format(new Date(prefsInitAfter)) + " prefsInitAfter" +
 					'}';
 		}
 	}

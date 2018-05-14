@@ -135,18 +135,18 @@ public class DetailsActivity extends AppCompatActivity {
 			startActivity(intent);
 		});
 
-		mAdapter.setOnCheckImageColorListener(isDark -> {
-			isImageDark = isDark;
-			updateFavorite(isFavorite);
-			if (getSupportActionBar() != null) {
-				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			}
-			if (isDark) {
+//		mAdapter.setOnCheckImageColorListener(isDark -> {
+//			isImageDark = isDark;
+//			updateFavorite(isFavorite);
+//			if (getSupportActionBar() != null) {
+//				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//			}
+//			if (isDark) {
 				toolbar.setNavigationIcon(R.drawable.arrow_left);
-			} else {
-				toolbar.setNavigationIcon(R.drawable.arrow_left_black);
-			}
-		});
+//			} else {
+//				toolbar.setNavigationIcon(R.drawable.arrow_left_black);
+//			}
+//		});
 		mAdapter.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 	}
 
