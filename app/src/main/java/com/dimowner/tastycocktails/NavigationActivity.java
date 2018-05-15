@@ -248,34 +248,72 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		}
 	}
 
+	public boolean isDirectionToLeft(int id) {
+		switch (id) {
+			case NAVDRAWER_ITEM_COCKTAILS:
+				return true;
+			case NAVDRAWER_ITEM_FAVORITES:
+				if (curActiveItem == NAVDRAWER_ITEM_COCKTAILS) {
+					return false;
+				} else {
+					return true;
+				}
+			case NAVDRAWER_ITEM_RANDOM:
+				if (curActiveItem == NAVDRAWER_ITEM_HISTORY) {
+					return true;
+				} else {
+					return false;
+				}
+			case NAVDRAWER_ITEM_HISTORY:
+				return false;
+			default:
+				return false;
+		}
+	}
+
 	protected void startFavorites() {
 		Timber.d("startFavorites");
 		FragmentManager manager = getSupportFragmentManager();
 		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_FAVORITES);
-		manager
-				.beginTransaction()
-				.replace(R.id.fragment, fragment, "favorites_fragment")
-				.commit();
+		FragmentTransaction ft = manager
+				.beginTransaction();
+		if (isDirectionToLeft(NAVDRAWER_ITEM_FAVORITES)) {
+			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+		} else {
+			ft.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_left_to_right);
+		}
+		ft.replace(R.id.fragment, fragment, "favorites_fragment");
+		ft.commit();
 	}
 
 	protected void startHistory() {
 		Timber.d("startHistory");
 		FragmentManager manager = getSupportFragmentManager();
 		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_HISTORY);
-		manager
-				.beginTransaction()
-				.replace(R.id.fragment, fragment, "history_fragment")
-				.commit();
+		FragmentTransaction ft = manager
+				.beginTransaction();
+		if (isDirectionToLeft(NAVDRAWER_ITEM_HISTORY)) {
+			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+		} else {
+			ft.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_left_to_right);
+		}
+		ft.replace(R.id.fragment, fragment, "history_fragment");
+		ft.commit();
 	}
 
 	protected void startCocktails() {
 		Timber.d("startCocktails");
 		FragmentManager manager = getSupportFragmentManager();
 		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_NORMAL);
-		manager
-				.beginTransaction()
-				.replace(R.id.fragment, fragment, "cocktails_fragment")
-				.commit();
+		FragmentTransaction ft = manager
+				.beginTransaction();
+		if (isDirectionToLeft(NAVDRAWER_ITEM_COCKTAILS)) {
+			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+		} else {
+			ft.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_left_to_right);
+		}
+		ft.replace(R.id.fragment, fragment, "cocktails_fragment");
+		ft.commit();
 	}
 
 	protected void startRandom() {
@@ -284,10 +322,15 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		RandomFragment fragment = new RandomFragment();
 		fragment.setOpenMenuListener(v -> mDrawerLayout.openDrawer(Gravity.START));
 //		fragment.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
-		manager
-				.beginTransaction()
-				.add(R.id.fragment, fragment, "random_fragment")
-				.commit();
+		FragmentTransaction ft = manager
+				.beginTransaction();
+		if (isDirectionToLeft(NAVDRAWER_ITEM_RANDOM)) {
+			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+		} else {
+			ft.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_left_to_right);
+		}
+		ft.replace(R.id.fragment, fragment, "random_fragment");
+		ft.commit();
 	}
 
 	private void showAboutDialog() {
