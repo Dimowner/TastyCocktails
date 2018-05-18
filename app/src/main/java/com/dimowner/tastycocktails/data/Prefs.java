@@ -3,9 +3,6 @@ package com.dimowner.tastycocktails.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.dimowner.tastycocktails.TCApplication;
-import com.dimowner.tastycocktails.util.AppStartTracker;
-
 public class Prefs {
 
 	private static final String PREF_NAME = "task.softermii.tastycocktails.data.Prefs";
@@ -25,10 +22,7 @@ public class Prefs {
 	private SharedPreferences sharedPreferences;
 
 	public Prefs(Context context) {
-		AppStartTracker tracker = TCApplication.getAppStartTracker(context);
-		tracker.prefsInitBefore();
 		sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-		tracker.prefsInitAfter();
 	}
 
 	public boolean isFirstRun() {

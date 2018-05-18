@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 
@@ -121,6 +122,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		super.onResume();
 		tracker.activityOnResume();
 //		Timber.v(tracker.getResults());
+		Toast.makeText(getApplicationContext(), tracker.getStartTime(), Toast.LENGTH_LONG).show();
 	}
 
 	@Override

@@ -33,6 +33,11 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 				.doOnSuccess(drink -> cacheDrink(drink, position));
 	}
 
+	@Override
+	public Single<Drink> getRandomDrink() {
+		return repository.getRandomCocktail();
+	}
+
 	private void cacheDrink(Drink drink, int position) {
 		Timber.v("cacheDrink id = " + drink.getIdDrink());
 		drinks.put(position, drink);

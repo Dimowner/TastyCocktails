@@ -9,6 +9,8 @@ public interface DetailsViewModel {
 
 	Single<Drink> getDrink(long id, int position);
 
+	Single<Drink> getRandomDrink();
+
 	Completable reverseFavorite(long id);
 
 	Drink getCachedDrink(int pos);

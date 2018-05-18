@@ -17,6 +17,7 @@
 package com.dimowner.tastycocktails.dagger.details;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import dagger.Module;
@@ -36,8 +37,16 @@ public class DetailsModule {
 
 	private FragmentActivity activity;
 
+	private Fragment fragment;
+
 	public DetailsModule(FragmentActivity activity) {
 		this.activity = activity;
+		this.fragment = null;
+	}
+
+	public DetailsModule(Fragment fragment) {
+		this.activity = null;
+		this.fragment = fragment;
 	}
 
 	@Provides
@@ -51,8 +60,13 @@ public class DetailsModule {
 	@Provides
 	@DetailsScoupe
 	DetailsViewModel provideDetailsViewModel(Repository repository) {
-		DetailsViewModelImpl presenter = ViewModelProviders.of(activity).get(DetailsViewModelImpl.class);
-		presenter.setRepository(repository);
-		return presenter;
+		DetailsViewModelImpl viewModel;
+		if (activity != null) {
+			viewModel = ViewModelProviders.of(activity).get(DetailsViewModelImpl.class);
+		} else {
+			viewModel = ViewModelProviders.of(fragment).get(DetailsViewModelImpl.class);
+		}
+		viewModel.setRepository(repository);
+		return viewModel;
 	}
 }

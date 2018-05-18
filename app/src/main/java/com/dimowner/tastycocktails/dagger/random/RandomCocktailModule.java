@@ -21,6 +21,10 @@ import android.support.v4.app.Fragment;
 
 import dagger.Module;
 import dagger.Provides;
+
+import com.dimowner.tastycocktails.cocktails.details.DetailsViewModel;
+import com.dimowner.tastycocktails.cocktails.details.DetailsViewModelImpl;
+import com.dimowner.tastycocktails.dagger.details.DetailsScoupe;
 import com.dimowner.tastycocktails.data.Repository;
 import com.dimowner.tastycocktails.random.RandomContract;
 import com.dimowner.tastycocktails.random.RandomPresenter;
@@ -45,4 +49,12 @@ public class RandomCocktailModule {
 		presenter.setRepository(repository);
 		return presenter;
 	}
+
+//	@Provides
+//	@DetailsScoupe
+//	DetailsViewModel provideDetailsViewModel(Repository repository) {
+//		DetailsViewModelImpl viewModel = ViewModelProviders.of(fragment).get(DetailsViewModelImpl.class);
+//		viewModel.setRepository(repository);
+//		return viewModel;
+//	}
 }
