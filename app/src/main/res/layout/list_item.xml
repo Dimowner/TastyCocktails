@@ -72,7 +72,6 @@
 				android:maxLines="1"/>
 	</LinearLayout>
 
-
 	<ImageView
 			android:id="@+id/list_item_btn_favorite"
 			android:layout_width="40dp"

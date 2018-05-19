@@ -292,7 +292,7 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 	public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		if (viewType == VIEW_TYPE_HEADER) {
 			View v = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.list_item_details_header, parent, false);
+					.inflate(R.layout.list_item_details_header2, parent, false);
 			return new HeaderViewHolder(v);
 		} else if (viewType == VIEW_TYPE_FOOTER) {
 			View v = LayoutInflater.from(parent.getContext())

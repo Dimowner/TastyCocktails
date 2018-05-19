@@ -72,8 +72,6 @@ public class RandomFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		TCApplication.get(getContext()).applicationComponent()
-				.plus(new RandomCocktailModule(this)).injectDetailsFragment(this);
 	}
 
 	@Nullable
@@ -81,6 +79,8 @@ public class RandomFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_random, container, false);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
+		TCApplication.get(getContext()).applicationComponent()
+				.plus(new RandomCocktailModule(this)).injectDetailsFragment(this);
 		return view;
 	}
 
@@ -140,7 +140,7 @@ public class RandomFragment extends Fragment {
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("is_favorite", isFavorite);
-		outState.putBoolean("is_created", isCreated);
+//		outState.putBoolean("is_created", isCreated);
 		if (mAdapter != null) {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
 		}
@@ -151,7 +151,8 @@ public class RandomFragment extends Fragment {
 		super.onViewStateRestored(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
-			isCreated = savedInstanceState.getBoolean("is_created");
+//			isCreated = savedInstanceState.getBoolean("is_created");
+			isCreated = false;
 			updateFavorite(isFavorite);
 			initAdapter();
 

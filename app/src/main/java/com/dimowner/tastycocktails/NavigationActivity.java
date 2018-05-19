@@ -277,8 +277,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		Timber.d("startFavorites");
 		FragmentManager manager = getSupportFragmentManager();
 		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_FAVORITES);
-		FragmentTransaction ft = manager
-				.beginTransaction();
+		FragmentTransaction ft = manager.beginTransaction();
 		if (isDirectionToLeft(NAVDRAWER_ITEM_FAVORITES)) {
 			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
 		} else {
@@ -292,8 +291,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		Timber.d("startHistory");
 		FragmentManager manager = getSupportFragmentManager();
 		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_HISTORY);
-		FragmentTransaction ft = manager
-				.beginTransaction();
+		FragmentTransaction ft = manager.beginTransaction();
 		if (isDirectionToLeft(NAVDRAWER_ITEM_HISTORY)) {
 			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
 		} else {
@@ -307,8 +305,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		Timber.d("startCocktails");
 		FragmentManager manager = getSupportFragmentManager();
 		CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_NORMAL);
-		FragmentTransaction ft = manager
-				.beginTransaction();
+		FragmentTransaction ft = manager.beginTransaction();
 		if (isDirectionToLeft(NAVDRAWER_ITEM_COCKTAILS)) {
 			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
 		} else {
@@ -324,8 +321,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		RandomFragment fragment = new RandomFragment();
 		fragment.setOpenMenuListener(v -> mDrawerLayout.openDrawer(Gravity.START));
 //		fragment.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
-		FragmentTransaction ft = manager
-				.beginTransaction();
+		FragmentTransaction ft = manager.beginTransaction();
 		if (isDirectionToLeft(NAVDRAWER_ITEM_RANDOM)) {
 			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
 		} else {
@@ -385,6 +381,11 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		super.onRestoreInstanceState(savedInstanceState);
 		if (savedInstanceState != null) {
 			curActiveItem = savedInstanceState.getInt("cur_active_item");
+			if (curActiveItem == NAVDRAWER_ITEM_RANDOM) {
+				mActionBarToolbar.setVisibility(View.GONE);
+				//TODO: find a better way to restore link to fragment
+				startRandom();
+			}
 		}
 	}
 }
