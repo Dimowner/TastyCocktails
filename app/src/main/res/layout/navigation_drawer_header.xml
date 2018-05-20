@@ -15,34 +15,14 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				  android:layout_width="match_parent"
-				  android:layout_height="@dimen/nav_header_height"
-				  xmlns:tools="http://schemas.android.com/tools"
-				  android:background="@drawable/default_cover3"
-				  android:gravity="bottom"
-				  android:orientation="vertical"
-				  android:padding="@dimen/padding_standard"
-				  android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-	<ImageView
-			android:id="@+id/user_icon"
-			android:layout_width="@dimen/navdrawer_profile_image_size"
-			android:layout_height="@dimen/navdrawer_profile_image_size"
-			android:layout_marginBottom="@dimen/padding_standard"
-			android:contentDescription="@string/content_description_user_face"
-			android:transitionName="@string/transition_user_face"
-			tools:ignore="UnusedAttribute"/>
-	<!--app:srcCompat="@drawable/account"-->
-
-	<TextView
-			android:id="@+id/user_name"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/text_size_large"
-			android:transitionName="@string/transition_user_name"
-			android:textColor="@color/text_primary_light"
-			android:textStyle="bold"
-			tools:ignore="UnusedAttribute"/>
-
-</LinearLayout>
+<ImageView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/nav_header_height"
+		android:scaleType="center"
+		android:contentDescription="@null"
+		android:src="@drawable/loadscreen_new"
+		android:paddingTop="54dp"
+		android:paddingBottom="@dimen/padding_standard"
+		android:background="@color/colorPrimary"
+		/>

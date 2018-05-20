@@ -34,7 +34,7 @@
 				android:layout_height="250dp"
 				android:contentDescription="@string/content_description_cocktail_image"
 				android:scaleType="center"
-				tools:src="@drawable/default_cover3"
+				tools:src="@drawable/loadscreen_new"
 				/>
 
 		<ProgressBar

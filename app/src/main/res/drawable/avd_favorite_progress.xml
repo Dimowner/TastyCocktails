@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/round_heart_grey">
+    android:drawable="@drawable/heart_grey_pressed">
     <target
         android:animation="@animator/opacity_pulse"
         android:name="fillGroup"/>
