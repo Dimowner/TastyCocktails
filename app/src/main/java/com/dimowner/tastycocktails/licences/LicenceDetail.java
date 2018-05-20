@@ -38,7 +38,6 @@ public class LicenceDetail extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_licence_detail);
 
-
 		String licenceTitle;
 		String licenceLocation;
 		if (getIntent().hasExtra(EXTRAS_KEY_LICENCE_ITEM_POS)) {
@@ -63,6 +62,7 @@ public class LicenceDetail extends AppCompatActivity {
 		}
 
 		Toolbar toolbar = findViewById(R.id.toolbar);
+		toolbar.setNavigationIcon(R.drawable.round_arrow_back);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);

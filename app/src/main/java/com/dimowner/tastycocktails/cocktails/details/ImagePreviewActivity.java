@@ -28,6 +28,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_image_preview);
 
 		Toolbar toolbar = findViewById(R.id.toolbar);
+		toolbar.setNavigationIcon(R.drawable.round_arrow_back);
 
 		PhotoView photoView = findViewById(R.id.photo_view);
 		photoView.setImageResource(R.drawable.loadscreen_new);

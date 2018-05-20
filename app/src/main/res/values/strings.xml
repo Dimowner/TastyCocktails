@@ -43,7 +43,7 @@
 	<string name="welcome">Welcome to the Tasty Cocktails!</string>
 	<string name="tap_search">Tap search to find one</string>
 	<string name="removed_from_favorites">%s removed from favorites</string>
-	<string name="removed_from_history">%s removed from favorites</string>
+	<string name="removed_from_history">%s removed from history</string>
 	<string name="added_to_favorites">%s added to favorites</string>
 	<string name="undo">UNDO</string>
 

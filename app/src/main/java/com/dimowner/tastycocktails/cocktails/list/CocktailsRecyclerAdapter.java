@@ -176,9 +176,9 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			});
 
 			if (mShowingData.get(holder.getAdapterPosition()).isFavorite()) {
-				holder.btnFev.setImageResource(R.drawable.heart_grey_pressed);
+				holder.btnFev.setImageResource(R.drawable.round_heart_grey);
 			} else {
-				holder.btnFev.setImageResource(R.drawable.heart_outline_grey);
+				holder.btnFev.setImageResource(R.drawable.round_heart_border_grey);
 			}
 
 			holder.view.setOnClickListener(v -> {

@@ -26,4 +26,6 @@
 		app:itemIconTint="@drawable/nav_item_state_list"
 		app:itemTextColor="@drawable/nav_item_state_list"
 		app:headerLayout="@layout/navigation_drawer_header"
-		app:menu="@menu/navigation_drawer_view"/>
+		app:menu="@menu/navigation_drawer_view"
+		app:itemTextAppearance="@style/AppTheme.NavDrawerItem"
+		/>

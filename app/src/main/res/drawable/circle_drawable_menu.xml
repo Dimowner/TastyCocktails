@@ -4,6 +4,6 @@
 	<item android:drawable="@drawable/circle_drawable"/>
 	<item
 			android:gravity="center"
-			android:drawable="@drawable/menu"/>
+			android:drawable="@drawable/round_menu"/>
 
 </layer-list>

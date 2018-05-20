@@ -22,11 +22,11 @@
 			android:checkableBehavior="single">
 		<item
 				android:id="@+id/nav_cocktails"
-				android:icon="@drawable/glass_flute"
+				android:icon="@drawable/round_local_bar"
 				android:title="@string/nav_cocktails"/>
 		<item
 				android:id="@+id/nav_favorites"
-				android:icon="@drawable/heart_grey"
+				android:icon="@drawable/round_heart_grey"
 				android:title="@string/nav_favorites"/>
 		<item
 				android:id="@+id/nav_random"
@@ -34,7 +34,7 @@
 				android:title="@string/nav_random"/>
 		<item
 				android:id="@+id/nav_history"
-				android:icon="@drawable/history"
+				android:icon="@drawable/round_history"
 				android:title="@string/nav_history"/>
 	</group>
 
@@ -42,7 +42,7 @@
 			 android:checkableBehavior="single">
 		<item
 				android:id="@+id/nav_about"
-				android:icon="@drawable/information"
+				android:icon="@drawable/round_info"
 				android:title="@string/nav_about"/>
 	</group>
 </menu>

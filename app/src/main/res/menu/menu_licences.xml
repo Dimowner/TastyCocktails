@@ -20,7 +20,7 @@
 
 	<item android:id="@+id/action_close"
 			android:title="@string/btn_close"
-			android:icon="@drawable/close"
+			android:icon="@drawable/round_close"
 			app:showAsAction="ifRoom"/>
 
 </menu>

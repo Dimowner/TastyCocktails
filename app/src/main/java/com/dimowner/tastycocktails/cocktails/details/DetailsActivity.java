@@ -142,7 +142,7 @@ public class DetailsActivity extends AppCompatActivity {
 //				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //			}
 //			if (isDark) {
-				toolbar.setNavigationIcon(R.drawable.arrow_left);
+				toolbar.setNavigationIcon(R.drawable.round_arrow_back);
 //			} else {
 //				toolbar.setNavigationIcon(R.drawable.arrow_left_black);
 //			}
@@ -208,9 +208,9 @@ public class DetailsActivity extends AppCompatActivity {
 	private void updateFavorite(boolean fav) {
 		if (itemFavorite != null) {
 			if (isImageDark) {
-				itemFavorite.setIcon(fav ? R.drawable.heart : R.drawable.heart_outline);
+				itemFavorite.setIcon(fav ? R.drawable.round_heart : R.drawable.round_heart_border);
 			} else {
-				itemFavorite.setIcon(fav ? R.drawable.heart_black : R.drawable.heart_outline_black);
+				itemFavorite.setIcon(fav ? R.drawable.round_heart_black: R.drawable.round_heart_outline_black);
 			}
 		}
 	}

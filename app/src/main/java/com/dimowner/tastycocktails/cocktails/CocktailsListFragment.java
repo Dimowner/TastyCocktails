@@ -271,7 +271,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mAdapter.setItemLongClickListener((view, id, position) ->
 					UIUtil.showWarningDialog(
 							getActivity(),
-							R.drawable.delete_forever_black, //Dialog title icon
+							R.drawable.round_delete_forever_black, //Dialog title icon
 							getString(R.string.remove_from_history, mAdapter.getItem(position).getName()),  //Dialog title text
 							(dialogInterface, i) -> mPresenter.removeFromHistory(id), //Callback for positive button
 							(dialogInterface, i) -> dialogInterface.dismiss() //Callback for negative button
@@ -408,7 +408,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			if (mAdapter.getItemCount() > 0) {
 				UIUtil.showWarningDialog(
 						getActivity(),
-						R.drawable.delete_forever_black,
+						R.drawable.round_delete_forever_black,
 						R.string.do_you_really_want_clear_history,
 						(dialogInterface, i) -> mPresenter.clearHistory(),
 						(dialogInterface, i) -> dialogInterface.dismiss()

@@ -39,6 +39,12 @@
 		<item name="android:windowBackground">@drawable/branded_logo</item>
 	</style>
 
+	<style name="AppTheme.NavDrawerItem">
+		<item name="android:textSize">18sp</item>
+		<item name="android:fontFamily">@font/product_sans_regular</item>
+		<!--<item name="android:textStyle">bold</item>-->
+	</style>
+
 	<!-- TextView -->
 	<style name="TextView" />
 

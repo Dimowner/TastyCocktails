@@ -46,7 +46,7 @@
 					android:layout_width="56dp"
 					android:layout_height="56dp"
 					android:contentDescription="@null"
-					app:srcCompat="@drawable/menu"
+					app:srcCompat="@drawable/round_menu"
 					android:background="?android:selectableItemBackground"
 					android:layout_gravity="top|start"
 					/>
@@ -56,7 +56,7 @@
 					android:layout_width="56dp"
 					android:layout_height="56dp"
 					android:contentDescription="@null"
-					app:srcCompat="@drawable/heart_outline"
+					app:srcCompat="@drawable/round_heart_border"
 					android:background="?android:selectableItemBackground"
 					android:layout_gravity="top|end"
 					/>

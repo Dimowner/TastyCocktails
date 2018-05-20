@@ -50,7 +50,7 @@ public class UIUtil {
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setTitle(R.string.title_warning)
 				.setMessage(mesRes)
-				.setIcon(R.drawable.alert)
+				.setIcon(R.drawable.round_alert)
 				.setCancelable(false)
 				.setPositiveButton(R.string.btn_ok, positiveBtnClickListener)
 				.setNegativeButton(R.string.btn_cancel, negativeBtnClickListener);
@@ -121,7 +121,7 @@ public class UIUtil {
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setTitle(R.string.title_warning)
 				.setMessage(mesRes)
-				.setIcon(R.drawable.alert)
+				.setIcon(R.drawable.round_alert)
 				.setCancelable(true)
 				.setPositiveButton(R.string.btn_ok, null);
 
