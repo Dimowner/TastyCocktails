@@ -135,7 +135,12 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 				recyclerView.setHasFixedSize(true);
 				recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-				IngredientsAdapter2 adapter = new IngredientsAdapter2();
+				IngredientsAdapter2 adapter;
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+					adapter = new IngredientsAdapter2(isInMultiWindowMode());
+				} else {
+					adapter = new IngredientsAdapter2();
+				}
 				adapter.setItemClickListener((v1, pos1) -> startIngredientDetailsActivity(adapter.getItem(pos1).getImageUrl()));
 				adapter.setOnImageClickListener(path -> startIngredientDetailsActivity(path));
 

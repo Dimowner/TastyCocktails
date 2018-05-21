@@ -59,6 +59,8 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 	private static final int VIEW_TYPE_NORMAL = 2;
 	private static final int VIEW_TYPE_FOOTER = 3;
 
+	private boolean isInMultiWindow = false;
+
 	private List<IngredientItem> mShowingData;
 
 	private String name;
@@ -140,6 +142,11 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 			super(itemView);
 			view = itemView;
 		}
+	}
+
+	public IngredientsAdapter2(boolean isInMultiWindow) {
+		this.isInMultiWindow = isInMultiWindow;
+		this.mShowingData = Collections.emptyList();
 	}
 
 	public IngredientsAdapter2() {
@@ -291,8 +298,9 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		if (viewType == VIEW_TYPE_HEADER) {
+			int resId = isInMultiWindow ? R.layout.list_item_details_header2_portrait : R.layout.list_item_details_header2;
 			View v = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.list_item_details_header2, parent, false);
+					.inflate(resId, parent, false);
 			return new HeaderViewHolder(v);
 		} else if (viewType == VIEW_TYPE_FOOTER) {
 			View v = LayoutInflater.from(parent.getContext())

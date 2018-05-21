@@ -163,7 +163,12 @@ public class RandomFragment extends Fragment {
 
 	private void initAdapter() {
 		if (mAdapter == null) {
-			mAdapter = new IngredientsAdapter();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				mAdapter = new IngredientsAdapter(getActivity().isInMultiWindowMode());
+			} else {
+				mAdapter = new IngredientsAdapter();
+			}
+
 			mRecyclerView.setAdapter(mAdapter);
 		}
 

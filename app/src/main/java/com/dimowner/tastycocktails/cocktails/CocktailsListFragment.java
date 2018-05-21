@@ -200,11 +200,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					if (onFirstRunExecutedListener != null) {
 						onFirstRunExecutedListener.onFirstRunExecuted();
 					}
-					String vals[] = getResources().getStringArray(R.array.filter_categories);
-					prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, vals[1]);
 					mWelcomePanel.setVisibility(View.GONE);
-					mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+					mRecyclerView.setVisibility(View.VISIBLE);
+					mTxtEmpty.setVisibility(View.GONE);
 				});
+				String vals[] = getResources().getStringArray(R.array.filter_categories);
+				prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, vals[1]);
+				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
 			} else {
 				if (fragmentType == TYPE_NORMAL) {
 					int filter = prefs.getCurrentActiveFilter();
@@ -509,6 +511,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
+			mAdapter.setData(data);
 		} else if (data.size() == 0) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.GONE);
