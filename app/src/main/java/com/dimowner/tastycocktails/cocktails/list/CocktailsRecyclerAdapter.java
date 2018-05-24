@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -34,7 +35,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
@@ -72,21 +72,29 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private ItemLongClickListener itemLongClickListener;
 
+	private int itemLayoutResId;
 
-	class ItemViewHolder extends RecyclerView.ViewHolder {
+
+	public class ItemViewHolder extends RecyclerView.ViewHolder {
 		TextView name;
  		TextView description;
 		ImageView image;
 		ImageView btnFev;
  		View view;
+ 		LinearLayout container;
 
-		ItemViewHolder(View itemView) {
+		public ItemViewHolder(View itemView) {
 			super(itemView);
 			this.view = itemView;
 			this.name = itemView.findViewById(R.id.list_item_name);
 			this.description = itemView.findViewById(R.id.list_item_description);
 			this.image = itemView.findViewById(R.id.list_item_image);
 			this.btnFev = itemView.findViewById(R.id.list_item_btn_favorite);
+			this.container = itemView.findViewById(R.id.container);
+		}
+
+		public LinearLayout getContainer() {
+			return container;
 		}
 	}
 
@@ -100,10 +108,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		}
 	}
 
-	public CocktailsRecyclerAdapter(int searchFragmentType, Prefs prefs) {
+	public CocktailsRecyclerAdapter(int searchFragmentType, int layoutResId, Prefs prefs) {
 		this.mShowingData = new ArrayList<>();
 		this.searchFragmentType = searchFragmentType;
 		this.prefs = prefs;
+		this.itemLayoutResId = layoutResId;
 	}
 
 	public void showFooter(boolean show) {
@@ -120,8 +129,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		if (viewType == VIEW_TYPE_NORMAL) {
-			View v = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.list_item, parent, false);
+			View v = LayoutInflater.from(parent.getContext()).inflate(itemLayoutResId, parent, false);
 			return new ItemViewHolder(v);
 		} else if (viewType == VIEW_TYPE_PROGRESS) {
 			View v = LayoutInflater.from(parent.getContext())
@@ -148,7 +156,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			if (mShowingData.get(pos).getAvatar_url() != null) {
 				Glide.with(holder.view.getContext())
 						.load(mShowingData.get(pos).getAvatar_url())
-						.apply(RequestOptions.circleCropTransform())
+//						.apply(RequestOptions.circleCropTransform())
 						.listener(new RequestListener<Drawable>() {
 							@Override
 							public boolean onLoadFailed(@Nullable GlideException e, Object model,
@@ -201,6 +209,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 //		ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
 //		ViewCompat.setTransitionName(holder.description, res.getString(R.string.list_item_content_transition));
 //		ViewCompat.setTransitionName(holder.image, res.getString(R.string.list_item_image_transition));
+	}
+
+	@Override
+	public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+		super.onDetachedFromRecyclerView(recyclerView);
 	}
 
 	@Override

@@ -28,6 +28,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -57,8 +58,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
-import com.dimowner.tastycocktails.cocktails.details.DetailsActivity;
-import com.dimowner.tastycocktails.cocktails.details.DetailsPagerAdapter;
 import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
 import com.dimowner.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import com.dimowner.tastycocktails.cocktails.list.EndlessRecyclerViewScrollListener;
@@ -149,6 +148,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		// use a linear layout manager
 		RecyclerView.LayoutManager mLayoutManager = new AppLinearLayoutManager(getContext());
 		mRecyclerView.setLayoutManager(mLayoutManager);
+		mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), ((AppLinearLayoutManager) mLayoutManager).getOrientation()));
 		mRecyclerView.addOnScrollListener(new MyScrollListener(mLayoutManager));
 
 		mPresenter.bindView(this);
@@ -169,6 +169,30 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 							return false;
 						}
 
+
+						@Override
+						public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+							if (viewHolder != null) {
+								final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
+								getDefaultUIUtil().onSelected(foregroundView);
+							}
+						}
+
+						@Override
+						public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
+															 RecyclerView.ViewHolder viewHolder, float dX, float dY,
+															 int actionState, boolean isCurrentlyActive) {
+							final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
+							getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+									actionState, isCurrentlyActive);
+						}
+
+						@Override
+						public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+							final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
+							getDefaultUIUtil().clearView(foregroundView);
+						}
+
 						@Override
 						public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 							ListItem item = mAdapter.getItem(viewHolder.getAdapterPosition());
@@ -180,7 +204,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						public void onChildDraw(Canvas c, RecyclerView recyclerView,
 														RecyclerView.ViewHolder viewHolder, float dX, float dY,
 														int actionState, boolean isCurrentlyActive) {
-							getDefaultUIUtil().onDraw(c, recyclerView, viewHolder.itemView, dX, dY, actionState, isCurrentlyActive);
+							getDefaultUIUtil().onDraw(c, recyclerView, ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer(), dX, dY, actionState, isCurrentlyActive);
 						}
 					};
 			new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
@@ -234,7 +258,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private void initAdapter() {
 		if (mAdapter == null) {
-			mAdapter = new CocktailsRecyclerAdapter(fragmentType, prefs);
+			if (fragmentType == TYPE_HISTORY) {
+				mAdapter = new CocktailsRecyclerAdapter(fragmentType, R.layout.list_item_history, prefs);
+			} else {
+				mAdapter = new CocktailsRecyclerAdapter(fragmentType, R.layout.list_item2, prefs);
+			}
 			mRecyclerView.setAdapter(mAdapter);
 		}
 		mAdapter.setItemClickListener((view1, position) ->
