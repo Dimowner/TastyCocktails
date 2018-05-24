@@ -173,7 +173,7 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 
 	@Override
 	public void removeFromHistory(long id) {
-		view.showProgress();
+//		view.showProgress();
 		compositeDisposable.add(
 				repository.removeFromHistory(id)
 						.subscribeOn(Schedulers.io())

@@ -195,9 +195,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 						@Override
 						public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-							ListItem item = mAdapter.getItem(viewHolder.getAdapterPosition());
+							int pos = viewHolder.getAdapterPosition();
+							ListItem item = mAdapter.getItem(pos);
 							mPresenter.removeFromHistory(item.getId());
-							showSnackBarRemoveFromHistory(item.getId(), item.getName(), item.getHistory());
+							showSnackBarRemoveFromHistory(item, pos);
+							mAdapter.removeItem(pos);
 						}
 
 						@Override
@@ -350,10 +352,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 	}
 
-	private void showSnackBarRemoveFromHistory(long id, String drinkName, long history) {
+	private void showSnackBarRemoveFromHistory(ListItem item, int pos) {
 		Snackbar snackbar = Snackbar
-				.make(mRoot, getString(R.string.removed_from_history, drinkName) , Snackbar.LENGTH_LONG)
-				.setAction(R.string.undo, view -> mPresenter.returnToHistory(id, history));
+				.make(mRoot, getString(R.string.removed_from_history, item.getName()) , Snackbar.LENGTH_LONG)
+				.setAction(R.string.undo, view -> {
+					mPresenter.returnToHistory(item.getId(), item.getHistory());
+					mAdapter.addItem(item, pos);
+				});
 		snackbar.show();
 	}
 

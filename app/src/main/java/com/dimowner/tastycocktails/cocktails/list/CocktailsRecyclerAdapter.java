@@ -226,6 +226,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		return position >= mShowingData.size() ? VIEW_TYPE_PROGRESS : VIEW_TYPE_NORMAL;
 	}
 
+	public void removeItem(int pos) {
+		mShowingData.remove(pos);
+		notifyItemRemoved(pos);
+	}
+
 	public ListItem getItem(int pos) {
 		if (pos >=0 && pos < mShowingData.size()) {
 			return mShowingData.get(pos);
@@ -243,6 +248,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			this.mShowingData.addAll(mBaseData);
 			notifyDataSetChanged();
 		}
+	}
+
+	public void addItem(ListItem item, int pos) {
+		mShowingData.add(pos, item);
+		notifyItemInserted(pos);
 	}
 
 	public void addItems(List<ListItem> items) {

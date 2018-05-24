@@ -76,7 +76,7 @@ public interface CocktailsDao {
 	Flowable<List<Drink>> getDrinksHistory(int offset, int perPage);
 
 	@Query("SELECT * FROM drinks WHERE history > 0 ORDER BY history DESC LIMIT 250")
-	Flowable<List<Drink>> getDrinksHistory();
+	Single<List<Drink>> getDrinksHistory();
 
 	@Query("UPDATE drinks SET history = :time WHERE idDrink = :id")
 	void updateDrinkHistory(long id, long time);
