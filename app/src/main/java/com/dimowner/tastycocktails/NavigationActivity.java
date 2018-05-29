@@ -154,6 +154,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		}
 		mNavigationView = findViewById(R.id.nav_view);
 		if (mNavigationView != null) {
+			mNavigationView.setCheckedItem(R.id.nav_cocktails);
 			mNavigationView.setNavigationItemSelectedListener(
 					menuItem -> {
 						mDrawerLayout.closeDrawers();
@@ -162,7 +163,6 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 						}
 						return true;
 					});
-			mNavigationView.setCheckedItem(R.id.nav_cocktails);
 		}
 
 		if (mActionBarToolbar != null) {
@@ -337,7 +337,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		} else {
 			ft.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_left_to_right);
 		}
-		ft.replace(R.id.fragment, fragment, "random_fragment");
+		ft.replace(R.id.fragment, fragment, RandomFragment.TAG);
 		ft.commit();
 	}
 
@@ -394,7 +394,11 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			if (curActiveItem == NAVDRAWER_ITEM_RANDOM) {
 				mActionBarToolbar.setVisibility(View.GONE);
 				//TODO: find a better way to restore link to fragment
-				startRandom();
+//				startRandom();
+				FragmentManager fragmentManager = getSupportFragmentManager();
+				RandomFragment fragment = (RandomFragment) fragmentManager
+						.findFragmentByTag(RandomFragment.TAG);
+				fragment.setOpenMenuListener(v -> mDrawerLayout.openDrawer(Gravity.START));
 			}
 		}
 	}

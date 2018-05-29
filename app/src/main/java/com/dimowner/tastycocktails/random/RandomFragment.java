@@ -52,6 +52,7 @@ import com.dimowner.tastycocktails.util.AnimationUtil;
 public class RandomFragment extends Fragment {
 
 	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
+	public final static String TAG = "RandomFragment";
 
 	@Inject
 	RandomContract.UserActionsListener mPresenter;
@@ -59,8 +60,8 @@ public class RandomFragment extends Fragment {
 	private RecyclerView mRecyclerView;
 	private IngredientsAdapter mAdapter;
 
-	private boolean isFavorite = false;
-	private boolean isCreated = false;
+	private boolean isFavorite;
+	private boolean isCreated;
 
 	private ImageButton btnMenu;
 	private ImageButton btnFavorite;
@@ -71,6 +72,7 @@ public class RandomFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
 		setHasOptionsMenu(true);
 	}
 
@@ -140,7 +142,7 @@ public class RandomFragment extends Fragment {
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("is_favorite", isFavorite);
-//		outState.putBoolean("is_created", isCreated);
+		outState.putBoolean("is_created", isCreated);
 		if (mAdapter != null) {
 			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
 		}
@@ -151,13 +153,14 @@ public class RandomFragment extends Fragment {
 		super.onViewStateRestored(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
-//			isCreated = savedInstanceState.getBoolean("is_created");
-			isCreated = false;
+			isCreated = savedInstanceState.getBoolean("is_created");
+//			isCreated = false;
 			updateFavorite(isFavorite);
 			initAdapter();
 
 			mPresenter.bindView(mAdapter);
 			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+			fab.setVisibility(View.VISIBLE);
 		}
 	}
 

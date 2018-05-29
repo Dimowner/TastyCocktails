@@ -35,6 +35,8 @@
 			android:layout_height="match_parent"
 			/>
 
+	<include layout="@layout/filters_layout" />
+
 	<ScrollView
 			android:id="@+id/welcome_panel"
 			android:layout_width="match_parent"

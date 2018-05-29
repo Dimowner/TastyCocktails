@@ -33,6 +33,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +44,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -65,6 +67,7 @@ import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsModule;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.dimowner.tastycocktails.util.AnimationUtil;
 import com.dimowner.tastycocktails.util.UIUtil;
 
 import timber.log.Timber;
@@ -74,6 +77,8 @@ import timber.log.Timber;
  * @author Dimowner
  */
 public class CocktailsListFragment extends Fragment implements CocktailsListContract.View {
+
+	public static final long ANIMATION_DURATION = 200;
 
 	public static final int TYPE_UNKNOWN = 0;
 	public static final int TYPE_NORMAL = 1;
@@ -90,6 +95,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private ScrollView mWelcomePanel;
 	private TextView mTxtEmpty;
 	private FrameLayout mRoot;
+	private LinearLayout filtersPanel;
+	private View filterMenu;
 
 	private CocktailsRecyclerAdapter mAdapter;
 
@@ -144,6 +151,52 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		mProgressBar = view.findViewById(R.id.progress);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
+		Button btnOk = view.findViewById(R.id.btn_ok);
+		Button btnCancel = view.findViewById(R.id.btn_cancel);
+		btnOk.setOnClickListener(v -> {
+			if (filterMenu != null) {
+				if (filtersPanel.getVisibility() == View.VISIBLE) {
+					AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
+				} else {
+					AnimationUtil.viewRotationAnimation(filterMenu, ANIMATION_DURATION);
+				}
+			}
+			showMenu();
+		});
+		btnCancel.setOnClickListener(v -> {
+			if (filterMenu != null) {
+				if (filtersPanel.getVisibility() == View.VISIBLE) {
+					AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
+				} else {
+					AnimationUtil.viewRotationAnimation(filterMenu, ANIMATION_DURATION);
+				}
+			}
+			showMenu();
+		});
+
+		//Hide show filters panel on scroll list
+		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				if (filtersPanel.getVisibility() == View.VISIBLE) {
+					float inset = filtersPanel.getTranslationY() - dy;
+					if (filtersPanel.getTranslationY() <= -filtersPanel.getHeight()) {
+						filtersPanel.setVisibility(View.GONE);
+						AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
+					}
+					if (filtersPanel.getTranslationY() <= 0 && inset > 0) {
+						filtersPanel.setTranslationY(0);
+					} else {
+						filtersPanel.setTranslationY(inset);
+					}
+				}
+			}
+		});
+
+		filtersPanel = view.findViewById(R.id.filters_panel);
+		Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+		toolbarMenuItemAnimation(toolbar);
 
 		// use a linear layout manager
 		RecyclerView.LayoutManager mLayoutManager = new AppLinearLayoutManager(getContext());
@@ -581,6 +634,48 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		this.onFirstRunExecutedListener = onFirstRunExecutedListener;
 	}
 
+	private void toolbarMenuItemAnimation(final Toolbar toolbar) {
+		toolbar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+			@Override
+			public void onLayoutChange(View v, int left, int top, int right, int bottom,
+												int oldLeft, int oldTop, int oldRight, int oldBottom) {
+				filterMenu = toolbar.findViewById(R.id.action_filter);
+				if (filterMenu != null) {
+					toolbar.removeOnLayoutChangeListener(this);
+					filterMenu.setOnClickListener(v1 -> {
+						if (filtersPanel.getVisibility() == View.VISIBLE) {
+							AnimationUtil.viewBackRotationAnimation(v1, ANIMATION_DURATION);
+						} else {
+							AnimationUtil.viewRotationAnimation(v1, ANIMATION_DURATION);
+						}
+						showMenu();
+					});
+				}
+			}
+		});
+	}
+
+	private void showMenu() {
+		if (filtersPanel.getVisibility() == View.VISIBLE) {
+//			filtersPanel.setElevation(getResources().getDimension(R.dimen.under_toolbar_elevation));
+			AnimationUtil.verticalSpringAnimation(
+					filtersPanel,
+					-filtersPanel.getHeight() - 100,
+					(animation, canceled, value, velocity) -> filtersPanel.setVisibility(View.GONE)
+			);
+		} else {
+			filtersPanel.setVisibility(View.VISIBLE);
+			if (filtersPanel.getHeight() == 0) {
+//				TODO: fix this 1000 px
+				filtersPanel.setTranslationY(-1000);
+			} else {
+				filtersPanel.setTranslationY(-filtersPanel.getHeight());
+			}
+
+			AnimationUtil.verticalSpringAnimation(filtersPanel, 0);
+//					(animation, canceled, value, velocity) -> filtersPanel.setElevation(getResources().getDimension(R.dimen.toolbar_elevation)));
+		}
+	}
 
 	public class MyScrollListener extends EndlessRecyclerViewScrollListener {
 

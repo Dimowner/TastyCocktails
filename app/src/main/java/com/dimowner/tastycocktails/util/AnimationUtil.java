@@ -71,4 +71,31 @@ public class AnimationUtil {
 		animation.start();
 	}
 
+	public static void verticalSpringAnimation(View view, int positionY) {
+		new SpringAnimation(view, SpringAnimation.TRANSLATION_Y, positionY).start();
+	}
+
+	public static void verticalSpringAnimation(View view, int positionY, DynamicAnimation.OnAnimationEndListener listener) {
+		SpringAnimation animY = new SpringAnimation(view, SpringAnimation.TRANSLATION_Y, positionY);
+		animY.addEndListener(listener);
+		animY.start();
+	}
+
+	public static void viewRotationAnimation(View view, long duration) {
+		view.animate()
+				.rotation(180)
+				.setDuration(duration)
+				.setInterpolator(AnimationUtils.loadInterpolator(view.getContext(),
+						android.R.interpolator.accelerate_decelerate))
+				.start();
+	}
+
+	public static void viewBackRotationAnimation(View view, long duration) {
+		view.animate()
+				.rotation(0)
+				.setDuration(duration)
+				.setInterpolator(AnimationUtils.loadInterpolator(view.getContext(),
+						android.R.interpolator.accelerate_decelerate))
+				.start();
+	}
 }

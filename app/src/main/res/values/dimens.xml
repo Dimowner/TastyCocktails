@@ -33,5 +33,6 @@
 	<dimen name="navdrawer_profile_image_size">60dp</dimen>
 
 	<dimen name="toolbar_elevation">4dp</dimen>
+	<dimen name="under_toolbar_elevation">2dp</dimen>
 
 </resources>
