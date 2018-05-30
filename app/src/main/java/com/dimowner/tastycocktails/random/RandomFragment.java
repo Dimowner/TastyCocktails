@@ -25,8 +25,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,12 +69,10 @@ public class RandomFragment extends Fragment {
 	private ImageButton btnFavorite;
 	private FloatingActionButton fab;
 	private CoordinatorLayout mRoot;
-	private View.OnClickListener openMenuListener;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
 		setHasOptionsMenu(true);
 	}
 
@@ -96,6 +96,13 @@ public class RandomFragment extends Fragment {
 		mRoot = view.findViewById(R.id.coordinator);
 		btnFavorite = view.findViewById(R.id.btn_favorite);
 		btnMenu = view.findViewById(R.id.btn_menu);
+
+		btnMenu.setOnClickListener(v -> {
+			DrawerLayout dl = getActivity().findViewById(R.id.drawer_layout);
+			if (dl != null) {
+				dl.openDrawer(Gravity.START);
+			}
+		});
 		fab = view.findViewById(R.id.fab);
 		fab.setOnClickListener(v -> mPresenter.loadRandomDrink());
 
@@ -110,14 +117,6 @@ public class RandomFragment extends Fragment {
 			initAdapter();
 
 			mPresenter.bindView(mAdapter);
-		}
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		if (openMenuListener != null) {
-			btnMenu.setOnClickListener(openMenuListener);
 		}
 	}
 
@@ -210,9 +209,5 @@ public class RandomFragment extends Fragment {
 
 	private void updateFavorite(boolean fav) {
 		btnFavorite.setImageResource(fav ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
-	}
-
-	public void setOpenMenuListener(View.OnClickListener openMenuListener) {
-		this.openMenuListener = openMenuListener;
 	}
 }

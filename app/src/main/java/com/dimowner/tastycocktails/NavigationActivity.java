@@ -329,7 +329,6 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		Timber.d("startRandom");
 		FragmentManager manager = getSupportFragmentManager();
 		RandomFragment fragment = new RandomFragment();
-		fragment.setOpenMenuListener(v -> mDrawerLayout.openDrawer(Gravity.START));
 //		fragment.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 		FragmentTransaction ft = manager.beginTransaction();
 		if (isDirectionToLeft(NAVDRAWER_ITEM_RANDOM)) {
@@ -393,12 +392,6 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			curActiveItem = savedInstanceState.getInt("cur_active_item");
 			if (curActiveItem == NAVDRAWER_ITEM_RANDOM) {
 				mActionBarToolbar.setVisibility(View.GONE);
-				//TODO: find a better way to restore link to fragment
-//				startRandom();
-				FragmentManager fragmentManager = getSupportFragmentManager();
-				RandomFragment fragment = (RandomFragment) fragmentManager
-						.findFragmentByTag(RandomFragment.TAG);
-				fragment.setOpenMenuListener(v -> mDrawerLayout.openDrawer(Gravity.START));
 			}
 		}
 	}
