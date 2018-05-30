@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -30,10 +29,6 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class PagerDetailsActivity  extends AppCompatActivity {
-
-	//TODO: If possible remove constant layout inflation;
-	//TODO: Add horizontal layout support;
-	//TODO: Replace list and constraint layout by LinearLayout.
 
 	public static final int TYPE_SEARCH = 1;
 	public static final int TYPE_FILETERS= 2;

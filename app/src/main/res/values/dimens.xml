@@ -20,6 +20,7 @@
 	<dimen name="padding_huge">72dp</dimen>
 	<dimen name="padding_double">32dp</dimen>
 	<dimen name="padding_standard">16dp</dimen>
+	<dimen name="padding_medium">12dp</dimen>
 	<dimen name="padding_small">8dp</dimen>
 	<dimen name="padding_tiny">4dp</dimen>
 
@@ -34,5 +35,6 @@
 
 	<dimen name="toolbar_elevation">4dp</dimen>
 	<dimen name="under_toolbar_elevation">2dp</dimen>
+	<dimen name="filters_label_width">110dp</dimen>
 
 </resources>

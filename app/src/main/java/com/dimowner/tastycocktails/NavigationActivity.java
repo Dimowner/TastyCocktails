@@ -178,12 +178,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			);
 
 			mDrawerToggle.setDrawerIndicatorEnabled(false);
-			mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					mDrawerLayout.openDrawer(GravityCompat.START);
-				}
-			});
+			mDrawerToggle.setToolbarNavigationClickListener(view -> mDrawerLayout.openDrawer(GravityCompat.START));
 			mDrawerToggle.setHomeAsUpIndicator(R.drawable.round_menu);
 
 			mDrawerToggle.syncState();
