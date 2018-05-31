@@ -47,7 +47,8 @@
 					android:layout_height="56dp"
 					android:contentDescription="@null"
 					app:srcCompat="@drawable/round_menu"
-					android:background="?android:selectableItemBackground"
+					android:foreground="?attr/selectableItemBackgroundBorderless"
+					android:background="@android:color/transparent"
 					android:layout_gravity="top|start"
 					/>
 
@@ -57,7 +58,8 @@
 					android:layout_height="56dp"
 					android:contentDescription="@null"
 					app:srcCompat="@drawable/round_heart_border"
-					android:background="?android:selectableItemBackground"
+					android:foreground="?attr/selectableItemBackgroundBorderless"
+					android:background="@android:color/transparent"
 					android:layout_gravity="top|end"
 					/>
 		</FrameLayout>

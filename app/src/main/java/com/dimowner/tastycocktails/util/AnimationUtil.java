@@ -72,12 +72,17 @@ public class AnimationUtil {
 	}
 
 	public static void verticalSpringAnimation(View view, int positionY) {
-		new SpringAnimation(view, SpringAnimation.TRANSLATION_Y, positionY).start();
+		SpringAnimation animY = new SpringAnimation(view, SpringAnimation.TRANSLATION_Y, positionY);
+		animY.getSpring().setStiffness(1000)
+				.setDampingRatio(0.6f);
+		animY.start();
 	}
 
 	public static void verticalSpringAnimation(View view, int positionY, DynamicAnimation.OnAnimationEndListener listener) {
 		SpringAnimation animY = new SpringAnimation(view, SpringAnimation.TRANSLATION_Y, positionY);
 		animY.addEndListener(listener);
+		animY.getSpring().setStiffness(900)
+				.setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY);
 		animY.start();
 	}
 

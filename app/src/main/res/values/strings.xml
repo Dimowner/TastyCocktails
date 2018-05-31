@@ -82,7 +82,7 @@
 	<string name="list_item_content_transition">list_item_content_transition</string>
 
 	<string-array name="filter_glass">
-		<item>Not selected</item>
+		<item> --- </item>
 		<item>Highball glass</item>
 		<item>Cocktail glass</item>
 		<item>Old-fashioned glass</item>
@@ -115,14 +115,14 @@
 	</string-array>
 
 	<string-array name="filter_alcoholic">
-		<item>Not selected</item>
+		<item> --- </item>
 		<item>Alcoholic</item>
 		<item>Non alcoholic</item>
 		<item>Optional alcohol</item>
 	</string-array>
 
 	<string-array name="filter_categories">
-		<item>Not selected</item>
+		<item> --- </item>
 		<item>Cocktail</item>
 		<item>Ordinary Drink</item>
 		<item>Shot</item>
@@ -137,7 +137,7 @@
 	</string-array>
 
 	<string-array name="filter_ingredients_alphabetical">
-		<item>Not selected</item>
+		<item> --- </item>
 		<item>151 proof rum</item>
 		<item>7-Up</item>
 		<item>Absinthe</item>

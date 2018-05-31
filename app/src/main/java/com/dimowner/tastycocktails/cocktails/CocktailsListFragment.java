@@ -180,6 +180,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		});
 
 		filtersPanel = view.findViewById(R.id.filters_panel);
+		filtersPanel.setOnClickListener(v -> {});
 		Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
 		toolbarMenuItemAnimation(toolbar);
 
@@ -851,7 +852,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 //			filtersPanel.setElevation(getResources().getDimension(R.dimen.under_toolbar_elevation));
 			AnimationUtil.verticalSpringAnimation(
 					filtersPanel,
-					-filtersPanel.getHeight() - 100,
+					-filtersPanel.getHeight(),
 					(animation, canceled, value, velocity) -> filtersPanel.setVisibility(View.GONE)
 			);
 		} else {
