@@ -27,6 +27,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -100,6 +101,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private FrameLayout mRoot;
 	private LinearLayout filtersPanel;
 	private View filterMenu;
+	private SwipeRefreshLayout mRefreshLayout;
 
 	private CocktailsRecyclerAdapter mAdapter;
 
@@ -156,6 +158,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		mProgressBar = view.findViewById(R.id.progress);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
+
+		mRefreshLayout = view.findViewById(R.id.swiperefresh);
+		mRefreshLayout.setOnRefreshListener(() -> {
+			mRefreshLayout.canChildScrollUp();
+			loadData();
+		});
 
 		initFiltersPanel(view);
 
@@ -273,28 +281,32 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, vals[1]);
 				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
 			} else {
-				if (fragmentType == TYPE_NORMAL) {
-					int filter = prefs.getCurrentActiveFilter();
-					if (filter == Prefs.FILTER_TYPE_SEARCH) {
-						mPresenter.loadLastSearch(prefs.getLastSearchString());
-						if (prefs.getLastSearchString() != null && getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
-							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
-						}
-					} else {
-						mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
-						if (getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
-							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-						}
-					}
-				} else if (fragmentType == TYPE_FAVORITES) {
-					mPresenter.loadFavorites();
-				} else if (fragmentType == TYPE_HISTORY) {
-					mPresenter.loadHistory(1);
-				} else {
-					Timber.e("Con't load data not correct fragment type!");
-				}
+				loadData();
 			}
 //		}
+	}
+
+	private void loadData() {
+		if (fragmentType == TYPE_NORMAL) {
+			int filter = prefs.getCurrentActiveFilter();
+			if (filter == Prefs.FILTER_TYPE_SEARCH) {
+				mPresenter.loadLastSearch(prefs.getLastSearchString());
+				if (prefs.getLastSearchString() != null && getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
+					((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
+				}
+			} else {
+				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+				if (getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
+					((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+				}
+			}
+		} else if (fragmentType == TYPE_FAVORITES) {
+			mPresenter.loadFavorites();
+		} else if (fragmentType == TYPE_HISTORY) {
+			mPresenter.loadHistory(1);
+		} else {
+			Timber.e("Con't load data not correct fragment type!");
+		}
 	}
 
 	private void initFiltersPanel(View view) {
@@ -769,6 +781,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	public void hideProgress() {
 		mProgressBar.setVisibility(View.GONE);
 		mRecyclerView.setVisibility(View.VISIBLE);
+		mRefreshLayout.setRefreshing(false);
 	}
 
 	@Override
