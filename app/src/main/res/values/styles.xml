@@ -31,7 +31,7 @@
 	<style name="AppTheme.TransparentStatusBar" parent="AppTheme" >
 	</style>
 
-	<style name="AppTheme.TransparentStatusBar.DarkNavigation" parent="AppTheme.TransparentStatusBar">
+	<style name="AppTheme.ImagePreview" parent="AppTheme.TransparentStatusBar">
 	</style>
 
 	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

@@ -43,11 +43,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
 			getSupportActionBar().setTitle("");
 		}
 
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			// Set the padding to match the Status Bar height
-			toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
-		}
-
 		AnimationUtil.physBasedRevealAnimation(toolbar.getChildAt(0));
 	}
 

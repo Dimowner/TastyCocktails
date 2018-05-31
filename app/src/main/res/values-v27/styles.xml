@@ -31,8 +31,9 @@
 		<item name="android:windowLightNavigationBar">true</item>
 	</style>
 
-	<style name="AppTheme.TransparentStatusBar.DarkNavigation" parent="AppTheme.TransparentStatusBar">
-		<item name="android:navigationBarColor">@android:color/black</item>
+	<style name="AppTheme.ImagePreview" parent="AppTheme">
+		<item name="android:colorPrimaryDark">@color/image_preview_bg</item>
+		<item name="android:navigationBarColor">@color/image_preview_bg</item>
 		<item name="android:windowLightNavigationBar">false</item>
 	</style>
 
