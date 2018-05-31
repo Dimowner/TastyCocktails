@@ -28,6 +28,13 @@
 			android:background="@color/background"
 			>
 
+		<View
+				android:layout_width="match_parent"
+				android:layout_height="1px"
+				android:background="@color/grey"
+				android:layout_gravity="bottom"
+				/>
+
 		<android.support.v7.widget.RecyclerView
 				android:id="@+id/recycler_view"
 				android:layout_width="match_parent"
@@ -38,8 +45,7 @@
 		<FrameLayout
 				android:id="@+id/title_bar"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal">
+				android:layout_height="wrap_content">
 
 			<ImageButton
 					android:id="@+id/btn_menu"

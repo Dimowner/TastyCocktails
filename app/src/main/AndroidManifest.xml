@@ -58,7 +58,7 @@
 				android:theme="@style/AppTheme.TransparentStatusBar"/>
 
 		<activity android:name="com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity"
-					 android:theme="@style/AppTheme.TransparentStatusBar"/>
+					 android:theme="@style/AppTheme.TransparentStatusBar.DarkNavigation"/>
 
 		<activity android:name="com.dimowner.tastycocktails.licences.LicenceActivity"
 				android:label="@string/open_source_licences"/>

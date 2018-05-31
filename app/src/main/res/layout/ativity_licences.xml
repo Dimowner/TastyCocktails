@@ -39,6 +39,13 @@
 			android:foreground="?android:windowContentOverlay"
 			app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+		<View
+				android:layout_width="match_parent"
+				android:layout_height="1px"
+				android:background="@color/grey"
+				android:layout_gravity="bottom"
+				/>
+
 		<ListView
 				android:id="@+id/licence_list"
 				android:layout_width="match_parent"
