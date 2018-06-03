@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Animatable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -206,6 +208,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mRecyclerView.setVisibility(View.GONE);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+				getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+			}
 		}
 
 		if (fragmentType == TYPE_HISTORY) {
@@ -278,10 +283,16 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					mWelcomePanel.setVisibility(View.GONE);
 					mRecyclerView.setVisibility(View.VISIBLE);
 					mTxtEmpty.setVisibility(View.GONE);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+						getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.white));
+					}
 				});
 				String vals[] = getResources().getStringArray(R.array.filter_categories);
 				prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, vals[1]);
 				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+					getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+				}
 			} else {
 				loadData();
 			}
@@ -667,6 +678,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 								onFirstRunExecutedListener.onFirstRunExecuted();
 							}
 							mWelcomePanel.setVisibility(View.GONE);
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+								getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.white));
+							}
 						}
 					} else {
 						showNetworkError();
@@ -746,6 +760,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				onFirstRunExecutedListener.onFirstRunExecuted();
 			}
 			mWelcomePanel.setVisibility(View.GONE);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+				getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.white));
+			}
 		}
 		if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
 			mPresenter.loadLastSearch(prefs.getLastSearchString());
@@ -812,6 +829,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mAdapter.setData(data);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+				getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+			}
 		} else if (data.size() == 0) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.GONE);
