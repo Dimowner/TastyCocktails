@@ -44,5 +44,14 @@
 				android:id="@+id/nav_about"
 				android:icon="@drawable/round_info"
 				android:title="@string/nav_about"/>
+
+		<item
+				android:id="@+id/nav_rate"
+				android:icon="@drawable/ic_round_thumbs_up_down_24px"
+				android:title="@string/nav_rate"/>
+
+		<!--<item-->
+				<!--android:id="@+id/nav_feedback"-->
+				<!--android:title="@string/nav_feedback"/>-->
 	</group>
 </menu>

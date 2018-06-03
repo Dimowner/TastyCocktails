@@ -109,6 +109,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private int fragmentType = TYPE_UNKNOWN;
 
+	boolean isChangedFilter = false;
+
 	private OnFirstRunExecutedListener onFirstRunExecutedListener;
 
 	@Inject
@@ -405,6 +407,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					ingredientSpinner.setSelection(0);
 					alcoholicSpinner.setSelection(0);
 					glassSpinner.setSelection(0);
+					isChangedFilter = true;
 				}
 			}
 
@@ -428,6 +431,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						alcoholicSpinner.setSelection(0);
 						glassSpinner.setSelection(0);
 					}
+					isChangedFilter = true;
 				}
 			}
 
@@ -451,6 +455,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						alcoholicSpinner.setSelection(0);
 						ingredientSpinner.setSelection(0);
 					}
+					isChangedFilter = true;
 				}
 			}
 
@@ -474,6 +479,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						ingredientSpinner.setSelection(0);
 						glassSpinner.setSelection(0);
 					}
+					isChangedFilter = true;
 				}
 			}
 
@@ -485,7 +491,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		Button btnOk = view.findViewById(R.id.btn_ok);
 		Button btnCancel = view.findViewById(R.id.btn_cancel);
 		btnOk.setOnClickListener(v -> {
-			applyFilters();
+			if (isChangedFilter) {
+				applyFilters();
+				isChangedFilter = false;
+			}
 
 			if (filterMenu != null) {
 				if (filtersPanel.getVisibility() == View.VISIBLE) {

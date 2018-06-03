@@ -24,6 +24,8 @@
 	<string name="nav_random">Random</string>
 	<string name="nav_history">History</string>
 	<string name="nav_about">About</string>
+	<string name="nav_rate">Rate</string>
+	<string name="nav_feedback">Feedback</string>
 	<string name="dialog_filters">Filters</string>
 
 	<string name="drawer_open">Main menu opened</string>

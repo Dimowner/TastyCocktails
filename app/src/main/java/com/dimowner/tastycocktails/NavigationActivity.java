@@ -16,8 +16,11 @@
 
 package com.dimowner.tastycocktails;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -59,6 +62,8 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 	protected static final int NAVDRAWER_ITEM_RANDOM 		= R.id.nav_random;
 	protected static final int NAVDRAWER_ITEM_HISTORY     = R.id.nav_history;
 	protected static final int NAVDRAWER_ITEM_ABOUT			= R.id.nav_about;
+	protected static final int NAVDRAWER_ITEM_RATE			= R.id.nav_rate;
+//	protected static final int NAVDRAWER_ITEM_FEEDBACK		= R.id.nav_feedback;
 	protected static final int NAVDRAWER_ITEM_INVALID		= -1;
 
 	// Primary toolbar and drawer toggle
@@ -123,6 +128,9 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		super.onResume();
 		tracker.activityOnResume();
 //		Timber.v(tracker.getResults());
+		if (getSelfNavDrawerItem() > NAVDRAWER_ITEM_INVALID) {
+			mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
+		}
 		Toast.makeText(getApplicationContext(), tracker.getStartTime(), Toast.LENGTH_LONG).show();
 	}
 
@@ -252,6 +260,56 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			case NAVDRAWER_ITEM_ABOUT:
 				showAboutDialog();
 				break;
+			case NAVDRAWER_ITEM_RATE:
+				rateApp();
+				mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
+				break;
+//			case NAVDRAWER_ITEM_FEEDBACK:
+//				openFeedback();
+//				mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
+//				break;
+		}
+	}
+
+	public void rateApp() {
+		try {
+			Intent rateIntent = rateIntentForUrl("market://details");
+			startActivity(rateIntent);
+		} catch (ActivityNotFoundException e) {
+			Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details");
+			startActivity(rateIntent);
+		}
+	}
+
+	private Intent rateIntentForUrl(String url) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, getPackageName())));
+		int flags = Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
+		if (Build.VERSION.SDK_INT >= 21) {
+			flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
+		} else {
+			flags |= Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
+		}
+		intent.addFlags(flags);
+		return intent;
+	}
+
+	public void openFeedback() {
+		Intent localIntent = new Intent(Intent.ACTION_SEND);
+		localIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{AppConstants.FEEDBACK_EMAIL});
+		localIntent.putExtra(Intent.EXTRA_CC, "");
+		String str;
+		try {
+			str = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			localIntent.putExtra(Intent.EXTRA_SUBJECT, AppConstants.FEEDBACK_SUBJECT);
+			localIntent.putExtra(Intent.EXTRA_TEXT,
+							"\n\n----------------------------------\n Device OS: Android " + Build.VERSION.RELEASE
+							+ "\n App Version: " + str
+							+ "\n Device Brand: " + Build.BRAND + " " + Build.MODEL
+							+ "\n Device Manufacturer: " + Build.MANUFACTURER);
+			localIntent.setType("message/rfc822");
+			startActivity(Intent.createChooser(localIntent, "Choose an Email client :"));
+		} catch (Exception e) {
+			Timber.e(e);
 		}
 	}
 
