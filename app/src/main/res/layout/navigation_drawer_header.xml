@@ -19,10 +19,7 @@
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/nav_header_height"
-		android:scaleType="center"
+		android:scaleType="centerCrop"
 		android:contentDescription="@null"
-		android:src="@drawable/loadscreen_new"
-		android:paddingTop="54dp"
-		android:paddingBottom="@dimen/padding_standard"
-		android:background="@color/colorPrimary"
+		android:src="@drawable/navigation_header_image"
 		/>

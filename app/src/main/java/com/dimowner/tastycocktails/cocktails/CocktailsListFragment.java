@@ -276,16 +276,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				prefs.saveSelectedFilterValue(categories[0]);
 				Button btnGetStarted = view.findViewById(R.id.get_started);
 				btnGetStarted.setOnClickListener(view1 -> {
-					prefs.firstRunExecuted();
-					if (onFirstRunExecutedListener != null) {
-						onFirstRunExecutedListener.onFirstRunExecuted();
-					}
-					mWelcomePanel.setVisibility(View.GONE);
-					mRecyclerView.setVisibility(View.VISIBLE);
-					mTxtEmpty.setVisibility(View.GONE);
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-						getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.white));
-					}
+					executeFirsRun();
 				});
 				String vals[] = getResources().getStringArray(R.array.filter_categories);
 				prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, vals[1]);
@@ -673,14 +664,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
 						}
 						if (prefs.isFirstRun()) {
-							prefs.firstRunExecuted();
-							if (onFirstRunExecutedListener != null) {
-								onFirstRunExecutedListener.onFirstRunExecuted();
-							}
-							mWelcomePanel.setVisibility(View.GONE);
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-								getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.white));
-							}
+							executeFirsRun();
 						}
 					} else {
 						showNetworkError();
@@ -755,14 +739,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private void applyFilters() {
 		if (prefs.isFirstRun()) {
-			prefs.firstRunExecuted();
-			if (onFirstRunExecutedListener != null) {
-				onFirstRunExecutedListener.onFirstRunExecuted();
-			}
-			mWelcomePanel.setVisibility(View.GONE);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-				getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.white));
-			}
+			executeFirsRun();
 		}
 		if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
 			mPresenter.loadLastSearch(prefs.getLastSearchString());
@@ -866,6 +843,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	public void setOnFirstRunExecutedListener(OnFirstRunExecutedListener onFirstRunExecutedListener) {
 		this.onFirstRunExecutedListener = onFirstRunExecutedListener;
+	}
+
+	public void executeFirsRun() {
+		prefs.firstRunExecuted();
+		if (onFirstRunExecutedListener != null) {
+			onFirstRunExecutedListener.onFirstRunExecuted();
+		}
+		mWelcomePanel.setVisibility(View.GONE);
+		mRecyclerView.setVisibility(View.VISIBLE);
+		mTxtEmpty.setVisibility(View.GONE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+			getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.background));
+		}
 	}
 
 	private void toolbarMenuItemAnimation(final Toolbar toolbar) {
