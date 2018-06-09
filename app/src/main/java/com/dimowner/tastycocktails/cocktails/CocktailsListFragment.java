@@ -863,9 +863,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		mWelcomePanel.setVisibility(View.GONE);
 		mRecyclerView.setVisibility(View.VISIBLE);
 		mTxtEmpty.setVisibility(View.GONE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-			getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.background));
-		}
+		AndroidUtils.handleNavigationBarColor(getActivity());
 	}
 
 	private void toolbarMenuItemAnimation(final Toolbar toolbar) {

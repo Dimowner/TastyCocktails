@@ -165,6 +165,10 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 			// Set the padding to match the Status Bar height
 			titleBar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
 		}
+
+		if (savedInstanceState == null) {
+			AndroidUtils.handleNavigationBarColor(this);
+		}
 	}
 
 	@Override
@@ -194,10 +198,11 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 //		outState.putBoolean("is_favorite", isFavorite);
 //		outState.putBoolean("is_image_dark", isImageDark);
 //	}
-//
-//	@Override
-//	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//		super.onRestoreInstanceState(savedInstanceState);
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		AndroidUtils.handleNavigationBarColor(this);
 //		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
 //			isFavorite = savedInstanceState.getBoolean("is_favorite");
 //			isImageDark = savedInstanceState.getBoolean("is_image_dark");
@@ -207,7 +212,7 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 //			mPresenter.bindView(mAdapter);
 //			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
 //		}
-//	}
+	}
 
 	private void updateFavorite(Drink d) {
 		if (d != null && d.isFavorite()) {

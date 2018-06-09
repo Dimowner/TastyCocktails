@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import com.dimowner.tastycocktails.R;
+import com.dimowner.tastycocktails.util.AndroidUtils;
 
 /**
  * Activity shows licence details.
@@ -68,6 +69,9 @@ public class LicenceDetail extends AppCompatActivity {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setTitle(licenceTitle);
 		}
+		if (savedInstanceState == null) {
+			AndroidUtils.handleNavigationBarColor(this);
+		}
 	}
 
 	@Override
@@ -78,5 +82,11 @@ public class LicenceDetail extends AppCompatActivity {
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		AndroidUtils.handleNavigationBarColor(this);
 	}
 }

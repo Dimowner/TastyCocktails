@@ -108,6 +108,8 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 					.beginTransaction()
 					.add(R.id.fragment, fragment, "cocktails_fragment")
 					.commit();
+
+			AndroidUtils.handleNavigationBarColor(this);
 		}
 		setupNavDrawer();
 		if (prefs.isFirstRun()) {
@@ -447,5 +449,6 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 				mActionBarToolbar.setVisibility(View.GONE);
 			}
 		}
+		AndroidUtils.handleNavigationBarColor(this);
 	}
 }

@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.dimowner.tastycocktails.R;
+import com.dimowner.tastycocktails.util.AndroidUtils;
 
 /**
  * Activity shows list which contains all licences used in app.
@@ -52,6 +53,9 @@ public class LicenceActivity extends AppCompatActivity {
 			intent.putExtra(LicenceDetail.EXTRAS_KEY_LICENCE_ITEM_POS, i);
 			startActivity(intent);
 		});
+		if (savedInstanceState == null) {
+			AndroidUtils.handleNavigationBarColor(this);
+		}
 	}
 
 	@Override
@@ -66,5 +70,11 @@ public class LicenceActivity extends AppCompatActivity {
 			finish();
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		AndroidUtils.handleNavigationBarColor(this);
 	}
 }
