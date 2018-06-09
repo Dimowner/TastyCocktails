@@ -17,7 +17,6 @@
 package com.dimowner.tastycocktails.cocktails;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Animatable;
 import android.os.Build;
@@ -49,7 +48,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -75,6 +73,7 @@ import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AnimationUtil;
 import com.dimowner.tastycocktails.util.UIUtil;
+import com.dimowner.tastycocktails.widget.TouchLayout;
 
 import timber.log.Timber;
 
@@ -101,7 +100,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private ScrollView mWelcomePanel;
 	private TextView mTxtEmpty;
 	private FrameLayout mRoot;
-	private LinearLayout filtersPanel;
+	private TouchLayout touchLayout;
 	private View filterMenu;
 	private SwipeRefreshLayout mRefreshLayout;
 
@@ -176,23 +175,37 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-				if (filtersPanel.getVisibility() == View.VISIBLE) {
-					float inset = filtersPanel.getTranslationY() - dy;
-					if (filtersPanel.getTranslationY() <= -filtersPanel.getHeight()) {
-						filtersPanel.setVisibility(View.GONE);
+				if (touchLayout.getVisibility() == View.VISIBLE) {
+					float inset = touchLayout.getTranslationY() - dy;
+					touchLayout.setReturnPositionY(inset);
+					if (touchLayout.getTranslationY() <= -touchLayout.getHeight()) {
+						touchLayout.setVisibility(View.GONE);
 						AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
 					}
-					if (filtersPanel.getTranslationY() <= 0 && inset > 0) {
-						filtersPanel.setTranslationY(0);
+					if (touchLayout.getTranslationY() <= 0 && inset > 0) {
+						touchLayout.setTranslationY(0);
 					} else {
-						filtersPanel.setTranslationY(inset);
+						touchLayout.setTranslationY(inset);
 					}
 				}
 			}
 		});
 
-		filtersPanel = view.findViewById(R.id.filters_panel);
-		filtersPanel.setOnClickListener(v -> {});
+		touchLayout = view.findViewById(R.id.touch_layout);
+		touchLayout.setOnThresholdListener(new TouchLayout.OnThresholdListener() {
+			@Override
+			public void onTopThreshold() {
+				invertMenuButton();
+				showMenu();
+			}
+
+			@Override
+			public void onBottomThreshold() {
+				invertMenuButton();
+				showMenu();
+			}
+		});
+
 		Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
 		toolbarMenuItemAnimation(toolbar);
 
@@ -497,29 +510,26 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				applyFilters();
 				isChangedFilter = false;
 			}
-
-			if (filterMenu != null) {
-				if (filtersPanel.getVisibility() == View.VISIBLE) {
-					AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
-				} else {
-					AnimationUtil.viewRotationAnimation(filterMenu, ANIMATION_DURATION);
-				}
-			}
+			invertMenuButton();
 			showMenu();
 		});
 		btnCancel.setOnClickListener(v -> {
-			if (filterMenu != null) {
-				if (filtersPanel.getVisibility() == View.VISIBLE) {
-					AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
-				} else {
-					AnimationUtil.viewRotationAnimation(filterMenu, ANIMATION_DURATION);
-				}
-			}
 			prefs.saveCurrentActiveFilter(prevFilter);
 			prefs.saveSelectedFilterValuePos(prevPos);
 			prefs.saveSelectedFilterValue(prevVal);
+			invertMenuButton();
 			showMenu();
 		});
+	}
+
+	private void invertMenuButton() {
+		if (filterMenu != null) {
+			if (touchLayout.getVisibility() == View.VISIBLE) {
+				AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
+			} else {
+				AnimationUtil.viewRotationAnimation(filterMenu, ANIMATION_DURATION);
+			}
+		}
 	}
 
 	private void initAdapter() {
@@ -576,11 +586,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 	}
 
-	private void startDetailsActivity(ListItem item, View view1) {
-		Intent intent = new Intent(getContext(), PagerDetailsActivity.class);
-		intent.putExtra(PagerDetailsActivity.EXTRAS_KEY_ID, item.getId());
-
-		//Transition
+//	private void startDetailsActivity(ListItem item, View view1) {
+//		Intent intent = new Intent(getContext(), PagerDetailsActivity.class);
+//		intent.putExtra(PagerDetailsActivity.EXTRAS_KEY_ID, item.getId());
+//
+//		//Transition
 //		View txtName = view1.findViewById(R.id.list_item_name);
 //		View txtDescription = view1.findViewById(R.id.list_item_description);
 //		View ivImage = view1.findViewById(R.id.list_item_image);
@@ -591,8 +601,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 //				Pair.create(ivImage, getResources().getString(R.string.list_item_image_transition)));
 //
 //		startActivity(intent, options.toBundle());
-		startActivity(intent);
-	}
+//		startActivity(intent);
+//	}
 
 	private void showSnackBar(long id, boolean isFavorite, String drinkName) {
 		if (isFavorite) {
@@ -867,7 +877,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				if (filterMenu != null) {
 					toolbar.removeOnLayoutChangeListener(this);
 					filterMenu.setOnClickListener(v1 -> {
-						if (filtersPanel.getVisibility() == View.VISIBLE) {
+						if (touchLayout.getVisibility() == View.VISIBLE) {
 							AnimationUtil.viewBackRotationAnimation(v1, ANIMATION_DURATION);
 						} else {
 							AnimationUtil.viewRotationAnimation(v1, ANIMATION_DURATION);
@@ -880,25 +890,26 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	private void showMenu() {
-		if (filtersPanel.getVisibility() == View.VISIBLE) {
-//			filtersPanel.setElevation(getResources().getDimension(R.dimen.under_toolbar_elevation));
+		if (touchLayout.getVisibility() == View.VISIBLE) {
+//			touchLayout.setElevation(getResources().getDimension(R.dimen.under_toolbar_elevation));
 			AnimationUtil.verticalSpringAnimation(
-					filtersPanel,
-					-filtersPanel.getHeight(),
-					(animation, canceled, value, velocity) -> filtersPanel.setVisibility(View.GONE)
+					touchLayout,
+					-touchLayout.getHeight(),
+					(animation, canceled, value, velocity) -> touchLayout.setVisibility(View.GONE)
 			);
 		} else {
-			filtersPanel.setVisibility(View.VISIBLE);
-			if (filtersPanel.getHeight() == 0) {
-//				TODO: fix this 1000 px
-				filtersPanel.setTranslationY(-1000);
+			touchLayout.setVisibility(View.VISIBLE);
+			if (touchLayout.getHeight() == 0) {
+				touchLayout.setTranslationY(-AndroidUtils.dpToPx(800));
 			} else {
-				filtersPanel.setTranslationY(-filtersPanel.getHeight());
+				touchLayout.setTranslationY(-touchLayout.getHeight());
 			}
 
-			AnimationUtil.verticalSpringAnimation(filtersPanel, 0);
-//					(animation, canceled, value, velocity) -> filtersPanel.setElevation(getResources().getDimension(R.dimen.toolbar_elevation)));
+			AnimationUtil.verticalSpringAnimation(touchLayout, 0);
+//					(animation, canceled, value, velocity) ->
+//							touchLayout.setElevation(getResources().getDimension(R.dimen.toolbar_elevation)));
 		}
+		touchLayout.setReturnPositionY(0);
 	}
 
 	public class MyScrollListener extends EndlessRecyclerViewScrollListener {

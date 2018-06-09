@@ -8,7 +8,6 @@
 		android:background="@color/white"
 		android:padding="@dimen/padding_standard"
 		android:elevation="@dimen/under_toolbar_elevation"
-		android:visibility="gone"
 		android:orientation="vertical"
 		tools:visibility="visible">
 

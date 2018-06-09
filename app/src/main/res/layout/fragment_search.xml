@@ -48,7 +48,19 @@
 			android:layout_gravity="bottom"
 			/>
 
-	<include layout="@layout/filters_layout" />
+	<com.dimowner.tastycocktails.widget.TouchLayout
+			android:id="@+id/touch_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:clipToPadding="false"
+			android:background="@color/white"
+			android:elevation="@dimen/under_toolbar_elevation"
+			android:visibility="gone"
+			>
+
+		<include layout="@layout/filters_layout" />
+
+	</com.dimowner.tastycocktails.widget.TouchLayout>
 
 	<ScrollView
 			android:id="@+id/welcome_panel"
