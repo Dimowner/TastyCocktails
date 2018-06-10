@@ -67,12 +67,7 @@ public class AndroidUtils {
 	}
 
 	public static boolean isPortraitOrientation(Context context) {
-		int orientation = context.getResources().getConfiguration().orientation;
-		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-			return true;
-		} else {
-			return false;
-		}
+		return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 	}
 
 	public static void handleNavigationBarColor(Activity activity) {

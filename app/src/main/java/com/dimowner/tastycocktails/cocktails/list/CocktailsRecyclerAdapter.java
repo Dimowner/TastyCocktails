@@ -22,6 +22,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.AbsSavedState;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -244,10 +245,16 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		if (isFiltered()) {
 			updateShowingDataWithFilter();
 		} else {
+			CocktailsDiffUtilCallback productDiffUtilCallback = new CocktailsDiffUtilCallback(mShowingData, mBaseData);
+			DiffUtil.DiffResult productDiffResult = DiffUtil.calculateDiff(productDiffUtilCallback);
 			this.mShowingData.clear();
 			this.mShowingData.addAll(mBaseData);
-			notifyDataSetChanged();
+			productDiffResult.dispatchUpdatesTo(this);
 		}
+	}
+
+	public List<ListItem> getData() {
+		return mShowingData;
 	}
 
 	public void addItem(ListItem item, int pos) {
@@ -265,22 +272,27 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	 */
 	private void updateShowingDataWithFilter() {
 		if (isFiltered()) {
+			List<ListItem> oldData = new ArrayList<>(mShowingData);
 			mShowingData.clear();
 			for (int i = 0; i < mBaseData.size(); i++) {
 				if (mBaseData.get(i).getName().toLowerCase().contains(filterStr.toLowerCase())) {
 					mShowingData.add(mBaseData.get(i));
 				}
 			}
-			notifyDataSetChanged();
+			CocktailsDiffUtilCallback productDiffUtilCallback = new CocktailsDiffUtilCallback(oldData, mShowingData);
+			DiffUtil.DiffResult productDiffResult = DiffUtil.calculateDiff(productDiffUtilCallback);
+			productDiffResult.dispatchUpdatesTo(this);
 		}
 	}
 
 	public void applyFilter(String str) {
 		if (str == null || str.isEmpty()) {
 			filterStr = "";
+			CocktailsDiffUtilCallback productDiffUtilCallback = new CocktailsDiffUtilCallback(mShowingData, mBaseData);
+			DiffUtil.DiffResult productDiffResult = DiffUtil.calculateDiff(productDiffUtilCallback);
 			this.mShowingData.clear();
 			mShowingData.addAll(mBaseData);
-			notifyDataSetChanged();
+			productDiffResult.dispatchUpdatesTo(this);
 		} else {
 			filterStr = str;
 			updateShowingDataWithFilter();

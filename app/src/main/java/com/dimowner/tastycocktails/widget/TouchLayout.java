@@ -39,7 +39,7 @@ public class TouchLayout extends FrameLayout {
 
 	private static final int MAX_MOVE = (int) AndroidUtils.dpToPx(150); //dip
 	private static final int TOP_THRESHOLD = (int)(MAX_MOVE * 0.35); //dip
-	private static final int BOTTOM_THRESHOLD = (int)(MAX_MOVE * 0.65); //dip
+	private static final int BOTTOM_THRESHOLD = (int)(MAX_MOVE * 0.55); //dip
 
 	private SpringAnimation moveAnimationY;
 

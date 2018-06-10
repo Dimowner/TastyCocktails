@@ -48,7 +48,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -61,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
@@ -95,8 +95,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 //	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 
+	private AppCompatActivity parentActivity;
+
 	private RecyclerView mRecyclerView;
-	private ProgressBar mProgressBar;
 	private ScrollView mWelcomePanel;
 	private TextView mTxtEmpty;
 	private FrameLayout mRoot;
@@ -113,6 +114,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	boolean isChangedFilter = false;
 
 	private OnFirstRunExecutedListener onFirstRunExecutedListener;
+
+	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 	@Inject
 	CocktailsListContract.UserActionsListener mPresenter;
@@ -137,8 +140,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		TCApplication.get(getContext()).applicationComponent()
-				.plus(new CocktailsModule(this)).injectCocktailsSearch(this);
+		if (getContext() != null) {
+			TCApplication.get(getContext()).applicationComponent()
+					.plus(new CocktailsModule(this)).injectCocktailsSearch(this);
+		}
 
 		if (getArguments() != null && getArguments().containsKey(EXTRAS_KEY_TYPE)) {
 			fragmentType = getArguments().getInt(EXTRAS_KEY_TYPE);
@@ -155,10 +160,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		parentActivity = (AppCompatActivity) getActivity();
 		mRoot = view.findViewById(R.id.coordinator_root);
 		mWelcomePanel = view.findViewById(R.id.welcome_panel);
 		mTxtEmpty = view.findViewById(R.id.txt_empty);
-		mProgressBar = view.findViewById(R.id.progress);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 
@@ -206,13 +211,15 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		});
 
-		Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+		Toolbar toolbar = parentActivity.findViewById(R.id.toolbar);
 		toolbarMenuItemAnimation(toolbar);
 
 		// use a linear layout manager
 		RecyclerView.LayoutManager mLayoutManager = new AppLinearLayoutManager(getContext());
 		mRecyclerView.setLayoutManager(mLayoutManager);
-		mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), ((AppLinearLayoutManager) mLayoutManager).getOrientation()));
+		if (getContext() != null) {
+			mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), ((AppLinearLayoutManager) mLayoutManager).getOrientation()));
+		}
 		mRecyclerView.addOnScrollListener(new MyScrollListener(mLayoutManager));
 
 		mPresenter.bindView(this);
@@ -222,7 +229,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mTxtEmpty.setVisibility(View.GONE);
 			mRecyclerView.setVisibility(View.GONE);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-				getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 			}
 		}
 
@@ -288,14 +295,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				String[] categories = getResources().getStringArray(R.array.filter_categories);
 				prefs.saveSelectedFilterValue(categories[0]);
 				Button btnGetStarted = view.findViewById(R.id.get_started);
-				btnGetStarted.setOnClickListener(view1 -> {
-					executeFirsRun();
-				});
-				String vals[] = getResources().getStringArray(R.array.filter_categories);
-				prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, vals[1]);
+				btnGetStarted.setOnClickListener(view1 -> executeFirsRun());
+				String values[] = getResources().getStringArray(R.array.filter_categories);
+				prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, values[1]);
 				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-					getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+					parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 				}
 			} else {
 				loadData();
@@ -308,14 +313,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			int filter = prefs.getCurrentActiveFilter();
 			if (filter == Prefs.FILTER_TYPE_SEARCH) {
 				mPresenter.loadLastSearch(prefs.getLastSearchString());
-				if (prefs.getLastSearchString() != null && getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
-					((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
+				if (prefs.getLastSearchString() != null) {
+					updateToolbarTitle(getString(R.string.search, prefs.getLastSearchString()));
 				}
 			} else {
 				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
-				if (getActivity() != null && ((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
-					((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-				}
+				updateToolbarTitle(getString(R.string.app_name));
 			}
 		} else if (fragmentType == TYPE_FAVORITES) {
 			mPresenter.loadFavorites();
@@ -417,7 +420,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					} else {
 						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_CATEGORY);
 						prefs.saveSelectedFilterValuePos(pos);
-						prefs.saveSelectedFilterValue(categoryAdapter.getItem(pos).toString());
+						CharSequence category = categoryAdapter.getItem(pos);
+						if (category != null) {
+							prefs.saveSelectedFilterValue(category.toString());
+						}
 					}
 					ingredientSpinner.setSelection(0);
 					alcoholicSpinner.setSelection(0);
@@ -441,7 +447,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					} else {
 						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_INGREDIENT);
 						prefs.saveSelectedFilterValuePos(pos);
-						prefs.saveSelectedFilterValue(ingredientAdapter.getItem(pos).toString());
+						CharSequence ing = ingredientAdapter.getItem(pos);
+						if (ing != null) {
+							prefs.saveSelectedFilterValue(ing.toString());
+						}
 						categorySpinner.setSelection(0);
 						alcoholicSpinner.setSelection(0);
 						glassSpinner.setSelection(0);
@@ -465,7 +474,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					} else {
 						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_GLASS);
 						prefs.saveSelectedFilterValuePos(pos);
-						prefs.saveSelectedFilterValue(glassAdapter.getItem(pos).toString());
+						CharSequence glass = glassAdapter.getItem(pos);
+						if (glass != null) {
+							prefs.saveSelectedFilterValue(glass.toString());
+						}
 						categorySpinner.setSelection(0);
 						alcoholicSpinner.setSelection(0);
 						ingredientSpinner.setSelection(0);
@@ -489,7 +501,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					} else {
 						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC);
 						prefs.saveSelectedFilterValuePos(pos);
-						prefs.saveSelectedFilterValue(alcoholicAdapter.getItem(pos).toString());
+						CharSequence alc = alcoholicAdapter.getItem(pos);
+						if (alc != null) {
+							prefs.saveSelectedFilterValue(alc.toString());
+						}
 						categorySpinner.setSelection(0);
 						ingredientSpinner.setSelection(0);
 						glassSpinner.setSelection(0);
@@ -553,7 +568,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				Animatable animatable = ((Animatable) view12.getDrawable());
 				animatable.start();
 				//TODO: refactor this into presenter
-				mPresenter.reverseFavorite(id)
+				compositeDisposable.add(mPresenter.reverseFavorite(id)
 						.subscribeOn(Schedulers.io())
 						.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
 						.observeOn(AndroidSchedulers.mainThread())
@@ -564,13 +579,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 								throwable -> {
 									animatable.stop();
 									Timber.e(throwable);
-								});
+								}));
 			} else {
 				//Add or remove from favorites without animation
-				mPresenter.reverseFavorite(id)
+				compositeDisposable.add(mPresenter.reverseFavorite(id)
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(() -> showSnackBar(id, !fev, name), Timber::e);
+						.subscribe(() -> showSnackBar(id, !fev, name), Timber::e));
 			}
 		});
 		if (fragmentType == TYPE_HISTORY) {
@@ -614,12 +629,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				Snackbar snackbar = Snackbar
 						.make(mRoot, getString(R.string.removed_from_favorites, drinkName) , Snackbar.LENGTH_LONG)
 						.setAction(R.string.undo, view ->
-								mPresenter.reverseFavorite(id)
+								compositeDisposable.add(mPresenter.reverseFavorite(id)
 									.subscribeOn(Schedulers.io())
 									.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
 									.observeOn(AndroidSchedulers.mainThread())
 									.subscribe(() -> Snackbar.make(mRoot,
-											getString(R.string.added_to_favorites, drinkName), Snackbar.LENGTH_LONG).show(), Timber::e));
+											getString(R.string.added_to_favorites, drinkName), Snackbar.LENGTH_LONG).show(), Timber::e)));
 
 				snackbar.show();
 			}
@@ -641,6 +656,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		super.onDestroyView();
 		mPresenter.unbindView();
 		mPresenter = null;
+		compositeDisposable.dispose();
 	}
 
 	@Override
@@ -670,8 +686,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
 
 						mPresenter.startSearch(query);
-						if (prefs.getLastSearchString() != null && getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-							((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
+						if (prefs.getLastSearchString() != null) {
+							updateToolbarTitle(getString(R.string.search, prefs.getLastSearchString()));
 						}
 						if (prefs.isFirstRun()) {
 							executeFirsRun();
@@ -740,9 +756,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 			ft.addToBackStack(null);
 			FiltersDialog dialog = new FiltersDialog();
-			dialog.setPositiveButtonListener((dialogInterface, i) -> {
-				applyFilters();
-			});
+			dialog.setPositiveButtonListener((dialogInterface, i) -> applyFilters());
 			dialog.show(ft, "dialog_filters");
 		}
 	}
@@ -753,14 +767,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 		if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
 			mPresenter.loadLastSearch(prefs.getLastSearchString());
-			if (prefs.getLastSearchString() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-				((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.search, prefs.getLastSearchString()));
-			}
+			updateToolbarTitle(getString(R.string.search, prefs.getLastSearchString()));
 		} else {
 			mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
-			if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-				((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-			}
+			updateToolbarTitle(getString(R.string.app_name));
 		}
 	}
 
@@ -786,14 +796,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	@Override
 	public void showProgress() {
-		mProgressBar.setVisibility(View.VISIBLE);
-		mRecyclerView.setVisibility(View.GONE);
+		mRefreshLayout.setRefreshing(true);
 	}
 
 	@Override
 	public void hideProgress() {
-		mProgressBar.setVisibility(View.GONE);
-		mRecyclerView.setVisibility(View.VISIBLE);
 		mRefreshLayout.setRefreshing(false);
 	}
 
@@ -816,8 +823,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mAdapter.setData(data);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-				getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && getContext() != null){
+				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 			}
 		} else if (data.size() == 0) {
 			mRecyclerView.setVisibility(View.GONE);
@@ -831,10 +838,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				mTxtEmpty.setText(R.string.click_search_to_find_some_drink);
 			}
 		} else {
-			mRecyclerView.setVisibility(View.VISIBLE);
-			mTxtEmpty.setVisibility(View.GONE);
+			if (mRecyclerView.getVisibility() != View.VISIBLE) {
+				mRecyclerView.setVisibility(View.VISIBLE);
+			}
+			if (mTxtEmpty.getVisibility() == View.VISIBLE) {
+				mTxtEmpty.setVisibility(View.GONE);
+			}
 			mAdapter.setData(data);
-//			mRecyclerView.post(() -> mAdapter.addItems(data));
+		}
+	}
+
+	public void updateToolbarTitle(String title) {
+		if (getActivity() != null && parentActivity.getSupportActionBar() != null) {
+			parentActivity.getSupportActionBar().setTitle(title);
 		}
 	}
 
