@@ -17,29 +17,30 @@
  * the License.
  */
 
-package com.dimowner.tastycocktails.widget;
+package com.dimowner.tastycocktails.widget.photoview;
 
-import android.content.Context;
 import android.support.animation.DynamicAnimation;
 import android.support.animation.SpringAnimation;
 import android.support.animation.SpringForce;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.dimowner.tastycocktails.widget.ThresholdListener;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import timber.log.Timber;
 
-public class TouchLayout extends FrameLayout {
+public class MyPhotoAttacher extends PhotoViewAttacher implements View.OnLongClickListener,View.OnTouchListener {
 
 	private static final int ACTION_NONE = -1;
 	private static final int ACTION_DRAG = 1;
 	private static final int ACTION_ZOOM = 2;
 
-	private static final int MAX_MOVE = (int) AndroidUtils.dpToPx(150); //dip
-	private static final int TOP_THRESHOLD = (int)(MAX_MOVE * 0.35); //dip
-	private static final int BOTTOM_THRESHOLD = (int)(MAX_MOVE * 0.55); //dip
+	private static final int MAX_MOVE = (int) AndroidUtils.dpToPx(200); //dip
+	private static final int TOP_THRESHOLD = (int)(MAX_MOVE * 0.5); //dip
+	private static final int BOTTOM_THRESHOLD = (int)(MAX_MOVE * 0.65); //dip
 
 	private SpringAnimation moveAnimationY;
 
@@ -50,35 +51,40 @@ public class TouchLayout extends FrameLayout {
 
 	private float startY = 0f;
 
-	private float returnPositionY = 0;
+	private boolean isScaled = false;
+	private float cumulatedScale = 1f;
+
+	private ImageView imageView;
 
 	//Converted value from pixels to coefficient used in function which describes move.
 	private final float k = (float) (MAX_MOVE / (Math.PI/2));
 
 	private ThresholdListener onThresholdListener;
 
-
-	public TouchLayout(Context context) {
-		super(context);
-		init();
+	public MyPhotoAttacher(ImageView imageView) {
+		super(imageView);
+		this.imageView = imageView;
+		setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
+			cumulatedScale += scaleFactor - 1;
+			if (cumulatedScale > 1.6) {
+				isScaled = true;
+			} else {
+				isScaled = false;
+			}
+		});
 	}
 
-	public TouchLayout(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
+	@Override
+	public boolean onLongClick(View v) {
+		return false;
 	}
 
-	public TouchLayout(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		init();
-	}
-
-	private void init() {
-		setOnTouchListener((view, motionEvent) -> {
+	@Override
+	public boolean onTouch(View view, MotionEvent motionEvent) {
+		if (!isScaled) {
 			switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 				case MotionEvent.ACTION_DOWN:
 					Timber.v("DOWN");
-					performClick();
 					action = ACTION_DRAG;
 					startY = motionEvent.getY();
 					cumulatedDy = 0;
@@ -96,10 +102,9 @@ public class TouchLayout extends FrameLayout {
 					if (action == ACTION_DRAG) {
 						realDy = motionEvent.getY() - startY;
 						cumulatedDy += realDy;
-						cumulatedDy = (float) (k * Math.atan(cumulatedDy /k));
-						this.setTranslationY(cumulatedDy + returnPositionY);
+						cumulatedDy = (float) (k * Math.atan(cumulatedDy / k));
+						imageView.setTranslationY(cumulatedDy);
 					}
-
 					break;
 				case MotionEvent.ACTION_POINTER_DOWN:
 					Timber.v("ZOOM");
@@ -111,7 +116,7 @@ public class TouchLayout extends FrameLayout {
 					break;
 				case MotionEvent.ACTION_UP:
 					Timber.v("UP");
-					moveAnimationY = new SpringAnimation(this, DynamicAnimation.TRANSLATION_Y, returnPositionY);
+					moveAnimationY = new SpringAnimation(imageView, DynamicAnimation.TRANSLATION_Y, 0);
 					moveAnimationY.getSpring().setStiffness(SpringForce.STIFFNESS_LOW)
 							.setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
 					moveAnimationY.start();
@@ -127,12 +132,8 @@ public class TouchLayout extends FrameLayout {
 					}
 					break;
 			}
-			return true;
-		});
-	}
-
-	public void setReturnPositionY(float returnPositionY) {
-		this.returnPositionY = returnPositionY;
+		}
+		return super.onTouch(view, motionEvent);
 	}
 
 	public void setOnThresholdListener(ThresholdListener onThresholdListener) {

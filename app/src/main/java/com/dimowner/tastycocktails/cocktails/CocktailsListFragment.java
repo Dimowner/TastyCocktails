@@ -73,6 +73,7 @@ import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AnimationUtil;
 import com.dimowner.tastycocktails.util.UIUtil;
+import com.dimowner.tastycocktails.widget.ThresholdListener;
 import com.dimowner.tastycocktails.widget.TouchLayout;
 
 import timber.log.Timber;
@@ -197,7 +198,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		});
 
 		touchLayout = view.findViewById(R.id.touch_layout);
-		touchLayout.setOnThresholdListener(new TouchLayout.OnThresholdListener() {
+		touchLayout.setOnThresholdListener(new ThresholdListener() {
 			@Override
 			public void onTopThreshold() {
 				invertMenuButton();
