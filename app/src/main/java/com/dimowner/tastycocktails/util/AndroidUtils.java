@@ -83,4 +83,10 @@ public class AndroidUtils {
 			}
 		}
 	}
+
+	public static void transparentNavigationBar(Activity activity) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		}
+	}
 }

@@ -1,5 +1,6 @@
 package com.dimowner.tastycocktails.cocktails.details;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -136,8 +137,8 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 				} else {
 					adapter = new IngredientsAdapter2();
 				}
-				adapter.setItemClickListener((v1, pos1) -> startIngredientDetailsActivity(adapter.getItem(pos1).getImageUrl()));
-				adapter.setOnImageClickListener(path -> startIngredientDetailsActivity(path));
+				adapter.setItemClickListener((v1, pos1) -> startIngredientDetailsActivity(adapter.getItem(pos1).getImageUrl(), v1));
+				adapter.setOnImageClickListener((v2, path) -> startIngredientDetailsActivity(path, v2));
 
 				recyclerView.setAdapter(adapter);
 
@@ -183,10 +184,9 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		compositeDisposable.dispose();
 	}
 
-	private void startIngredientDetailsActivity(String path) {
-		Intent intent = new Intent(getApplicationContext(), ImagePreviewActivity.class);
-		intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, path);
-		startActivity(intent);
+	private void startIngredientDetailsActivity(String path, View view) {
+		startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path),
+				ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
 	}
 
 //	@Override

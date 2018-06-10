@@ -241,7 +241,7 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 			header.ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			header.ivImage.setOnClickListener(view -> {
 				if (onImageClickListener != null) {
-					onImageClickListener.onImageClick(imageUrl);
+					onImageClickListener.onImageClick(view, imageUrl);
 				}
 			});
 			Glide.with(header.ivImage.getContext())
@@ -533,7 +533,7 @@ public class IngredientsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewH
 	}
 
 	public interface OnImageClickListener {
-		void onImageClick(String path);
+		void onImageClick(View view, String path);
 	}
 
 	public interface OnSnackBarListener {

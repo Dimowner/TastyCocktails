@@ -75,6 +75,7 @@
 					android:layout_gravity="center"
 					android:src="@drawable/loadscreen_new"
 					android:layout_margin="@dimen/padding_double"/>
+
 			<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"

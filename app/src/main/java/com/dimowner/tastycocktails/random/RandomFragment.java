@@ -183,9 +183,7 @@ public class RandomFragment extends Fragment {
 		});
 
 		mAdapter.setOnImageClickListener(path -> {
-			Intent intent = new Intent(getContext(), ImagePreviewActivity.class);
-			intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, path);
-			startActivity(intent);
+			startActivity(ImagePreviewActivity.getStartIntent(getContext(), path));
 		});
 
 		btnMenu.setImageResource(R.drawable.circle_drawable_menu);
@@ -202,9 +200,7 @@ public class RandomFragment extends Fragment {
 	}
 
 	private void startIngredientDetailsActivity(IngredientItem item) {
-		Intent intent = new Intent(getContext(), ImagePreviewActivity.class);
-		intent.putExtra(ImagePreviewActivity.EXTRAS_KEY_IMAGE_PATH, item.getImageUrl());
-		startActivity(intent);
+		startActivity(ImagePreviewActivity.getStartIntent(getContext(), item.getImageUrl()));
 	}
 
 	private void updateFavorite(boolean fav) {
