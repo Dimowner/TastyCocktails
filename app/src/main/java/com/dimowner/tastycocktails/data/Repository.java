@@ -107,6 +107,11 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> getIngredients() {
+		return remoteRepository.getIngredients();
+	}
+
+	@Override
 	public Completable addToFavorites(Drink drink) {
 		return localRepository.addToFavorites(drink);
 	}

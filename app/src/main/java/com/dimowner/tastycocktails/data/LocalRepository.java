@@ -19,6 +19,7 @@ package com.dimowner.tastycocktails.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,10 @@ import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.room.AppDatabase;
 import com.dimowner.tastycocktails.data.room.CocktailsDao;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import timber.log.Timber;
+import static com.dimowner.tastycocktails.util.LogUtil.log2file;
 
 /**
  * Created on 27.07.2017.
@@ -138,6 +142,11 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> getIngredients() {
+		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
+	@Override
 	public Completable addToFavorites(Drink drink) {
 		drink.inverseFavorite();
 		return Completable.fromAction(() -> {
@@ -217,5 +226,19 @@ public class LocalRepository implements RepositoryContract {
 		})
 				.subscribeOn(Schedulers.io())
 				.subscribe((o, throwable) -> Timber.e(throwable));
+	}
+
+	private void cacheIntoFile() {
+		getRepositoriesDao().getAll()
+				.subscribeOn(Schedulers.io())
+				.subscribe(drinks -> {
+					ArrayList<Long> ids = new ArrayList<>(drinks.size());
+					for (int i = 0; i < drinks.size(); i++) {
+						ids.add(drinks.get(i).getIdDrink());
+						Gson gson = new GsonBuilder().create();
+						String json = gson.toJson(drinks.get(i));
+						log2file(json +",\n");
+					}
+					Timber.v("Drinks count = " + drinks.size() + " ids: " + ids.toString());}, Timber::e);
 	}
 }

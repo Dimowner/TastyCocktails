@@ -40,7 +40,7 @@ public class MyPhotoAttacher extends PhotoViewAttacher implements View.OnLongCli
 
 	private static final int MAX_MOVE = (int) AndroidUtils.dpToPx(200); //dip
 	private static final int TOP_THRESHOLD = (int)(MAX_MOVE * 0.5); //dip
-	private static final int BOTTOM_THRESHOLD = (int)(MAX_MOVE * 0.65); //dip
+	private static final int BOTTOM_THRESHOLD = (int)(MAX_MOVE * 0.5); //dip
 
 	private SpringAnimation moveAnimationY;
 

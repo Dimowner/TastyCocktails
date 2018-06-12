@@ -12,4 +12,7 @@ public class AppConstants {
 
 	public static String FEEDBACK_EMAIL = "dimmony@gmail.com";
 	public static String FEEDBACK_SUBJECT = "Tasty Cocktails feedback";
+
+	public static String APP_DIRECTORY = "TastyCocktails";
+	public static final String LOG_FILE_NAME = "Log.txt";
 }

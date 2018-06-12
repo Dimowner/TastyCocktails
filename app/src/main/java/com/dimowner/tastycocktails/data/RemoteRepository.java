@@ -18,6 +18,8 @@ package com.dimowner.tastycocktails.data;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -31,6 +33,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import timber.log.Timber;
 
 import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.data.model.Drink;
@@ -139,6 +142,23 @@ public class RemoteRepository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> getIngredients() {
+		return getCocktailApi()
+				.getIngredients()
+				.map(ModelMapper::convertDrinksToList)
+				.map(drinks -> {
+					List<String> ingredients = new ArrayList<>(drinks.size());
+					for (int i = 0; i < drinks.size(); i++) {
+						ingredients.add("<item>" + drinks.get(i).getStrIngredient1() + "</item>\n");
+					}
+					Collections.sort(ingredients, String::compareToIgnoreCase);
+					Timber.v("Drinks: %s", ingredients.toString());
+					return drinks;
+				})
+				.subscribeOn(Schedulers.io());
+	}
+
+	@Override
 	public Completable addToFavorites(Drink drink) {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
@@ -172,7 +192,9 @@ public class RemoteRepository implements RepositoryContract {
 		if (retrofit == null) {
 			HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 			interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-			OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+			OkHttpClient client = new OkHttpClient.Builder()
+					.addInterceptor(interceptor)
+					.build();
 
 			retrofit = new Retrofit.Builder()
 					.baseUrl(API_URL)
@@ -205,6 +227,9 @@ public class RemoteRepository implements RepositoryContract {
 
 		@GET("lookup.php")
 		Flowable<Drinks> getCocktail(@Query("i") long id);
+
+		@GET("list.php?i=list")
+		Flowable<Drinks> getIngredients();
 
 		@GET("random.php")
 		Single<Drinks> getRandom();

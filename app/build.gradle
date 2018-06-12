@@ -50,7 +50,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 9
-def versionPatch = 23
+def versionPatch = 24
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -130,8 +130,9 @@ dependencies {
 	implementation "com.android.support:support-dynamic-animation:$versions.support"
 
 	// Android: Components
-	implementation "com.android.support.constraint:constraint-layout:$versions.constraintlayout"
-	implementation "com.android.support.constraint:constraint-layout-solver:$versions.constraintlayout"
+	compile 'com.android.support.constraint:constraint-layout:1.0.2'
+//	implementation "com.android.support.constraint:constraint-layout:$versions.constraintlayout"
+//	implementation "com.android.support.constraint:constraint-layout-solver:$versions.constraintlayout"
 
 	// Rx
 	implementation "io.reactivex.rxjava2:rxjava:$versions.rxJava"

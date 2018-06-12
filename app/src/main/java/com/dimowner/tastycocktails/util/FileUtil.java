@@ -20,6 +20,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
+import android.util.Log;
+
+import java.io.File;
 
 /**
  * Created on 01.10.2017.
@@ -48,5 +52,40 @@ public class FileUtil {
 		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawable.draw(canvas);
 		return bitmap;
+	}
+
+	/**
+	 * Get public directory (external storage).
+	 * @param dirName directory name.
+	 */
+	public static File getStorageDir(String dirName) {
+		if (dirName != null && !dirName.isEmpty()) {
+			File file = new File(Environment.getExternalStorageDirectory(), dirName);
+			if (isExternalStorageReadable() && isExternalStorageWritable()) {
+				if (!file.exists() && !file.mkdirs()) {
+					Log.e("FileUtils", "Directory " + file.getAbsolutePath() + " was not created");
+				}
+			}
+			return file;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Checks if external storage is available for read and write.
+	 */
+	public static boolean isExternalStorageWritable() {
+		String state = Environment.getExternalStorageState();
+		return Environment.MEDIA_MOUNTED.equals(state);
+	}
+
+	/**
+	 * Checks if external storage is available to at least read.
+	 */
+	public static boolean isExternalStorageReadable() {
+		String state = Environment.getExternalStorageState();
+		return (Environment.MEDIA_MOUNTED.equals(state) ||
+				Environment.MEDIA_MOUNTED_READ_ONLY.equals(state));
 	}
 }

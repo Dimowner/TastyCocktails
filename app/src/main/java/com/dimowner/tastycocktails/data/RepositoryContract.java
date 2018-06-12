@@ -39,6 +39,7 @@ public interface RepositoryContract {
 	Single<Drink> getLocalCocktailRx(long id);
 	Flowable<List<Drink>> getLastSearch(String query);
 	Flowable<List<Drink>> getFavorites();
+	Flowable<List<Drink>> getIngredients();
 	Completable addToFavorites(Drink drink);
 	Completable removeFromFavorites(long id);
 	Completable reverseFavorite(long id);

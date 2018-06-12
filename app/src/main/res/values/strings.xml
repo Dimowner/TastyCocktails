@@ -95,6 +95,7 @@
 		<item>Whiskey sour glass</item>
 		<item>Brandy snifter</item>
 		<item>White wine glass</item>
+		<item>Nick and Nora Glass</item>
 		<item>Hurricane glass</item>
 		<item>Coffee mug</item>
 		<item>Shot glass</item>
@@ -115,6 +116,7 @@
 		<item>Margarita glass</item>
 		<item>Martini Glass</item>
 		<item>Balloon Glass</item>
+		<item>Coupe Glass</item>
 	</string-array>
 
 	<string-array name="filter_alcoholic">
@@ -158,7 +160,7 @@
 		<item>Apricot brandy</item>
 		<item>Añejo rum</item>
 		<item>Bacardi Limon</item>
-		<item>Bailey</item>
+		<item>Bailey's irish cream</item>
 		<item>Baileys irish cream</item>
 		<item>Banana liqueur</item>
 		<item>Beer</item>
@@ -166,6 +168,7 @@
 		<item>Bitters</item>
 		<item>Black Sambuca</item>
 		<item>Blackberry brandy</item>
+		<item>Blended Scotch</item>
 		<item>Blended whiskey</item>
 		<item>Blue Curacao</item>
 		<item>Bourbon</item>
@@ -176,20 +179,19 @@
 		<item>Carbonated water</item>
 		<item>Chambord raspberry liqueur</item>
 		<item>Champagne</item>
-		<item>Cherry Heering</item>
 		<item>Cherry brandy</item>
-		<item>Chocolate</item>
+		<item>Cherry Heering</item>
 		<item>Chocolate ice-cream</item>
 		<item>Chocolate liqueur</item>
-		<item>Chocolate liqueur</item>
 		<item>Chocolate syrup</item>
+		<item>Chocolate</item>
 		<item>Cider</item>
 		<item>Coca-Cola</item>
 		<item>Cocoa powder</item>
 		<item>Coconut rum</item>
-		<item>Coffee</item>
 		<item>Coffee brandy</item>
 		<item>Coffee liqueur</item>
+		<item>Coffee</item>
 		<item>Cognac</item>
 		<item>Cointreau</item>
 		<item>Corona</item>
@@ -200,10 +202,11 @@
 		<item>Creme de Cassis</item>
 		<item>Crown Royal</item>
 		<item>Dark rum</item>
+		<item>demerara Sugar</item>
 		<item>Dry Vermouth</item>
 		<item>Dubonnet Rouge</item>
-		<item>Egg</item>
 		<item>Egg yolk</item>
+		<item>Egg</item>
 		<item>Espresso</item>
 		<item>Everclear</item>
 		<item>Firewater</item>
@@ -215,13 +218,16 @@
 		<item>Godiva liqueur</item>
 		<item>Goldschlager</item>
 		<item>Grand Marnier</item>
-		<item>Grape juic</item>
+		<item>Grape juice</item>
+		<item>Grape Soda</item>
 		<item>Grapefruit juice</item>
 		<item>Grapes</item>
+		<item>Green Chartreuse</item>
 		<item>Green Creme de Menthe</item>
 		<item>Grenadine</item>
 		<item>Guinness stout</item>
 		<item>Heavy cream</item>
+		<item>Hot Chocolate</item>
 		<item>Hot Damn</item>
 		<item>Ice</item>
 		<item>Irish cream</item>
@@ -231,29 +237,31 @@
 		<item>Johnnie Walker</item>
 		<item>Jägermeister</item>
 		<item>Kahlua</item>
-		<item>Kiwi</item>
 		<item>Kiwi liqueur</item>
+		<item>Kiwi</item>
 		<item>Kool-Aid</item>
 		<item>Lager</item>
-		<item>Lemon</item>
 		<item>Lemon juice</item>
 		<item>Lemon peel</item>
 		<item>Lemon vodka</item>
+		<item>Lemon</item>
 		<item>Lemonade</item>
 		<item>Light rum</item>
-		<item>Lime</item>
 		<item>Lime juice</item>
+		<item>Lime</item>
 		<item>Malibu rum</item>
 		<item>Mango</item>
 		<item>Maui</item>
+		<item>Mezcal</item>
+		<item>Midori melon liqueur</item>
 		<item>Milk</item>
 		<item>Mint</item>
-		<item>Orange</item>
 		<item>Orange bitters</item>
 		<item>Orange juice</item>
+		<item>Orange</item>
 		<item>Ouzo</item>
-		<item>Peach Vodka</item>
 		<item>Peach nectar</item>
+		<item>Peach Vodka</item>
 		<item>Peachtree schnapps</item>
 		<item>Peppermint schnapps</item>
 		<item>Pineapple juice</item>
@@ -264,6 +272,7 @@
 		<item>Red wine</item>
 		<item>Ricard</item>
 		<item>Rum</item>
+		<item>Rye whiskey</item>
 		<item>Sambuca</item>
 		<item>Scotch</item>
 		<item>Sherry</item>
@@ -274,8 +283,8 @@
 		<item>Sprite</item>
 		<item>Strawberries</item>
 		<item>Strawberry schnapps</item>
-		<item>Sugar</item>
 		<item>Sugar syrup</item>
+		<item>Sugar</item>
 		<item>Sweet Vermouth</item>
 		<item>Tea</item>
 		<item>Tequila</item>
@@ -294,6 +303,5 @@
 		<item>Yoghurt</item>
 		<item>Yukon Jack</item>
 		<item>Zima</item>
-		<item>demerara Sugar</item>
 	</string-array>
 </resources>
