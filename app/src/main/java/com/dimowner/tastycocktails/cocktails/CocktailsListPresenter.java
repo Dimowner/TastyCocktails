@@ -18,8 +18,11 @@ package com.dimowner.tastycocktails.cocktails;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -30,6 +33,9 @@ import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.data.RepositoryContract;
+import com.dimowner.tastycocktails.data.model.Drinks;
+import com.google.gson.Gson;
+
 import timber.log.Timber;
 
 /**
@@ -183,5 +189,27 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 	@Override
 	public Completable reverseFavorite(long id) {
 		return repository.reverseFavorite(id);
+	}
+
+	@Override
+	public void firstRunInitialization(Context context) {
+		String json;
+		try {
+			InputStream is = context.getAssets().open("drinks_json.txt");
+			int size = is.available();
+			byte[] buffer = new byte[size];
+			is.read(buffer);
+			is.close();
+			json = new String(buffer, "UTF-8");
+
+			Gson gson = new Gson();
+			Drinks drinks = gson.fromJson(json, Drinks.class);
+			compositeDisposable.add(repository.cacheIntoLocalDatabase(drinks)
+					.subscribe(drinks1 -> {
+								Timber.d("Succeed to cache %d drinks!", drinks.getDrinks().length);
+						}, Timber::e));
+		} catch (IOException ex) {
+			Timber.e(ex);
+		}
 	}
 }

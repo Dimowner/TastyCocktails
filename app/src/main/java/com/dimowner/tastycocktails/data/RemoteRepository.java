@@ -188,6 +188,11 @@ public class RemoteRepository implements RepositoryContract {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
 
+	@Override
+	public Single<Drink[]> cacheIntoLocalDatabase(Drinks drinks) {
+		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
 	private CocktailApi getCocktailApi() {
 		if (retrofit == null) {
 			HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

@@ -29,6 +29,7 @@ import timber.log.Timber;
 
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.model.Drink;
+import com.dimowner.tastycocktails.data.model.Drinks;
 
 /**
  * Created on 27.07.2017.
@@ -139,5 +140,10 @@ public class Repository implements RepositoryContract {
 	@Override
 	public Completable removeFromHistory(long id) {
 		return localRepository.removeFromHistory(id);
+	}
+
+	@Override
+	public Single<Drink[]> cacheIntoLocalDatabase(Drinks drinks) {
+		return localRepository.cacheIntoLocalDatabase(drinks);
 	}
 }

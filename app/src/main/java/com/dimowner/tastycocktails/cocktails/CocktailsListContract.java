@@ -16,6 +16,8 @@
 
 package com.dimowner.tastycocktails.cocktails;
 
+import android.content.Context;
+
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -54,5 +56,7 @@ public interface CocktailsListContract {
 		void removeFromHistory(long id);
 
 		Completable reverseFavorite(long id);
+
+		void firstRunInitialization(Context context);
 	}
 }

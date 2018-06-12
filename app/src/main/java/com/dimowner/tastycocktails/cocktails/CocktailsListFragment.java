@@ -874,6 +874,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	public void executeFirsRun() {
 		prefs.firstRunExecuted();
+		mPresenter.firstRunInitialization(getContext());
 		if (onFirstRunExecutedListener != null) {
 			onFirstRunExecutedListener.onFirstRunExecuted();
 		}

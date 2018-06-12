@@ -31,6 +31,7 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.model.Drink;
+import com.dimowner.tastycocktails.data.model.Drinks;
 import com.dimowner.tastycocktails.data.room.AppDatabase;
 import com.dimowner.tastycocktails.data.room.CocktailsDao;
 import com.google.gson.Gson;
@@ -143,7 +144,7 @@ public class LocalRepository implements RepositoryContract {
 
 	@Override
 	public Flowable<List<Drink>> getIngredients() {
-		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+		throw new UnsupportedOperationException("This method is supported only in RemoteRepository");
 	}
 
 	@Override
@@ -203,6 +204,16 @@ public class LocalRepository implements RepositoryContract {
 			})
 			.subscribeOn(Schedulers.io())
 			.subscribe((o, throwable) -> Timber.e(throwable));
+	}
+
+	/**
+	 * Cache list of drinks into local database
+	 * @param items new Drinks to save.
+	 */
+	public Single<Drink[]> cacheIntoLocalDatabase(Drinks items) {
+		return Single.just(items.getDrinks())
+				.doOnSuccess(data -> getRepositoriesDao().insertAll(data))
+				.subscribeOn(Schedulers.io());
 	}
 
 	/**
