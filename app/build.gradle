@@ -14,7 +14,7 @@ apply plugin: 'io.fabric'
 ext.versions = [
 		// Android
 		targetSdkVersion : 27,
-		minSdkVersion    : 16,
+		minSdkVersion    : 21,
 		buildtools       : "27.0.2",
 		support          : "27.1.1",
 
@@ -50,7 +50,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 9
-def versionPatch = 25
+def versionPatch = 26
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -128,6 +128,7 @@ dependencies {
 	implementation "com.android.support:design:$versions.support"
 	implementation "com.android.support:support-annotations:$versions.support"
 	implementation "com.android.support:support-dynamic-animation:$versions.support"
+	implementation "com.android.support:cardview-v7:$versions.support"
 
 	// Android: Components
 	compile 'com.android.support.constraint:constraint-layout:1.0.2'

@@ -27,10 +27,7 @@
 
 	<color name="text_primary_dark">#de000000</color> <!-- 87% -->
 	<color name="text_secondary_dark">#8a000000</color> <!-- 54% -->
-	<!-- 38% -->
 	<color name="text_primary_light">#ffffffff</color>
-	<!-- 70% -->
-	<!-- 30% -->
 
 	<color name="blue">#3f51b5</color>
 	<color name="white">#ffffff</color>

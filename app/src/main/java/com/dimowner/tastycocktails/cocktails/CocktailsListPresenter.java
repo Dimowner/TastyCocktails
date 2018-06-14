@@ -162,6 +162,18 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 	}
 
 	@Override
+	public void loadFilteredList(String category, String ingredient, String glass, String alcoholic) {
+		view.showProgress();
+		compositeDisposable.clear();
+		compositeDisposable.add(
+				repository.loadFilteredDrinks(category, ingredient, glass, alcoholic)
+						.map(ModelMapper::drinksToListItems)
+						.subscribeOn(Schedulers.io())
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(this::displayData, this::handleError));
+	}
+
+	@Override
 	public void clearHistory() {
 		view.showProgress();
 		compositeDisposable.add(

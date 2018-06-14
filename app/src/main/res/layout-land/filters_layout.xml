@@ -6,7 +6,10 @@
 		android:background="@color/white"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/padding_small"
+		android:layout_marginTop="@dimen/padding_small"
+		android:layout_marginBottom="@dimen/padding_small"
+		android:layout_marginStart="@dimen/padding_huge"
+		android:layout_marginEnd="@dimen/padding_huge"
 		android:elevation="@dimen/under_toolbar_elevation"
 		card_view:cardCornerRadius="8dp">
 

@@ -49,6 +49,8 @@ public interface CocktailsListContract {
 
 		void loadBuildList(int filterType, String filterVal);
 
+		void loadFilteredList(String category, String ingredient, String glass, String alcoholic);
+
 		void clearHistory();
 
 		void returnToHistory(long id, long time);

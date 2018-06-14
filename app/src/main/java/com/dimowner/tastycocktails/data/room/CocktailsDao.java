@@ -16,10 +16,12 @@
 
 package com.dimowner.tastycocktails.data.room;
 
+import android.arch.persistence.db.SupportSQLiteQuery;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.RawQuery;
 import android.arch.persistence.room.Update;
 
 import java.util.List;
@@ -40,6 +42,9 @@ public interface CocktailsDao {
 
 	@Query("SELECT * FROM drinks WHERE isFavorite <> 1 ORDER BY strDrink")
 	Flowable<List<Drink>> getLastSearch();
+
+	@RawQuery(observedEntities = Drink.class)
+	Flowable<List<Drink>> getFiltered(SupportSQLiteQuery query);
 
 	@Query("SELECT * FROM drinks WHERE UPPER(strDrink) LIKE UPPER(:search) ORDER BY strDrink")
 	Flowable<List<Drink>> searchDrinksRx(String search);

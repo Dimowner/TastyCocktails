@@ -16,10 +16,14 @@
 
 package com.dimowner.tastycocktails.data;
 
+import android.arch.persistence.db.SimpleSQLiteQuery;
+import android.arch.persistence.db.SupportSQLiteQuery;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -86,6 +90,109 @@ public class LocalRepository implements RepositoryContract {
 //			TODO: add implementation
 			throw new UnsupportedOperationException("This is not implemented yet");
 		}
+	}
+
+	@Override
+	public Flowable<List<Drink>> loadFilteredDrinks(String category, String ingredient, String glass, String alcoholic) {
+
+		int argsCount = 0;
+		StringBuilder sb = new StringBuilder();
+		String[] args;
+		if (!TextUtils.isEmpty(ingredient)) {
+			args = new String[] {
+					ingredient, ingredient, ingredient, ingredient, ingredient,
+					ingredient, ingredient, ingredient, ingredient, ingredient
+			};
+			argsCount = 10;
+
+			sb.append("SELECT * FROM drinks WHERE UPPER(strIngredient1) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient2) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient3) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient4) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient5) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient6) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient7) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient8) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient9) LIKE UPPER(?)");
+			sb.append(" OR UPPER(strIngredient10) LIKE UPPER(?)");
+			sb.append(" ORDER BY strDrink");
+		} else {
+			sb.append("SELECT * FROM drinks WHERE");
+
+			if (!TextUtils.isEmpty(category)) {
+				sb.append(" UPPER(strCategory) LIKE UPPER(?)");
+				argsCount++;
+			}
+			if (!TextUtils.isEmpty(glass)) {
+				if (!TextUtils.isEmpty(category)) {
+					sb.append(" AND");
+				}
+				sb.append(" UPPER(strGlass) LIKE UPPER(?)");
+				argsCount++;
+			}
+
+			if (!TextUtils.isEmpty(alcoholic)) {
+				if (!TextUtils.isEmpty(category) || !TextUtils.isEmpty(glass)) {
+					sb.append(" AND");
+				}
+				argsCount++;
+				sb.append(" UPPER(strAlcoholic) LIKE UPPER(?)");
+			}
+
+			sb.append(" ORDER BY strDrink");
+
+			args = new String[argsCount];
+			if (!TextUtils.isEmpty(category)) {
+				args[0] = category;
+				if (!TextUtils.isEmpty(glass)) {
+					args[1] = glass;
+					if (!TextUtils.isEmpty(alcoholic)) {
+						args[2] = alcoholic;
+					}
+				} else {
+					if (!TextUtils.isEmpty(alcoholic)) {
+						args[1] = alcoholic;
+					}
+				}
+			} else {
+				if (!TextUtils.isEmpty(glass)) {
+					args[0] = glass;
+					if (!TextUtils.isEmpty(alcoholic)) {
+						args[1] = alcoholic;
+					}
+				} else {
+					if (!TextUtils.isEmpty(alcoholic)) {
+						args[0] = alcoholic;
+					}
+				}
+			}
+		}
+
+		Timber.v("RAW QUERY : %s, args %s", sb.toString(), Arrays.toString(args));
+
+		SupportSQLiteQuery query;
+		if (argsCount > 0) {
+			 query = new SimpleSQLiteQuery(sb.toString(), args);
+		} else {
+			query = new SimpleSQLiteQuery("SELECT * FROM drinks ORDER BY strDrink");
+		}
+
+		return getRepositoriesDao().getFiltered(query)
+				.map(drinks -> {
+					if (!TextUtils.isEmpty(ingredient) && (!TextUtils.isEmpty(category) || !TextUtils.isEmpty(glass) || !TextUtils.isEmpty(alcoholic))) {
+						for (int i = drinks.size() - 1; i >= 0; i--) {
+							Drink drink = drinks.get(i);
+							//TODO: FIX FILTER
+							if (!((!TextUtils.isEmpty(category) && drink.getStrCategory().equalsIgnoreCase(category))
+									|| (!TextUtils.isEmpty(glass) && drink.getStrGlass().equalsIgnoreCase(glass))
+									|| (!TextUtils.isEmpty(alcoholic) && drink.getStrAlcoholic().equalsIgnoreCase(alcoholic)))) {
+								Timber.v("Remove dring i = " + i);
+								drinks.remove(i);
+							}
+						}
+					}
+					return drinks;
+				});
 	}
 
 	@Override

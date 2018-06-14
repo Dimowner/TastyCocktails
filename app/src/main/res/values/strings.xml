@@ -33,6 +33,7 @@
 
 	<string name="btn_ok">OK</string>
 	<string name="btn_cancel">Cancel</string>
+	<string name="btn_clear">Clear</string>
 	<string name="btn_search">Search</string>
 	<string name="btn_close">Close</string>
 	<string name="btn_get_started">Get started</string>

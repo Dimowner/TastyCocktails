@@ -70,6 +70,11 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> loadFilteredDrinks(String category, String ingredient, String glass, String alcoholic) {
+		return localRepository.loadFilteredDrinks(category, ingredient, glass, alcoholic);
+	}
+
+	@Override
 	public Single<Drink> getRandomCocktail() {
 		if (TCApplication.isConnected()) {
 			return remoteRepository.getRandomCocktail()
