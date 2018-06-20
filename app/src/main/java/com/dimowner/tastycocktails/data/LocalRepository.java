@@ -72,7 +72,7 @@ public class LocalRepository implements RepositoryContract {
 //	}
 
 	@Override
-	public Single<List<Drink>> getDrinksHistory(int page) {
+	public Flowable<List<Drink>> getDrinksHistory(int page) {
 		return getRepositoriesDao().getDrinksHistory();
 	}
 

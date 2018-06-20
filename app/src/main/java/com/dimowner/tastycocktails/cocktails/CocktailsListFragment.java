@@ -59,6 +59,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -92,7 +93,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	public static final int TYPE_HISTORY = 3;
 	public static final String EXTRAS_KEY_TYPE = "search_fragment_type";
 
-	public static final int ADD_TO_FAVORITES_ANIMATION_DURATION = 400;
+	public static final int ADD_TO_FAVORITES_ANIMATION_DURATION = 600;
 
 //	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 
@@ -274,7 +275,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 							ListItem item = mAdapter.getItem(pos);
 							mPresenter.removeFromHistory(item.getId());
 							showSnackBarRemoveFromHistory(item, pos);
-							mAdapter.removeItem(pos);
 						}
 
 						@Override
@@ -492,7 +492,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		});
 
-
 		alcoholicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
@@ -572,18 +571,21 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				Animatable animatable = ((Animatable) view12.getDrawable());
 				animatable.start();
 				//TODO: refactor this into presenter
-				compositeDisposable.add(mPresenter.reverseFavorite(id)
-						.subscribeOn(Schedulers.io())
-						.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(() -> {
-									animatable.stop();
-									showSnackBar(id, !fev, name);
-								},
-								throwable -> {
-									animatable.stop();
-									Timber.e(throwable);
-								}));
+				compositeDisposable.add(
+						Single.just("")
+								.delay(ADD_TO_FAVORITES_ANIMATION_DURATION, TimeUnit.MILLISECONDS)
+								.flatMapCompletable(d -> mPresenter.reverseFavorite(id))
+								.subscribeOn(Schedulers.io())
+								.observeOn(AndroidSchedulers.mainThread())
+								.subscribe(() -> {
+										animatable.stop();
+										showSnackBar(id, !fev, name);
+									},
+									throwable -> {
+										animatable.stop();
+										Timber.e(throwable);
+									})
+				);
 			} else {
 				//Add or remove from favorites without animation
 				compositeDisposable.add(mPresenter.reverseFavorite(id)
@@ -650,7 +652,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				.make(mRoot, getString(R.string.removed_from_history, item.getName()) , Snackbar.LENGTH_LONG)
 				.setAction(R.string.undo, view -> {
 					mPresenter.returnToHistory(item.getId(), item.getHistory());
-					mAdapter.addItem(item, pos);
 				});
 		snackbar.show();
 	}
