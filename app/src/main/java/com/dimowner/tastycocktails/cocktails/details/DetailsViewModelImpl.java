@@ -56,7 +56,8 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 		Drink drink = findDrinkById(id);
 		if (drink != null) {
 			if (drink.isFavorite()) {
-				return repository.removeFromFavorites(drink.getIdDrink());
+				return repository.removeFromFavorites(drink.getIdDrink())
+						.doOnComplete(drink::inverseFavorite);
 			} else {
 				return repository.addToFavorites(drink);
 			}
@@ -68,9 +69,9 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 
 	private Drink findDrinkById(long id) {
 		for (int i = 0; i < drinks.size(); i++) {
-			int key = drinks.keyAt(i);
-			if (drinks.get(key).getIdDrink() == id) {
-				return drinks.get(i);
+			long key = drinks.valueAt(i).getIdDrink();
+			if (key == id) {
+				return drinks.valueAt(i);
 			}
 		}
 		return null;

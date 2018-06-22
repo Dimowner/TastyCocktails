@@ -148,7 +148,9 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 						.subscribe(drink -> {
 							Timber.v("Drink = " + drink.toString());
 							adapter.setDrink(drink);
-							updateFavorite(drink);
+							if (viewPager.getCurrentItem() == pos) {
+								updateFavorite(drink);
+							}
 						}, Timber::e));
 			}
 
