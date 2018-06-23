@@ -8,6 +8,8 @@ import android.util.SparseArray;
 import com.dimowner.tastycocktails.data.RepositoryContract;
 import com.dimowner.tastycocktails.data.model.Drink;
 
+import java.util.Date;
+
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import timber.log.Timber;
@@ -49,6 +51,11 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 
 	public void removeFromCache(int pos) {
 		drinks.delete(pos);
+	}
+
+	@Override
+	public Completable updateDrinkHistory(long id) {
+		return repository.updateDrinkHistory(id, new Date().getTime());
 	}
 
 	@Override

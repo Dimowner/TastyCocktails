@@ -25,8 +25,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +41,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -107,6 +106,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private View filterMenu;
 	private SwipeRefreshLayout mRefreshLayout;
 
+	private Spinner categorySpinner;
+	private Spinner ingredientSpinner;
+	private Spinner glassSpinner;
+	private Spinner alcoholicSpinner;
+
 	private CocktailsRecyclerAdapter mAdapter;
 
 	private MenuItem searchMenu;
@@ -164,6 +168,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 		parentActivity = (AppCompatActivity) getActivity();
 		mRoot = view.findViewById(R.id.coordinator_root);
+		touchLayout = view.findViewById(R.id.touch_layout);
 		mWelcomePanel = view.findViewById(R.id.welcome_panel);
 		mTxtEmpty = view.findViewById(R.id.txt_empty);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
@@ -174,8 +179,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mRefreshLayout.canChildScrollUp();
 			loadData();
 		});
-
-		initFiltersPanel(view);
 
 		//Hide show filters panel on scroll list
 		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -197,24 +200,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				}
 			}
 		});
-
-		touchLayout = view.findViewById(R.id.touch_layout);
-		touchLayout.setOnThresholdListener(new ThresholdListener() {
-			@Override
-			public void onTopThreshold() {
-				invertMenuButton();
-				showMenu();
-			}
-
-			@Override
-			public void onBottomThreshold() {
-				invertMenuButton();
-				showMenu();
-			}
-		});
-
-		Toolbar toolbar = parentActivity.findViewById(R.id.toolbar);
-		toolbarMenuItemAnimation(toolbar);
 
 		// use a linear layout manager
 		RecyclerView.LayoutManager mLayoutManager = new AppLinearLayoutManager(getContext());
@@ -285,22 +270,45 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						}
 					};
 			new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+		} else if (fragmentType == TYPE_NORMAL) {
+			initFiltersPanel(view);
+			touchLayout.setOnThresholdListener(new ThresholdListener() {
+				@Override
+				public void onTopThreshold() {
+					invertMenuButton();
+					showMenu();
+				}
+
+				@Override
+				public void onBottomThreshold() {
+					invertMenuButton();
+					showMenu();
+				}
+			});
+			Toolbar toolbar = parentActivity.findViewById(R.id.toolbar);
+			toolbarMenuItemAnimation(toolbar);
 		}
 
 //		if (savedInstanceState == null) {
 			initAdapter();
 
 			if (prefs.isFirstRun()) {
-				prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_CATEGORY);
-				prefs.saveSelectedFilterValuePos(0);
-				String[] categories = getResources().getStringArray(R.array.filter_categories);
-				prefs.saveSelectedFilterValue(categories[0]);
+//				prefs.saveCurrentSearchType(Prefs.FILTER_TYPE_CATEGORY);
+//				prefs.saveSelectedFilterValuePos(0);
+//				String[] categories = getResources().getStringArray(R.array.filter_categories);
+//				prefs.saveSelectedFilterValue(categories[0]);
+				String values[] = getResources().getStringArray(R.array.filter_categories);
+				prefs.setFirstRunDefaultValues(Prefs.SEARCH_TYPE_FILTER, 1, values[1]);
 				Button btnGetStarted = view.findViewById(R.id.get_started);
 				btnGetStarted.setOnClickListener(view1 -> executeFirsRun());
-				String values[] = getResources().getStringArray(R.array.filter_categories);
-				prefs.setFirstRunDefaultValues(Prefs.FILTER_TYPE_CATEGORY, 1, values[1]);
-				prefs.saveFilterCategory(values[1]);
+
+//				prefs.saveFilterCategory(values[1]);
 //				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
+				mPresenter.loadFilteredList(
+						prefs.getFilterCategory(),
+						prefs.getFilterIngredient(),
+						prefs.getFilterGlass(),
+						prefs.getFilterAlcoholic());
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
 					parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 				}
@@ -312,14 +320,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private void loadData() {
 		if (fragmentType == TYPE_NORMAL) {
-			int filter = prefs.getCurrentActiveFilter();
-			if (filter == Prefs.FILTER_TYPE_SEARCH) {
-				mPresenter.loadLastSearch(prefs.getLastSearchString());
-				if (prefs.getLastSearchString() != null) {
-					updateToolbarTitle(getString(R.string.search, prefs.getLastSearchString()));
-				}
+			String lastSearch = prefs.getLastSearchString();
+			if (prefs.getCurrentSearchType() == Prefs.SEARCH_TYPE_SEARCH) {
+				mPresenter.loadLastSearch(lastSearch);
+				updateToolbarTitle(getString(R.string.search, lastSearch));
 			} else {
-//				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
 				mPresenter.loadFilteredList(
 						prefs.getFilterCategory(),
 						prefs.getFilterIngredient(),
@@ -329,8 +334,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		} else if (fragmentType == TYPE_FAVORITES) {
 			mPresenter.loadFavorites();
+			updateToolbarTitle(getString(R.string.app_name));
 		} else if (fragmentType == TYPE_HISTORY) {
 			mPresenter.loadHistory(1);
+			updateToolbarTitle(getString(R.string.app_name));
 		} else {
 			Timber.e("Con't load data not correct fragment type!");
 		}
@@ -338,7 +345,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private void initFiltersPanel(View view) {
 		//Init CATEGORY filter
-		Spinner categorySpinner = view.findViewById(R.id.filter_categories);
+		categorySpinner = view.findViewById(R.id.filter_categories);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getContext(),
 				R.array.filter_categories, R.layout.spinner_item);
@@ -348,7 +355,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		categorySpinner.setAdapter(categoryAdapter);
 
 		//Init INGREDIENTS filter
-		Spinner ingredientSpinner = view.findViewById(R.id.filter_ingredients);
+		ingredientSpinner = view.findViewById(R.id.filter_ingredients);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> ingredientAdapter = ArrayAdapter.createFromResource(getContext(),
 				R.array.filter_ingredients_alphabetical, R.layout.spinner_item);
@@ -359,7 +366,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		ingredientSpinner.setAdapter(ingredientAdapter);
 
 		//Init GLASS filter
-		Spinner glassSpinner = view.findViewById(R.id.filter_glass);
+		glassSpinner = view.findViewById(R.id.filter_glass);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> glassAdapter = ArrayAdapter.createFromResource(getContext(),
 				R.array.filter_glass, R.layout.spinner_item);
@@ -369,7 +376,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		glassSpinner.setAdapter(glassAdapter);
 
 		//Init ALCOHOLIC filter
-		Spinner alcoholicSpinner = view.findViewById(R.id.filter_alcoholic);
+		alcoholicSpinner = view.findViewById(R.id.filter_alcoholic);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> alcoholicAdapter = ArrayAdapter.createFromResource(getContext(),
 				R.array.filter_alcoholic, R.layout.spinner_item);
@@ -378,18 +385,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		// Apply the adapter to the spinner
 		alcoholicSpinner.setAdapter(alcoholicAdapter);
 
-		//TODO: Fix filters load
-//		prefs = new Prefs(getContext());
-//		int activeFilter = prefs.getCurrentActiveFilter();
-//		if (activeFilter == Prefs.FILTER_TYPE_CATEGORY) {
-//			categorySpinner.setSelection(prefs.getSelectedFilterValuePos());
-//		} else if (activeFilter == Prefs.FILTER_TYPE_INGREDIENT) {
-//			ingredientSpinner.setSelection(prefs.getSelectedFilterValuePos());
-//		} else if (activeFilter == Prefs.FILTER_TYPE_GLASS) {
-//			glassSpinner.setSelection(prefs.getSelectedFilterValuePos());
-//		} else if (activeFilter == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
-//			alcoholicSpinner.setSelection(prefs.getSelectedFilterValuePos());
-//		}
+		prefs = new Prefs(getContext());
+		categorySpinner.setSelection(prefs.getSelectedCategoryPos());
+		ingredientSpinner.setSelection(prefs.getSelectedIngredientPos());
+		glassSpinner.setSelection(prefs.getSelectedGlassPos());
+		alcoholicSpinner.setSelection(prefs.getSelectedAlcoholicPos());
 
 		categorySpinner.setOnTouchListener((view14, motionEvent) -> {
 			selectedFilter = Prefs.FILTER_TYPE_CATEGORY;
@@ -421,18 +421,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				if (selectedFilter == Prefs.FILTER_TYPE_CATEGORY) {
 					if (pos == 0) {
 						prefs.saveFilterCategory(null);
+						prefs.saveSelectedCategoryPos(0);
 					} else {
-						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_CATEGORY);
-						prefs.saveSelectedFilterValuePos(pos);
 						CharSequence category = categoryAdapter.getItem(pos);
 						if (category != null) {
-							prefs.saveSelectedFilterValue(category.toString());
 							prefs.saveFilterCategory(category.toString());
+							prefs.saveSelectedCategoryPos(pos);
 						}
 					}
+					prefs.setLastSearchString(null);
+					prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_FILTER);
 					isChangedFilter = true;
+					onFilterSelected();
 				}
-				onFilterSelected();
 			}
 
 			@Override
@@ -440,25 +441,25 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		});
 
-
 		ingredientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
 				if (selectedFilter == Prefs.FILTER_TYPE_INGREDIENT) {
-					if (pos == 0) {;
+					if (pos == 0) {
 						prefs.saveFilterIngredient(null);
+						prefs.saveSelectedIngredientPos(0);
 					} else {
-						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_INGREDIENT);
-						prefs.saveSelectedFilterValuePos(pos);
 						CharSequence ing = ingredientAdapter.getItem(pos);
 						if (ing != null) {
-							prefs.saveSelectedFilterValue(ing.toString());
 							prefs.saveFilterIngredient(ing.toString());
+							prefs.saveSelectedIngredientPos(pos);
 						}
 					}
+					prefs.setLastSearchString(null);
+					prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_FILTER);
 					isChangedFilter = true;
+					onFilterSelected();
 				}
-				onFilterSelected();
 			}
 
 			@Override
@@ -473,18 +474,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				if (selectedFilter == Prefs.FILTER_TYPE_GLASS) {
 					if (pos == 0) {
 						prefs.saveFilterGlass(null);
+						prefs.saveSelectedGlassPos(0);
 					} else {
-						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_GLASS);
-						prefs.saveSelectedFilterValuePos(pos);
 						CharSequence glass = glassAdapter.getItem(pos);
 						if (glass != null) {
-							prefs.saveSelectedFilterValue(glass.toString());
 							prefs.saveFilterGlass(glass.toString());
+							prefs.saveSelectedGlassPos(pos);
 						}
 					}
+					prefs.setLastSearchString(null);
+					prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_FILTER);
 					isChangedFilter = true;
+					onFilterSelected();
 				}
-				onFilterSelected();
 			}
 
 			@Override
@@ -498,18 +500,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				if (selectedFilter == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
 					if (pos == 0) {
 						prefs.saveFilterAlcoholic(null);
+						prefs.saveSelectedAlcoholicPos(0);
 					} else {
-						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC);
-						prefs.saveSelectedFilterValuePos(pos);
 						CharSequence alc = alcoholicAdapter.getItem(pos);
 						if (alc != null) {
-							prefs.saveSelectedFilterValue(alc.toString());
 							prefs.saveFilterAlcoholic(alc.toString());
+							prefs.saveSelectedAlcoholicPos(pos);
 						}
 					}
+					prefs.setLastSearchString(null);
+					prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_FILTER);
 					isChangedFilter = true;
+					onFilterSelected();
 				}
-				onFilterSelected();
 			}
 
 			@Override
@@ -525,6 +528,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			glassSpinner.setSelection(0);
 			alcoholicSpinner.setSelection(0);
 			prefs.clearFilters();
+			applyFilters();
 		});
 
 		btnClose.setOnClickListener(v -> {
@@ -559,8 +563,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 			mRecyclerView.setAdapter(mAdapter);
 		}
-		mAdapter.setItemClickListener((view1, position) ->
-				startActivity(PagerDetailsActivity.getStartIntent(getContext(), ids, position)));
+		mAdapter.setItemClickListener((view1, position) -> {
+			hideKeyboard();
+			startActivity(PagerDetailsActivity.getStartIntent(getContext(), ids, position));
+		});
 //				startDetailsActivity(mAdapter.getItem(position), view1));
 		mAdapter.setOnFavoriteClickListener((view12, position, id, action) -> {
 			final boolean fev = mAdapter.getItem(position).isFavorite();
@@ -604,6 +610,15 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 							(dialogInterface, i) -> dialogInterface.dismiss() //Callback for negative button
 					)
 			);
+		}
+	}
+
+	private void hideKeyboard() {
+		// Check if no view has focus:
+		View view = getActivity().getCurrentFocus();
+		if (view != null) {
+			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
 	}
 
@@ -688,7 +703,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					//Save search query string
 					if (TCApplication.isConnected()) {
 						prefs.setLastSearchString(query);
-						prefs.saveCurrentActiveFilter(Prefs.FILTER_TYPE_SEARCH);
+						prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_SEARCH);
+						prefs.clearFilters();
+
+						categorySpinner.setSelection(0);
+						ingredientSpinner.setSelection(0);
+						glassSpinner.setSelection(0);
+						alcoholicSpinner.setSelection(0);
 
 						mPresenter.startSearch(query);
 						if (prefs.getLastSearchString() != null) {
@@ -742,46 +763,15 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			} else {
 				Toast.makeText(getContext(), R.string.history_already_empty, Toast.LENGTH_LONG).show();
 			}
-		} else if (item.getItemId() == R.id.action_filter) {
-			showFilterDialog();
-			if (searchMenu.isActionViewExpanded()) {
-				searchMenu.collapseActionView();
-			}
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void showFilterDialog() {
-		if (getActivity() != null) {
-			FragmentManager fm = getActivity().getSupportFragmentManager();
-			FragmentTransaction ft = fm.beginTransaction();
-			Fragment prev = fm.findFragmentByTag("dialog_filters");
-			if (prev != null) {
-				ft.remove(prev);
-			}
-			ft.addToBackStack(null);
-			FiltersDialog dialog = new FiltersDialog();
-			dialog.setPositiveButtonListener((dialogInterface, i) -> applyFilters());
-			dialog.show(ft, "dialog_filters");
-		}
 	}
 
 	private void applyFilters() {
 		if (prefs.isFirstRun()) {
 			executeFirsRun();
 		}
-		if (prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
-			mPresenter.loadLastSearch(prefs.getLastSearchString());
-			updateToolbarTitle(getString(R.string.search, prefs.getLastSearchString()));
-		} else {
-//			mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
-			mPresenter.loadFilteredList(
-					prefs.getFilterCategory(),
-					prefs.getFilterIngredient(),
-					prefs.getFilterGlass(),
-					prefs.getFilterAlcoholic());
-			updateToolbarTitle(getString(R.string.app_name));
-		}
+		loadData();
 	}
 
 	@Override
@@ -845,7 +835,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			} else if (fragmentType == TYPE_HISTORY) {
 				mTxtEmpty.setText(R.string.history_is_empty);
 			} else {
-				mTxtEmpty.setText(R.string.click_search_to_find_some_drink);
+				mTxtEmpty.setText(R.string.empty);
 			}
 		} else {
 			if (mRecyclerView.getVisibility() != View.VISIBLE) {
@@ -874,7 +864,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			//TODO: Cast long to int, potential errors here.
 			ids.add((int) data.get(i).getId());
 		}
-		Timber.v("ids = " + ids.toString());
 	}
 
 	public void setOnFirstRunExecutedListener(OnFirstRunExecutedListener onFirstRunExecutedListener) {
@@ -902,12 +891,14 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				if (filterMenu != null) {
 					toolbar.removeOnLayoutChangeListener(this);
 					filterMenu.setOnClickListener(v1 -> {
-						if (touchLayout.getVisibility() == View.VISIBLE) {
-							AnimationUtil.viewBackRotationAnimation(v1, ANIMATION_DURATION);
-						} else {
-							AnimationUtil.viewRotationAnimation(v1, ANIMATION_DURATION);
+						if (!prefs.isFirstRun()) {
+							if (touchLayout.getVisibility() == View.VISIBLE) {
+								AnimationUtil.viewBackRotationAnimation(v1, ANIMATION_DURATION);
+							} else {
+								AnimationUtil.viewRotationAnimation(v1, ANIMATION_DURATION);
+							}
+							showMenu();
 						}
-						showMenu();
 					});
 				}
 			}
@@ -916,11 +907,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private void showMenu() {
 		if (touchLayout.getVisibility() == View.VISIBLE) {
+			selectedFilter = -1;
 //			touchLayout.setElevation(getResources().getDimension(R.dimen.under_toolbar_elevation));
 			AnimationUtil.verticalSpringAnimation(
 					touchLayout,
 					-touchLayout.getHeight(),
-					(animation, canceled, value, velocity) -> touchLayout.setVisibility(View.GONE)
+					(animation, canceled, value, velocity) -> touchLayout.setVisibility(View.INVISIBLE)
 			);
 		} else {
 			touchLayout.setVisibility(View.VISIBLE);

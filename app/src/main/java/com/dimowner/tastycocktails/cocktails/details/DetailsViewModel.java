@@ -17,4 +17,5 @@ public interface DetailsViewModel {
 
 	void removeFromCache(int pos);
 
+	Completable updateDrinkHistory(long id);
 }

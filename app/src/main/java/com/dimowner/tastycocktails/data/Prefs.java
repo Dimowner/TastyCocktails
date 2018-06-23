@@ -9,16 +9,21 @@ public class Prefs {
 
 	private static final String PREF_KEY_IS_FIRST_RUN = "is_first_run";
 	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
-	private static final String PREF_KEY_FILTER_TYPE = "filter_type";
-	private static final String PREF_KEY_FILTER_VALUE_POS = "filter_value_pos";
-	private static final String PREF_KEY_FILTER_VALUE = "filter_value";
+	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
 
 	private static final String PREF_KEY_FILTER_CATEGORY = "filter_category";
+	private static final String PREF_KEY_FILTER_CATEGORY_POS = "filter_category_pos";
 	private static final String PREF_KEY_FILTER_INGREDIENT = "filter_ingredient";
+	private static final String PREF_KEY_FILTER_INGREDIENT_POS = "filter_ingredient_pos";
 	private static final String PREF_KEY_FILTER_GLASS = "filter_glass";
+	private static final String PREF_KEY_FILTER_GLASS_POS = "filter_glass_pos";
 	private static final String PREF_KEY_FILTER_ALCOHOLIC = "filter_alcoholic";
+	private static final String PREF_KEY_FILTER_ALCOHOLIC_POS = "filter_alcoholic_pos";
 
-	public static final int FILTER_TYPE_SEARCH = 0;
+	public static final int SEARCH_TYPE_SEARCH = 0;
+	public static final int SEARCH_TYPE_FILTER = 1;
+
+
 	public static final int FILTER_TYPE_CATEGORY = 1;
 	public static final int FILTER_TYPE_INGREDIENT = 2;
 	public static final int FILTER_TYPE_GLASS = 3;
@@ -40,11 +45,11 @@ public class Prefs {
 		editor.apply();
 	}
 
-	public void setFirstRunDefaultValues(int filterType, int position, String value) {
+	public void setFirstRunDefaultValues(int searchType, int position, String value) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putInt(PREF_KEY_FILTER_TYPE, filterType);
-		editor.putInt(PREF_KEY_FILTER_VALUE_POS, position);
-		editor.putString(PREF_KEY_FILTER_VALUE, value);
+		editor.putInt(PREF_KEY_SEARCH_TYPE, searchType);
+		editor.putString(PREF_KEY_FILTER_CATEGORY, value);
+		editor.putInt(PREF_KEY_FILTER_CATEGORY_POS, position);
 		editor.apply();
 	}
 
@@ -58,21 +63,33 @@ public class Prefs {
 		editor.apply();
 	}
 
-	public void saveCurrentActiveFilter(int filterType) {
+	public void saveCurrentSearchType(int searchType) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putInt(PREF_KEY_FILTER_TYPE, filterType);
+		editor.putInt(PREF_KEY_SEARCH_TYPE, searchType);
 		editor.apply();
 	}
 
-	public void saveSelectedFilterValuePos(int pos) {
+	public void saveSelectedCategoryPos(int pos) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putInt(PREF_KEY_FILTER_VALUE_POS, pos);
+		editor.putInt(PREF_KEY_FILTER_CATEGORY_POS, pos);
 		editor.apply();
 	}
 
-	public void saveSelectedFilterValue(String value) {
+	public void saveSelectedIngredientPos(int pos) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(PREF_KEY_FILTER_VALUE, value);
+		editor.putInt(PREF_KEY_FILTER_INGREDIENT_POS, pos);
+		editor.apply();
+	}
+
+	public void saveSelectedGlassPos(int pos) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putInt(PREF_KEY_FILTER_GLASS_POS, pos);
+		editor.apply();
+	}
+
+	public void saveSelectedAlcoholicPos(int pos) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putInt(PREF_KEY_FILTER_ALCOHOLIC_POS, pos);
 		editor.apply();
 	}
 
@@ -116,16 +133,24 @@ public class Prefs {
 		return sharedPreferences.getString(PREF_KEY_FILTER_ALCOHOLIC, "");
 	}
 
-	public int getSelectedFilterValuePos() {
-		return sharedPreferences.getInt(PREF_KEY_FILTER_VALUE_POS, 0);
+	public int getCurrentSearchType() {
+		return sharedPreferences.getInt(PREF_KEY_SEARCH_TYPE, FILTER_TYPE_CATEGORY);
 	}
 
-	public String getSelectedFilterValue() {
-		return sharedPreferences.getString(PREF_KEY_FILTER_VALUE, "");
+	public int getSelectedCategoryPos() {
+		return sharedPreferences.getInt(PREF_KEY_FILTER_CATEGORY_POS, 0);
 	}
 
-	public int getCurrentActiveFilter() {
-		return sharedPreferences.getInt(PREF_KEY_FILTER_TYPE, FILTER_TYPE_CATEGORY);
+	public int getSelectedIngredientPos() {
+		return sharedPreferences.getInt(PREF_KEY_FILTER_INGREDIENT_POS, 0);
+	}
+
+	public int getSelectedGlassPos() {
+		return sharedPreferences.getInt(PREF_KEY_FILTER_GLASS_POS, 0);
+	}
+
+	public int getSelectedAlcoholicPos() {
+		return sharedPreferences.getInt(PREF_KEY_FILTER_ALCOHOLIC_POS, 0);
 	}
 
 	public void clearFilters() {
@@ -134,6 +159,10 @@ public class Prefs {
 		editor.putString(PREF_KEY_FILTER_INGREDIENT, null);
 		editor.putString(PREF_KEY_FILTER_GLASS, null);
 		editor.putString(PREF_KEY_FILTER_ALCOHOLIC, null);
+		editor.putInt(PREF_KEY_FILTER_CATEGORY_POS, 0);
+		editor.putInt(PREF_KEY_FILTER_INGREDIENT_POS, 0);
+		editor.putInt(PREF_KEY_FILTER_GLASS_POS, 0);
+		editor.putInt(PREF_KEY_FILTER_ALCOHOLIC_POS, 0);
 		editor.apply();
 	}
 }

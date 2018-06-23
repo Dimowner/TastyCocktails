@@ -147,12 +147,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			int pos = h.getAdapterPosition();
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
-			if (searchFragmentType != CocktailsListFragment.TYPE_NORMAL
-					|| prefs.getCurrentActiveFilter() == Prefs.FILTER_TYPE_SEARCH) {
-				holder.description.setText(mShowingData.get(pos).getCategory());
-			} else {
-				holder.description.setText(prefs.getSelectedFilterValue());
-			}
+			holder.description.setText(mShowingData.get(pos).getCategory());
 
 			if (mShowingData.get(pos).getAvatar_url() != null) {
 				Glide.with(holder.view.getContext())
@@ -180,7 +175,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			holder.btnFev.setOnClickListener(v -> {
 				if (onFavoriteClickListener != null) {
 					onFavoriteClickListener.onFavoriteClick(
-							holder.btnFev, pos, (int) mShowingData.get(pos).getId(), -1);
+							holder.btnFev, h.getAdapterPosition(), (int) mShowingData.get(h.getAdapterPosition()).getId(), -1);
 				}
 			});
 
@@ -192,13 +187,13 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 			holder.view.setOnClickListener(v -> {
 				if (itemClickListener != null) {
-					itemClickListener.onItemClick(v, pos);
+					itemClickListener.onItemClick(v, h.getAdapterPosition());
 				}
 			});
 
 			holder.view.setOnLongClickListener(v -> {
 				if (itemLongClickListener != null) {
-					itemLongClickListener.onItemLongClick(v, mShowingData.get(pos).getId(), pos);
+					itemLongClickListener.onItemLongClick(v, mShowingData.get(h.getAdapterPosition()).getId(), h.getAdapterPosition());
 				}
 				return true;
 			});

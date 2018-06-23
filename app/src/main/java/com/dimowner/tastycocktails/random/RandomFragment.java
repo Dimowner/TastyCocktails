@@ -16,7 +16,7 @@
 
 package com.dimowner.tastycocktails.random;
 
-import android.content.Intent;
+import android.app.ActivityOptions;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -183,7 +183,8 @@ public class RandomFragment extends Fragment {
 		});
 
 		mAdapter.setOnImageClickListener(path -> {
-			startActivity(ImagePreviewActivity.getStartIntent(getContext(), path));
+			startActivity(ImagePreviewActivity.getStartIntent(getContext(), path),
+					ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
 		});
 
 		btnMenu.setImageResource(R.drawable.circle_drawable_menu);
@@ -200,7 +201,8 @@ public class RandomFragment extends Fragment {
 	}
 
 	private void startIngredientDetailsActivity(IngredientItem item) {
-		startActivity(ImagePreviewActivity.getStartIntent(getContext(), item.getImageUrl()));
+		startActivity(ImagePreviewActivity.getStartIntent(getContext(), item.getImageUrl()),
+				ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
 	}
 
 	private void updateFavorite(boolean fav) {

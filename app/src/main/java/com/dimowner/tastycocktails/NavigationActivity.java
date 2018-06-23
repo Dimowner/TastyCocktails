@@ -133,7 +133,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		if (getSelfNavDrawerItem() > NAVDRAWER_ITEM_INVALID) {
 			mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
 		}
-		Toast.makeText(getApplicationContext(), tracker.getStartTime(), Toast.LENGTH_LONG).show();
+//		Toast.makeText(getApplicationContext(), tracker.getStartTime(), Toast.LENGTH_LONG).show();
 	}
 
 	@Override

@@ -16,6 +16,7 @@
 
 package com.dimowner.tastycocktails.cocktails.details;
 
+import android.app.ActivityOptions;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -127,7 +128,8 @@ public class DetailsActivity extends AppCompatActivity {
 		});
 
 		mAdapter.setOnImageClickListener(path -> {
-			startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path));
+			startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path),
+					ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
 		});
 
 //		mAdapter.setOnCheckImageColorListener(isDark -> {

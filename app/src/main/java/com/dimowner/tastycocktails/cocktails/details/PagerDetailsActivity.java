@@ -99,6 +99,9 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		}
 		if (getIntent().hasExtra(EXTRAS_KEY_ACTIVE_ITEM_POS)) {
 			activeItem = getIntent().getIntExtra(EXTRAS_KEY_ACTIVE_ITEM_POS, 0);
+			if (activeItem == 0) {
+				updateHistory(0);
+			}
 		}
 
 		titleBar = findViewById(R.id.title_bar);
@@ -110,7 +113,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(() -> {
-							Timber.v("REVERSE FAV");
 							updateFavorite(viewModel.getCachedDrink(viewPager.getCurrentItem()));
 						}, Timber::e))
 		);
@@ -119,6 +121,7 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 			@Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 			@Override public void onPageSelected(int position) {
 				updateFavorite(viewModel.getCachedDrink(position));
+				updateHistory(position);
 			}
 			@Override public void onPageScrollStateChanged(int state) {}
 		});
@@ -222,5 +225,11 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		} else {
 			btnFav.setImageResource(R.drawable.circle_drawable_heart_outline);
 		}
+	}
+
+	private void updateHistory(int pos) {
+		viewModel.updateDrinkHistory(ids.get(pos))
+				.subscribeOn(Schedulers.io())
+				.subscribe(() -> {}, Timber::e);
 	}
 }

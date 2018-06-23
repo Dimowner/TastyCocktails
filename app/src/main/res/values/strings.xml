@@ -44,7 +44,7 @@
 	<string name="ingredients">Ingredients:</string>
 
 	<string name="welcome">Welcome to the Tasty Cocktails!</string>
-	<string name="tap_search">Tap search to find one</string>
+	<string name="find_something_for_you">Find something for you</string>
 	<string name="removed_from_favorites">%s removed from favorites</string>
 	<string name="removed_from_history">%s removed from history</string>
 	<string name="added_to_favorites">%s added to favorites</string>
@@ -53,6 +53,7 @@
 	<string name="add_to_favorites">Favorites</string>
 	<string name="no_favorite_drinks">No favorite drinks</string>
 	<string name="click_search_to_find_some_drink">Click search to find some drinks</string>
+	<string name="empty">Empty</string>
 	<string name="history_is_empty">History is empty</string>
 	<string name="clear_history">Clear history</string>
 	<string name="do_you_really_want_clear_history">Do you really want to clear the history?</string>
