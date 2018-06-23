@@ -149,17 +149,17 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 						.subscribe(this::displayData, this::handleError));
 	}
 
-	@Override
-	public void loadBuildList(int filterType, String filterVal) {
-		view.showProgress();
-		compositeDisposable.clear();
-		compositeDisposable.add(
-				repository.loadDrinksWithFilter(filterType, filterVal)
-						.map(ModelMapper::drinksToListItems)
-						.subscribeOn(Schedulers.io())
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(this::displayData, this::handleError));
-	}
+//	@Override
+//	public void loadBuildList(int filterType, String filterVal) {
+//		view.showProgress();
+//		compositeDisposable.clear();
+//		compositeDisposable.add(
+//				repository.loadDrinksWithFilter(filterType, filterVal)
+//						.map(ModelMapper::drinksToListItems)
+//						.subscribeOn(Schedulers.io())
+//						.observeOn(AndroidSchedulers.mainThread())
+//						.subscribe(this::displayData, this::handleError));
+//	}
 
 	@Override
 	public void loadFilteredList(String category, String ingredient, String glass, String alcoholic) {

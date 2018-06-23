@@ -60,14 +60,14 @@ public class Repository implements RepositoryContract {
 		return localRepository.getDrinksHistory(page);
 	}
 
-	@Override
-	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
-		remoteRepository.loadDrinksWithFilter(filterType, value)
-				.subscribeOn(Schedulers.io())
-				.doOnNext(drinks -> localRepository.cacheDrinks(drinks))
-				.subscribe(drinks -> {}, Timber::e);
-		return localRepository.loadDrinksWithFilter(filterType, value);
-	}
+//	@Override
+//	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
+//		remoteRepository.loadDrinksWithFilter(filterType, value)
+//				.subscribeOn(Schedulers.io())
+//				.doOnNext(drinks -> localRepository.cacheDrinks(drinks))
+//				.subscribe(drinks -> {}, Timber::e);
+//		return localRepository.loadDrinksWithFilter(filterType, value);
+//	}
 
 	@Override
 	public Flowable<List<Drink>> loadFilteredDrinks(String category, String ingredient, String glass, String alcoholic) {

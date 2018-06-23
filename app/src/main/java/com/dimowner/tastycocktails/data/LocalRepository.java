@@ -76,21 +76,20 @@ public class LocalRepository implements RepositoryContract {
 		return getRepositoriesDao().getDrinksHistory();
 	}
 
-	@Override
-	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
-		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
-			return getRepositoriesDao().searchDrinksByCategory(value);
-		} else if (filterType == Prefs.FILTER_TYPE_INGREDIENT) {
-			return getRepositoriesDao().searchDrinksByIngredient(value);
-		} else if (filterType == Prefs.FILTER_TYPE_GLASS) {
-			return getRepositoriesDao().searchDrinksByGlass(value);
-		} else if (filterType == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
-			return getRepositoriesDao().searchDrinksByAlcoholic(value);
-		} else {
-//			TODO: add implementation
-			throw new UnsupportedOperationException("This is not implemented yet");
-		}
-	}
+//	@Override
+//	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
+//		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
+//			return getRepositoriesDao().searchDrinksByCategory(value);
+//		} else if (filterType == Prefs.FILTER_TYPE_INGREDIENT) {
+//			return getRepositoriesDao().searchDrinksByIngredient(value);
+//		} else if (filterType == Prefs.FILTER_TYPE_GLASS) {
+//			return getRepositoriesDao().searchDrinksByGlass(value);
+//		} else if (filterType == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
+//			return getRepositoriesDao().searchDrinksByAlcoholic(value);
+//		} else {
+//			throw new UnsupportedOperationException("This is not implemented yet");
+//		}
+//	}
 
 	@Override
 	public Flowable<List<Drink>> loadFilteredDrinks(String category, String ingredient, String glass, String alcoholic) {
@@ -259,7 +258,11 @@ public class LocalRepository implements RepositoryContract {
 		drink.inverseFavorite();
 		return Completable.fromAction(() -> {
 			if (getRepositoriesDao().getDrink(drink.getIdDrink()) != null) {
-				getRepositoriesDao().updateDrink(drink);
+				Drink d = getRepositoriesDao().getDrink(drink.getIdDrink());
+				if (!d.isFavorite()) {
+					d.inverseFavorite();
+					getRepositoriesDao().updateDrink(d);
+				}
 			} else {
 				getRepositoriesDao().insertDrink(drink);
 			}

@@ -23,12 +23,6 @@ public class Prefs {
 	public static final int SEARCH_TYPE_SEARCH = 0;
 	public static final int SEARCH_TYPE_FILTER = 1;
 
-
-	public static final int FILTER_TYPE_CATEGORY = 1;
-	public static final int FILTER_TYPE_INGREDIENT = 2;
-	public static final int FILTER_TYPE_GLASS = 3;
-	public static final int FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC = 4;
-
 	private SharedPreferences sharedPreferences;
 
 	public Prefs(Context context) {
@@ -134,7 +128,7 @@ public class Prefs {
 	}
 
 	public int getCurrentSearchType() {
-		return sharedPreferences.getInt(PREF_KEY_SEARCH_TYPE, FILTER_TYPE_CATEGORY);
+		return sharedPreferences.getInt(PREF_KEY_SEARCH_TYPE, SEARCH_TYPE_FILTER);
 	}
 
 	public int getSelectedCategoryPos() {

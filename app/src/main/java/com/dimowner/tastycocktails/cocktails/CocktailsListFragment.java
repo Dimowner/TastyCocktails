@@ -90,6 +90,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	public static final int TYPE_NORMAL = 1;
 	public static final int TYPE_FAVORITES = 2;
 	public static final int TYPE_HISTORY = 3;
+
+	public static final int FILTER_TYPE_CATEGORY = 1;
+	public static final int FILTER_TYPE_INGREDIENT = 2;
+	public static final int FILTER_TYPE_GLASS = 3;
+	public static final int FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC = 4;
+
 	public static final String EXTRAS_KEY_TYPE = "search_fragment_type";
 
 	public static final int ADD_TO_FAVORITES_ANIMATION_DURATION = 600;
@@ -293,17 +299,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			initAdapter();
 
 			if (prefs.isFirstRun()) {
-//				prefs.saveCurrentSearchType(Prefs.FILTER_TYPE_CATEGORY);
-//				prefs.saveSelectedFilterValuePos(0);
-//				String[] categories = getResources().getStringArray(R.array.filter_categories);
-//				prefs.saveSelectedFilterValue(categories[0]);
 				String values[] = getResources().getStringArray(R.array.filter_categories);
 				prefs.setFirstRunDefaultValues(Prefs.SEARCH_TYPE_FILTER, 1, values[1]);
 				Button btnGetStarted = view.findViewById(R.id.get_started);
 				btnGetStarted.setOnClickListener(view1 -> executeFirsRun());
+				categorySpinner.setSelection(1);
 
-//				prefs.saveFilterCategory(values[1]);
-//				mPresenter.loadBuildList(prefs.getCurrentActiveFilter(), prefs.getSelectedFilterValue());
 				mPresenter.loadFilteredList(
 						prefs.getFilterCategory(),
 						prefs.getFilterIngredient(),
@@ -392,25 +393,25 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		alcoholicSpinner.setSelection(prefs.getSelectedAlcoholicPos());
 
 		categorySpinner.setOnTouchListener((view14, motionEvent) -> {
-			selectedFilter = Prefs.FILTER_TYPE_CATEGORY;
+			selectedFilter = FILTER_TYPE_CATEGORY;
 			view14.performClick();
 			return false;
 		});
 
 		ingredientSpinner.setOnTouchListener((view13, motionEvent) -> {
-			selectedFilter = Prefs.FILTER_TYPE_INGREDIENT;
+			selectedFilter = FILTER_TYPE_INGREDIENT;
 			view13.performClick();
 			return false;
 		});
 
 		glassSpinner.setOnTouchListener((view12, motionEvent) -> {
-			selectedFilter = Prefs.FILTER_TYPE_GLASS;
+			selectedFilter = FILTER_TYPE_GLASS;
 			view12.performClick();
 			return false;
 		});
 
 		alcoholicSpinner.setOnTouchListener((view1, motionEvent) -> {
-			selectedFilter = Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC;
+			selectedFilter = FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC;
 			view1.performClick();
 			return false;
 		});
@@ -418,7 +419,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-				if (selectedFilter == Prefs.FILTER_TYPE_CATEGORY) {
+				if (selectedFilter == FILTER_TYPE_CATEGORY) {
 					if (pos == 0) {
 						prefs.saveFilterCategory(null);
 						prefs.saveSelectedCategoryPos(0);
@@ -444,7 +445,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		ingredientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-				if (selectedFilter == Prefs.FILTER_TYPE_INGREDIENT) {
+				if (selectedFilter == FILTER_TYPE_INGREDIENT) {
 					if (pos == 0) {
 						prefs.saveFilterIngredient(null);
 						prefs.saveSelectedIngredientPos(0);
@@ -471,7 +472,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		glassSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-				if (selectedFilter == Prefs.FILTER_TYPE_GLASS) {
+				if (selectedFilter == FILTER_TYPE_GLASS) {
 					if (pos == 0) {
 						prefs.saveFilterGlass(null);
 						prefs.saveSelectedGlassPos(0);
@@ -497,7 +498,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		alcoholicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-				if (selectedFilter == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
+				if (selectedFilter == FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
 					if (pos == 0) {
 						prefs.saveFilterAlcoholic(null);
 						prefs.saveSelectedAlcoholicPos(0);

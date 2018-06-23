@@ -66,49 +66,49 @@ public class RemoteRepository implements RepositoryContract {
 	public Flowable<List<Drink>> getDrinksHistory(int page) {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
-
-	@Override
-	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
-		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
-			return getCocktailApi().searchByCategory(value)
-					.map(ModelMapper::convertDrinksToList)
-					.map(drinks -> {
-						for (int i = 0; i < drinks.size(); i++) {
-							drinks.get(i).setStrCategory(value);
-						}
-						return drinks;
-					});
-		} else if (filterType == Prefs.FILTER_TYPE_INGREDIENT) {
-			return getCocktailApi().searchByIngredient(value)
-					.map(ModelMapper::convertDrinksToList)
-					.map(drinks -> {
-						for (int i = 0; i < drinks.size(); i++) {
-							drinks.get(i).setStrIngredient1(value);
-						}
-						return drinks;
-					});
-		} else if (filterType == Prefs.FILTER_TYPE_GLASS) {
-			return getCocktailApi().searchByGlass(value)
-					.map(ModelMapper::convertDrinksToList)
-					.map(drinks -> {
-						for (int i = 0; i < drinks.size(); i++) {
-							drinks.get(i).setStrGlass(value);
-						}
-						return drinks;
-					});
-		} else if (filterType == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
-			return getCocktailApi().searchByAlcoholic(value)
-					.map(ModelMapper::convertDrinksToList)
-					.map(drinks -> {
-						for (int i = 0; i < drinks.size(); i++) {
-							drinks.get(i).setStrAlcoholic(value);
-						}
-						return drinks;
-					});
-		} else {
-			throw new UnsupportedOperationException("This is not implemented yet");
-		}
-	}
+//
+//	@Override
+//	public Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value) {
+//		if (filterType == Prefs.FILTER_TYPE_CATEGORY) {
+//			return getCocktailApi().searchByCategory(value)
+//					.map(ModelMapper::convertDrinksToList)
+//					.map(drinks -> {
+//						for (int i = 0; i < drinks.size(); i++) {
+//							drinks.get(i).setStrCategory(value);
+//						}
+//						return drinks;
+//					});
+//		} else if (filterType == Prefs.FILTER_TYPE_INGREDIENT) {
+//			return getCocktailApi().searchByIngredient(value)
+//					.map(ModelMapper::convertDrinksToList)
+//					.map(drinks -> {
+//						for (int i = 0; i < drinks.size(); i++) {
+//							drinks.get(i).setStrIngredient1(value);
+//						}
+//						return drinks;
+//					});
+//		} else if (filterType == Prefs.FILTER_TYPE_GLASS) {
+//			return getCocktailApi().searchByGlass(value)
+//					.map(ModelMapper::convertDrinksToList)
+//					.map(drinks -> {
+//						for (int i = 0; i < drinks.size(); i++) {
+//							drinks.get(i).setStrGlass(value);
+//						}
+//						return drinks;
+//					});
+//		} else if (filterType == Prefs.FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC) {
+//			return getCocktailApi().searchByAlcoholic(value)
+//					.map(ModelMapper::convertDrinksToList)
+//					.map(drinks -> {
+//						for (int i = 0; i < drinks.size(); i++) {
+//							drinks.get(i).setStrAlcoholic(value);
+//						}
+//						return drinks;
+//					});
+//		} else {
+//			throw new UnsupportedOperationException("This is not implemented yet");
+//		}
+//	}
 
 	@Override
 	public Flowable<List<Drink>> loadFilteredDrinks(String category, String ingredient, String glass, String alcoholic) {
