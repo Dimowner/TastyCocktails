@@ -21,6 +21,7 @@ import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.inject.Inject;
 
@@ -46,6 +47,8 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 
 	@Inject
 	DetailsViewModel viewModel;
+
+	private Stack<IngredientsAdapter2> adaptersPool;
 
 	private FrameLayout titleBar;
 	private ViewPager viewPager;
@@ -126,6 +129,8 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 			@Override public void onPageScrollStateChanged(int state) {}
 		});
 
+		adaptersPool = new Stack<>();
+
 		pagerAdapter = new DetailsPagerAdapter(getApplicationContext(), R.layout.layout_details, ids.size());
 		pagerAdapter.setOnCreatePageListener(new DetailsPagerAdapter.OnCreatePageListener() {
 			@Override
@@ -136,9 +141,17 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 
 				IngredientsAdapter2 adapter;
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-					adapter = new IngredientsAdapter2(isInMultiWindowMode());
+					if (adaptersPool.empty()) {
+						adapter = new IngredientsAdapter2(isInMultiWindowMode());
+					} else {
+						adapter = adaptersPool.pop();
+					}
 				} else {
-					adapter = new IngredientsAdapter2();
+					if (adaptersPool.empty()) {
+						adapter = new IngredientsAdapter2();
+					} else {
+						adapter = adaptersPool.pop();
+					}
 				}
 				adapter.setItemClickListener((v1, pos1) -> startIngredientDetailsActivity(adapter.getItem(pos1).getImageUrl(), v1));
 				adapter.setOnImageClickListener((v2, path) -> startIngredientDetailsActivity(path, v2));
@@ -149,7 +162,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(drink -> {
-							Timber.v("Drink = " + drink.toString());
 							adapter.setDrink(drink);
 							if (viewPager.getCurrentItem() == pos) {
 								updateFavorite(drink);
@@ -159,8 +171,10 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 
 			@Override
 			public void onDestroyPage(int pos, View view) {
-				Timber.v("onDestroyPage p = " + pos);
-//				compositeDisposable.clear();
+				RecyclerView recyclerView = (RecyclerView) view;
+				adaptersPool.push((IngredientsAdapter2) recyclerView.getAdapter());
+				recyclerView.setAdapter(null);
+
 				viewModel.removeFromCache(pos);
 			}
 		});
