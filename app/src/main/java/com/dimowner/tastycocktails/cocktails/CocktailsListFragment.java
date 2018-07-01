@@ -738,6 +738,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			public boolean onQueryTextChange(final String newText) {
 				if ((fragmentType == TYPE_FAVORITES || fragmentType == TYPE_HISTORY) && mAdapter != null) {
 					mAdapter.applyFilter(newText);
+					extractIds(mAdapter.getData());
 				}
 				return false;
 			}
