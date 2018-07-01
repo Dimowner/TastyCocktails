@@ -123,6 +123,9 @@ public interface CocktailsDao {
 	void insertAll(Drink... items);
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertAllWithReplace(Drink... items);
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertDrink(Drink item);
 
 	@Update

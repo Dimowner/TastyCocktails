@@ -322,7 +322,7 @@ public class LocalRepository implements RepositoryContract {
 	 */
 	public Single<Drink[]> cacheIntoLocalDatabase(Drinks items) {
 		return Single.just(items.getDrinks())
-				.doOnSuccess(data -> getRepositoriesDao().insertAll(data))
+				.doOnSuccess(data -> getRepositoriesDao().insertAllWithReplace(data))
 				.subscribeOn(Schedulers.io());
 	}
 

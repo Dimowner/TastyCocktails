@@ -8,7 +8,7 @@ public class Prefs {
 	private static final String PREF_NAME = "task.softermii.tastycocktails.data.Prefs";
 
 	private static final String PREF_KEY_IS_FIRST_RUN = "is_first_run";
-	private static final String PREF_KEY_IS_DRINKS_CACHED = "is_drinks_cached";
+	private static final String PREF_KEY_IS_DRINKS_CACHED = "is_cached_drinks2";
 	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
 	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
 
