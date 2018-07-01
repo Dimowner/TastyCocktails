@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -179,7 +180,7 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 		compositeDisposable.add(
 				repository.clearHistory()
 						.subscribeOn(Schedulers.io())
-						.subscribe(() -> {}, this::handleError));
+						.subscribe(() -> {displayData(new ArrayList<>());}, this::handleError));
 	}
 
 	@Override

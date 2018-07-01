@@ -291,9 +291,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					showMenu();
 				}
 			});
-			Toolbar toolbar = parentActivity.findViewById(R.id.toolbar);
-			toolbarMenuItemAnimation(toolbar);
 		}
+		Toolbar toolbar = parentActivity.findViewById(R.id.toolbar);
+		toolbarMenuItemAnimation(toolbar);
 
 //		if (savedInstanceState == null) {
 			initAdapter();
@@ -888,21 +888,40 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			@Override
 			public void onLayoutChange(View v, int left, int top, int right, int bottom,
 												int oldLeft, int oldTop, int oldRight, int oldBottom) {
-				filterMenu = toolbar.findViewById(R.id.action_filter);
-				if (filterMenu != null) {
-					toolbar.removeOnLayoutChangeListener(this);
-					filterMenu.setOnClickListener(v1 -> {
-						if (!prefs.isFirstRun()) {
-							if (touchLayout.getVisibility() == View.VISIBLE) {
-								AnimationUtil.viewBackRotationAnimation(v1, ANIMATION_DURATION);
-							} else {
-								AnimationUtil.viewRotationAnimation(v1, ANIMATION_DURATION);
-							}
-							showMenu();
+					if (fragmentType == TYPE_NORMAL) {
+						filterMenu = toolbar.findViewById(R.id.action_filter);
+						if (filterMenu != null) {
+							toolbar.removeOnLayoutChangeListener(this);
+							filterMenu.setOnClickListener(v1 -> {
+								if (!prefs.isFirstRun()) {
+									if (touchLayout.getVisibility() == View.VISIBLE) {
+										AnimationUtil.viewBackRotationAnimation(v1, ANIMATION_DURATION);
+									} else {
+										AnimationUtil.viewRotationAnimation(v1, ANIMATION_DURATION);
+									}
+									showMenu();
+								}
+							});
 						}
-					});
+					} else if (fragmentType == TYPE_HISTORY) {
+						filterMenu = toolbar.findViewById(R.id.action_clear_history);
+						if (filterMenu != null) {
+							filterMenu.setOnClickListener(v1 -> {
+								if (mAdapter.getItemCount() > 0) {
+									UIUtil.showWarningDialog(
+											getActivity(),
+											R.drawable.round_delete_forever_black,
+											R.string.do_you_really_want_clear_history,
+											(dialogInterface, i) -> mPresenter.clearHistory(),
+											(dialogInterface, i) -> dialogInterface.dismiss()
+									);
+								} else {
+									Toast.makeText(getContext(), R.string.history_already_empty, Toast.LENGTH_LONG).show();
+								}
+							});
+						}
+					}
 				}
-			}
 		});
 	}
 

@@ -57,7 +57,7 @@
 	<string name="history_is_empty">History is empty</string>
 	<string name="clear_history">Clear history</string>
 	<string name="do_you_really_want_clear_history">Do you really want to clear the history?</string>
-	<string name="history_already_empty">History has already empty</string>
+	<string name="history_already_empty">History is already empty</string>
 	<string name="glass">Glass</string>
 	<string name="alcoholic">Alcoholic</string>
 	<string name="category">Category</string>
@@ -162,7 +162,7 @@
 		<item>Apricot brandy</item>
 		<item>Añejo rum</item>
 		<item>Bacardi Limon</item>
-		<item>Bailey's irish cream</item>
+		<item>Bailey\'s irish cream</item>
 		<item>Baileys irish cream</item>
 		<item>Banana liqueur</item>
 		<item>Beer</item>
