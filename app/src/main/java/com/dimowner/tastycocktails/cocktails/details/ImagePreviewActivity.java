@@ -82,7 +82,9 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
 //		AnimationUtil.physBasedRevealAnimation(toolbar.getChildAt(0));
 		AndroidUtils.transparentNavigationBar(this);
-		setupWindowAnimations();
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			setupWindowAnimations();
+		}
 	}
 
 	@TargetApi(21)

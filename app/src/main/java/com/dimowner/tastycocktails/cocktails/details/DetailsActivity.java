@@ -128,8 +128,12 @@ public class DetailsActivity extends AppCompatActivity {
 		});
 
 		mAdapter.setOnImageClickListener(path -> {
-			startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path),
-					ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path),
+						ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+			} else {
+				startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path));
+			}
 		});
 
 //		mAdapter.setOnCheckImageColorListener(isDark -> {

@@ -111,13 +111,18 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		ImageButton btnBack = findViewById(R.id.btn_back);
 		btnBack.setOnClickListener(v -> finish());
 		btnFav = findViewById(R.id.btn_favorite);
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			btnFav.setImageResource(R.drawable.circle_drawable_heart_outline);
+			btnBack.setImageResource(R.drawable.circle_drawable_arrow);
+		} else {
+			btnFav.setImageResource(R.drawable.heart_outline);
+			btnBack.setImageResource(R.drawable.arrow_left);
+		}
 		btnFav.setOnClickListener(v ->
 				compositeDisposable.add(viewModel.reverseFavorite(ids.get(viewPager.getCurrentItem()))
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(() -> {
-							updateFavorite(viewModel.getCachedDrink(viewPager.getCurrentItem()));
-						}, Timber::e))
+						.subscribe(() -> updateFavorite(viewModel.getCachedDrink(viewPager.getCurrentItem())), Timber::e))
 		);
 		viewPager = findViewById(R.id.pager);
 		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -204,8 +209,12 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	}
 
 	private void startIngredientDetailsActivity(String path, View view) {
-		startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path),
-				ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path),
+					ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+		} else {
+			startActivity(ImagePreviewActivity.getStartIntent(getApplicationContext(), path));
+		}
 	}
 
 //	@Override
@@ -234,16 +243,24 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	}
 
 	private void updateFavorite(Drink d) {
-		if (d != null && d.isFavorite()) {
-			btnFav.setImageResource(R.drawable.circle_drawable_heart);
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			if (d != null && d.isFavorite()) {
+				btnFav.setImageResource(R.drawable.circle_drawable_heart);
+			} else {
+				btnFav.setImageResource(R.drawable.circle_drawable_heart_outline);
+			}
 		} else {
-			btnFav.setImageResource(R.drawable.circle_drawable_heart_outline);
+			if (d != null && d.isFavorite()) {
+				btnFav.setImageResource(R.drawable.heart);
+			} else {
+				btnFav.setImageResource(R.drawable.heart_outline);
+			}
 		}
 	}
 
 	private void updateHistory(int pos) {
-		viewModel.updateDrinkHistory(ids.get(pos))
+		compositeDisposable.add(viewModel.updateDrinkHistory(ids.get(pos))
 				.subscribeOn(Schedulers.io())
-				.subscribe(() -> {}, Timber::e);
+				.subscribe(() -> {}, Timber::e));
 	}
 }

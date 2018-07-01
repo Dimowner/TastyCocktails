@@ -47,7 +47,6 @@
 				android:contentDescription="@null"
 				android:foreground="?attr/selectableItemBackgroundBorderless"
 				android:background="@android:color/transparent"
-				app:srcCompat="@drawable/circle_drawable_arrow"
 				android:layout_gravity="top|start"
 				/>
 
@@ -56,7 +55,6 @@
 				android:layout_width="56dp"
 				android:layout_height="56dp"
 				android:contentDescription="@null"
-				app:srcCompat="@drawable/circle_drawable_heart_outline"
 				android:background="@android:color/transparent"
 				android:foreground="?attr/selectableItemBackgroundBorderless"
 				android:layout_gravity="top|end"

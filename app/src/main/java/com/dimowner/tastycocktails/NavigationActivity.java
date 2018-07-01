@@ -35,7 +35,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 
@@ -189,7 +188,11 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 			mDrawerToggle.setDrawerIndicatorEnabled(false);
 			mDrawerToggle.setToolbarNavigationClickListener(view -> mDrawerLayout.openDrawer(GravityCompat.START));
-			mDrawerToggle.setHomeAsUpIndicator(R.drawable.round_menu);
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				mDrawerToggle.setHomeAsUpIndicator(R.drawable.round_menu);
+			} else {
+				mDrawerToggle.setHomeAsUpIndicator(R.drawable.round_menu_white_24);
+			}
 
 			mDrawerToggle.syncState();
 			mDrawerLayout.addDrawerListener(mDrawerToggle);

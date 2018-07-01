@@ -41,7 +41,6 @@ import javax.inject.Inject;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity;
-import com.dimowner.tastycocktails.cocktails.details.IngredientItem;
 import com.dimowner.tastycocktails.cocktails.details.IngredientsAdapter;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
 import com.dimowner.tastycocktails.util.AndroidUtils;
@@ -175,20 +174,22 @@ public class RandomFragment extends Fragment {
 		}
 
 		mAdapter.setItemClickListener((view1, position) ->
-				startIngredientDetailsActivity(mAdapter.getItem(position)));
+				startIngredientDetailsActivity(mAdapter.getItem(position).getImageUrl()));
 
 		mAdapter.setFavoriteUpdateListener(fav -> {
 			isFavorite = fav;
 			updateFavorite(isFavorite);
 		});
 
-		mAdapter.setOnImageClickListener(path -> {
-			startActivity(ImagePreviewActivity.getStartIntent(getContext(), path),
-					ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-		});
+		mAdapter.setOnImageClickListener(this::startIngredientDetailsActivity);
 
-		btnMenu.setImageResource(R.drawable.circle_drawable_menu);
-		btnFavorite.setImageResource(isFavorite ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			btnMenu.setImageResource(R.drawable.circle_drawable_menu);
+			btnFavorite.setImageResource(isFavorite ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
+		} else {
+			btnMenu.setImageResource(R.drawable.menu);
+			btnFavorite.setImageResource(isFavorite ? R.drawable.heart : R.drawable.heart_outline);
+		}
 
 		mAdapter.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 	}
@@ -200,12 +201,20 @@ public class RandomFragment extends Fragment {
 		mPresenter = null;
 	}
 
-	private void startIngredientDetailsActivity(IngredientItem item) {
-		startActivity(ImagePreviewActivity.getStartIntent(getContext(), item.getImageUrl()),
-				ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+	private void startIngredientDetailsActivity(String url) {
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			startActivity(ImagePreviewActivity.getStartIntent(getContext(), url),
+					ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+		} else {
+			startActivity(ImagePreviewActivity.getStartIntent(getContext(), url));
+		}
 	}
 
 	private void updateFavorite(boolean fav) {
-		btnFavorite.setImageResource(fav ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			btnFavorite.setImageResource(fav ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
+		} else {
+			btnFavorite.setImageResource(fav ? R.drawable.heart: R.drawable.heart_outline);
+		}
 	}
 }
