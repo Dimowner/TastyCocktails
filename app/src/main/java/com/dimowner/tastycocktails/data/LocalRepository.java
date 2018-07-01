@@ -249,6 +249,16 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
+	public List<Drink> getFavoritesDrinks() {
+		return getRepositoriesDao().getFavoritesDrinks();
+	}
+
+	@Override
+	public Single<Integer> getFavoritesCount() {
+		return getRepositoriesDao().getFavoritesRowCount();
+	}
+
+	@Override
 	public Flowable<List<Drink>> getIngredients() {
 		throw new UnsupportedOperationException("This method is supported only in RemoteRepository");
 	}
@@ -287,6 +297,11 @@ public class LocalRepository implements RepositoryContract {
 	@Override
 	public Completable clearHistory() {
 		return Completable.fromAction(() -> getRepositoriesDao().clearHistory());
+	}
+
+	@Override
+	public void clearAll() {
+		getRepositoriesDao().deleteAll();
 	}
 
 	@Override

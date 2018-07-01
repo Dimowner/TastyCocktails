@@ -118,6 +118,16 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
+	public List<Drink> getFavoritesDrinks() {
+		return localRepository.getFavoritesDrinks();
+	}
+
+	@Override
+	public Single<Integer> getFavoritesCount() {
+		return localRepository.getFavoritesCount();
+	}
+
+	@Override
 	public Flowable<List<Drink>> getIngredients() {
 		return remoteRepository.getIngredients();
 	}
@@ -145,6 +155,11 @@ public class Repository implements RepositoryContract {
 	@Override
 	public Completable clearHistory() {
 		return localRepository.clearHistory();
+	}
+
+	@Override
+	public void clearAll() {
+		localRepository.clearAll();
 	}
 
 	@Override

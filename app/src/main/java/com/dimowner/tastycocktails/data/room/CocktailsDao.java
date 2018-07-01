@@ -77,6 +77,9 @@ public interface CocktailsDao {
 	@Query("SELECT * FROM drinks WHERE isFavorite = 1 ORDER BY strDrink")
 	Flowable<List<Drink>> getFavorites();
 
+	@Query("SELECT * FROM drinks WHERE isFavorite = 1 ORDER BY strDrink")
+	List<Drink> getFavoritesDrinks();
+
 	@Query("SELECT * FROM drinks WHERE history > 0 ORDER BY history DESC LIMIT :perPage OFFSET :offset")
 	Flowable<List<Drink>> getDrinksHistory(int offset, int perPage);
 

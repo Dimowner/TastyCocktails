@@ -220,7 +220,26 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 
 			Gson gson = new Gson();
 			Drinks drinks = gson.fromJson(json, Drinks.class);
-			return repository.cacheIntoLocalDatabase(drinks);
+			List<Drink> cachedFev = new ArrayList<>();
+			return repository.getFavoritesCount()
+					.subscribeOn(Schedulers.io())
+					.flatMap(count -> {
+						if (count > 0) {
+							cachedFev.addAll(repository.getFavoritesDrinks());
+							repository.clearAll();
+							return repository.cacheIntoLocalDatabase(drinks)
+									.doOnSuccess(v -> {
+										for (int i = 0; i < cachedFev.size(); i++) {
+											repository.reverseFavorite(cachedFev.get(i).getIdDrink())
+													.subscribeOn(Schedulers.io())
+													.subscribe();
+										}
+									});
+						} else {
+							repository.clearAll();
+							return repository.cacheIntoLocalDatabase(drinks);
+						}
+					});
 		} catch (IOException ex) {
 			Timber.e(ex);
 			return Single.error(ex);

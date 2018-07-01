@@ -147,6 +147,16 @@ public class RemoteRepository implements RepositoryContract {
 	}
 
 	@Override
+	public List<Drink> getFavoritesDrinks() {
+		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
+	@Override
+	public Single<Integer> getFavoritesCount() {
+		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
+	@Override
 	public Flowable<List<Drink>> getIngredients() {
 		return getCocktailApi()
 				.getIngredients()
@@ -185,6 +195,11 @@ public class RemoteRepository implements RepositoryContract {
 
 	@Override
 	public Completable clearHistory() {
+		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
+	@Override
+	public void clearAll() {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
 
