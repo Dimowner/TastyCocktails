@@ -226,6 +226,14 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		}
 
+		if (!prefs.isDrinksCached()) {
+			compositeDisposable.add(mPresenter.firstRunInitialization(getContext())
+					.subscribe(drinks1 -> {
+						Timber.d("Succeed to cache %d drinks!", drinks1.length);
+						prefs.setDrinksCached();
+					}, Timber::e));
+		}
+
 		if (fragmentType == TYPE_HISTORY) {
 			ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
 					new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -873,7 +881,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	public void executeFirsRun() {
 		prefs.firstRunExecuted();
-		mPresenter.firstRunInitialization(getContext());
+//		mPresenter.firstRunInitialization(getContext());
 		if (onFirstRunExecutedListener != null) {
 			onFirstRunExecutedListener.onFirstRunExecuted();
 		}

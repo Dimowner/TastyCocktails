@@ -21,8 +21,11 @@ import android.content.Context;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
+
 import com.dimowner.tastycocktails.Contract;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
+import com.dimowner.tastycocktails.data.model.Drink;
 
 /**
  * Created on 27.07.2017.
@@ -59,6 +62,6 @@ public interface CocktailsListContract {
 
 		Completable reverseFavorite(long id);
 
-		void firstRunInitialization(Context context);
+		Single<Drink[]> firstRunInitialization(Context context);
 	}
 }

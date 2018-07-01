@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -34,6 +35,7 @@ import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.data.RepositoryContract;
+import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
 import com.google.gson.Gson;
 
@@ -180,6 +182,7 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 		compositeDisposable.add(
 				repository.clearHistory()
 						.subscribeOn(Schedulers.io())
+						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(() -> {displayData(new ArrayList<>());}, this::handleError));
 	}
 
@@ -205,7 +208,7 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 	}
 
 	@Override
-	public void firstRunInitialization(Context context) {
+	public Single<Drink[]> firstRunInitialization(Context context) {
 		String json;
 		try {
 			InputStream is = context.getAssets().open("drinks_json.txt");
@@ -217,12 +220,10 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 
 			Gson gson = new Gson();
 			Drinks drinks = gson.fromJson(json, Drinks.class);
-			compositeDisposable.add(repository.cacheIntoLocalDatabase(drinks)
-					.subscribe(drinks1 -> {
-								Timber.d("Succeed to cache %d drinks!", drinks.getDrinks().length);
-						}, Timber::e));
+			return repository.cacheIntoLocalDatabase(drinks);
 		} catch (IOException ex) {
 			Timber.e(ex);
+			return Single.error(ex);
 		}
 	}
 }

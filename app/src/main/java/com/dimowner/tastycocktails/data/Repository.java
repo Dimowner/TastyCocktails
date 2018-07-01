@@ -83,7 +83,12 @@ public class Repository implements RepositoryContract {
 						localRepository.cacheIntoLocalDatabase(drink);
 					});
 		} else {
-			return localRepository.getRandomCocktail();
+			return localRepository.getRandomCocktail()
+					.doOnSuccess(drink -> {
+						localRepository.updateDrinkHistory(drink.getIdDrink(), new Date().getTime())
+								.subscribeOn(Schedulers.io())
+								.subscribe(()-> {}, Timber::e);
+					});
 		}
 	}
 

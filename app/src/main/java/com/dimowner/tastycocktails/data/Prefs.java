@@ -8,6 +8,7 @@ public class Prefs {
 	private static final String PREF_NAME = "task.softermii.tastycocktails.data.Prefs";
 
 	private static final String PREF_KEY_IS_FIRST_RUN = "is_first_run";
+	private static final String PREF_KEY_IS_DRINKS_CACHED = "is_drinks_cached";
 	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
 	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
 
@@ -36,6 +37,16 @@ public class Prefs {
 	public void firstRunExecuted() {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putBoolean(PREF_KEY_IS_FIRST_RUN, false);
+		editor.apply();
+	}
+
+	public boolean isDrinksCached() {
+		return sharedPreferences.contains(PREF_KEY_IS_DRINKS_CACHED) && sharedPreferences.getBoolean(PREF_KEY_IS_DRINKS_CACHED, false);
+	}
+
+	public void setDrinksCached() {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_DRINKS_CACHED, true);
 		editor.apply();
 	}
 
