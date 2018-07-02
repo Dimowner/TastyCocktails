@@ -244,7 +244,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 							return false;
 						}
 
-
 						@Override
 						public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
 							if (viewHolder != null) {
@@ -343,10 +342,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		} else if (fragmentType == TYPE_FAVORITES) {
 			mPresenter.loadFavorites();
-			updateToolbarTitle(getString(R.string.app_name));
+			updateToolbarTitle(getString(R.string.nav_favorites));
 		} else if (fragmentType == TYPE_HISTORY) {
 			mPresenter.loadHistory(1);
-			updateToolbarTitle(getString(R.string.app_name));
+			updateToolbarTitle(getString(R.string.nav_history));
 		} else {
 			Timber.e("Con't load data not correct fragment type!");
 		}
@@ -859,7 +858,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	public void updateToolbarTitle(String title) {
-		if (getActivity() != null && parentActivity.getSupportActionBar() != null) {
+		if (parentActivity.getSupportActionBar() != null) {
 			parentActivity.getSupportActionBar().setTitle(title);
 		}
 	}
