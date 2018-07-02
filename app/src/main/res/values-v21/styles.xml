@@ -40,18 +40,4 @@
 	<!--</style>-->
 
 
-	<style name="StarterTheme" parent="@android:style/Theme.Material">
-		<item name="android:colorPrimary">@color/colorPrimary</item>
-		<item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="android:colorAccent">@color/colorAccent</item>
-
-		<item name="android:windowActionBar">false</item>
-		<item name="android:windowNoTitle">true</item>
-		<item name="android:windowActionBarOverlay">true</item>
-
-		<!--<item name="android:windowBackground">@drawable/gradient_blue</item>-->
-
-		<item name="android:navigationBarColor">@color/colorPrimary</item>
-	</style>
-
 </resources>

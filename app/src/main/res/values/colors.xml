@@ -33,7 +33,6 @@
 	<color name="white">#ffffff</color>
 	<color name="black">#000000</color>
 	<color name="background">#fafafa</color>
-	<color name="background_dark">#dadada</color>
 
 	<color name="circle_drawable">#47575757</color>
 
