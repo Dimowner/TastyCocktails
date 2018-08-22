@@ -42,6 +42,8 @@ public interface CocktailsListContract {
 
 		void startSearch(String search);
 
+		void startSearchLocal(String search);
+
 		void cancelSearch();
 
 		void loadLastSearch(String query);

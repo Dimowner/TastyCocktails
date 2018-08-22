@@ -56,6 +56,11 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> searchCocktailsByNameLocal(@NonNull String search) {
+		return localRepository.searchCocktailsByName(search);
+	}
+
+	@Override
 	public Flowable<List<Drink>> getDrinksHistory(int page) {
 		return localRepository.getDrinksHistory(page);
 	}

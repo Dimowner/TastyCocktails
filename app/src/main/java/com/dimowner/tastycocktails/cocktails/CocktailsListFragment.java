@@ -138,6 +138,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	Prefs prefs;
 
 	private int selectedFilter = -1;
+	private boolean isSearchOpen = false;
 
 	public static CocktailsListFragment newInstance(int fragmentType) {
 		CocktailsListFragment fragment = new CocktailsListFragment();
@@ -230,7 +231,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			compositeDisposable.add(mPresenter.firstRunInitialization(getContext())
 					.subscribe(drinks1 -> {
 						Timber.d("Succeed to cache %d drinks!", drinks1.length);
-						prefs.setDrinksCached();
+						if (drinks1.length > 0) {
+							prefs.setDrinksCached();
+						}
 					}, Timber::e));
 		}
 
@@ -702,42 +705,52 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 
 		searchMenu = menu.findItem(R.id.action_search);
-		final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+		final SearchView searchView = (SearchView) searchMenu.getActionView();
+		searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				Timber.v("onMenuItemActionExpand");
+				isSearchOpen = true;
+				searchView.setQuery(prefs.getLastSearchString(), false);
+				if (touchLayout.getVisibility() == View.VISIBLE) {
+					showMenu();
+				}
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				Timber.v("onMenuItemActionCollapse");
+				isSearchOpen = false;
+				return true;
+			}
+		});
+
+		searchView.setOnCloseListener(() -> {
+			Timber.v("onClose");
+			return false;
+		});
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				if (fragmentType == TYPE_NORMAL) {
 //					TODO: should move this logic into presenter
 					//Save search query string
-					if (TCApplication.isConnected()) {
-						prefs.setLastSearchString(query);
-						prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_SEARCH);
-						prefs.clearFilters();
+//					if (TCApplication.isConnected()) {
+					applySearch(query, false);
 
-						categorySpinner.setSelection(0);
-						ingredientSpinner.setSelection(0);
-						glassSpinner.setSelection(0);
-						alcoholicSpinner.setSelection(0);
-
-						mPresenter.startSearch(query);
-						if (prefs.getLastSearchString() != null) {
-							updateToolbarTitle(getString(R.string.search, prefs.getLastSearchString()));
-						}
-						if (prefs.isFirstRun()) {
-							executeFirsRun();
-						}
-					} else {
-						showNetworkError();
-					}
 				}
 				return false;
 			}
 
 			@Override
 			public boolean onQueryTextChange(final String newText) {
+				Timber.v("onQueryTextChange text = %s", newText);
 				if ((fragmentType == TYPE_FAVORITES || fragmentType == TYPE_HISTORY) && mAdapter != null) {
 					mAdapter.applyFilter(newText);
 					extractIds(mAdapter.getData());
+				} else if (fragmentType == TYPE_NORMAL && isSearchOpen) {
+					applySearch(newText, true);
 				}
 				return false;
 			}
@@ -748,6 +761,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 		// Set on click listener
 		closeButton.setOnClickListener(v -> {
+			Timber.v("closeBtnClick");
 			mPresenter.cancelSearch();
 			//Clear query
 			searchView.setQuery("", false);
@@ -756,6 +770,37 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			//Collapse the search widget
 			searchMenu.collapseActionView();
 		});
+	}
+
+	private void applySearch(String query, boolean localSearch) {
+		Timber.v("startSearch local = " + localSearch);
+		prefs.setLastSearchString(query);
+		if (!query.isEmpty()) {
+			prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_SEARCH);
+		} else {
+			prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_FILTER);
+		}
+		prefs.clearFilters();
+
+		categorySpinner.setSelection(0);
+		ingredientSpinner.setSelection(0);
+		glassSpinner.setSelection(0);
+		alcoholicSpinner.setSelection(0);
+
+		if (localSearch) {
+			mPresenter.startSearchLocal(query);
+		} else {
+			mPresenter.startSearch(query);
+		}
+		String lastSearch = prefs.getLastSearchString();
+		if (lastSearch != null && !lastSearch.isEmpty()) {
+			updateToolbarTitle(getString(R.string.search, prefs.getLastSearchString()));
+		} else {
+			updateToolbarTitle(getString(R.string.app_name));
+		}
+		if (prefs.isFirstRun()) {
+			executeFirsRun();
+		}
 	}
 
 	@Override
@@ -772,6 +817,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			} else {
 				Toast.makeText(getContext(), R.string.history_already_empty, Toast.LENGTH_LONG).show();
 			}
+		} else if (item.getItemId() == R.id.action_search) {
+			Timber.v("ActionSearch click");
+
+		} else if (item.getItemId() == android.R.id.home) {
+			Timber.v("onHomeBtnClick");
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -943,6 +993,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					(animation, canceled, value, velocity) -> touchLayout.setVisibility(View.INVISIBLE)
 			);
 		} else {
+			SearchView searchView = ((SearchView)searchMenu.getActionView());
+			//Collapse the action view
+			searchView.onActionViewCollapsed();
+			//Collapse the search widget
+			searchMenu.collapseActionView();
+			applySearch(searchView.getQuery().toString(), true);
+
 			touchLayout.setVisibility(View.VISIBLE);
 			if (touchLayout.getHeight() == 0) {
 				touchLayout.setTranslationY(-AndroidUtils.dpToPx(800));

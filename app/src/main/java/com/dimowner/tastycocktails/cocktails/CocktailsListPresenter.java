@@ -94,6 +94,19 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 	}
 
 	@Override
+	public void startSearchLocal(String search) {
+		view.showProgress();
+		if (compositeDisposable.size() > 0) {
+			compositeDisposable.clear();
+		}
+		compositeDisposable.add(
+				repository.searchCocktailsByNameLocal(search)
+						.map(ModelMapper::drinksToListItems)
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(this::displayData, this::handleError));
+	}
+
+	@Override
 	public void cancelSearch() {
 		view.hideProgress();
 		if (compositeDisposable.size() > 0) {

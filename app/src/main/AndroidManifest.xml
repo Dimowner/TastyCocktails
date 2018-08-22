@@ -29,7 +29,6 @@
 			android:icon="@mipmap/tasty_cocktail_logo_new"
 			android:label="@string/app_name"
 			android:roundIcon="@mipmap/tasty_cocktail_logo_new"
-			android:supportsRtl="true"
 			android:theme="@style/AppTheme"
 			tools:ignore="GoogleAppIndexingWarning">
 

@@ -66,6 +66,11 @@ public class LocalRepository implements RepositoryContract {
 		return getRepositoriesDao().searchDrinksRx(search);
 	}
 
+	@Override
+	public Flowable<List<Drink>> searchCocktailsByNameLocal(@NonNull String search) {
+		throw new UnsupportedOperationException("This method is supported only in Repository Please use searchCocktailsByName");
+	}
+
 //	@Override
 //	public Single<List<Drink>> searchCocktailsByIngredient(@NonNull String ingredient) {
 //		throw new RuntimeException("This method is supported only in RemoteRepository");
