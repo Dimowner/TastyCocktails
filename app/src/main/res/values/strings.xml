@@ -72,6 +72,7 @@
 
 	<string name="licences_description">This application makes use of the following third party libraries.</string>
 	<string name="open_source_licences">Open source licences</string>
+	<string name="rate_app">Rate app</string>
 	<string name="content_description_cocktail_image">Cocktail image</string>
 	<string name="content_description_ingredient_image">Ingredient image</string>
 

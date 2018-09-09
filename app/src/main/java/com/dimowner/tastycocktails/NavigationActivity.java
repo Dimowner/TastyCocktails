@@ -61,7 +61,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 	protected static final int NAVDRAWER_ITEM_RANDOM 		= R.id.nav_random;
 	protected static final int NAVDRAWER_ITEM_HISTORY     = R.id.nav_history;
 	protected static final int NAVDRAWER_ITEM_ABOUT			= R.id.nav_about;
-	protected static final int NAVDRAWER_ITEM_RATE			= R.id.nav_rate;
+//	protected static final int NAVDRAWER_ITEM_RATE			= R.id.nav_rate;
 //	protected static final int NAVDRAWER_ITEM_FEEDBACK		= R.id.nav_feedback;
 	protected static final int NAVDRAWER_ITEM_INVALID		= -1;
 
@@ -265,10 +265,10 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			case NAVDRAWER_ITEM_ABOUT:
 				showAboutDialog();
 				break;
-			case NAVDRAWER_ITEM_RATE:
-				rateApp();
-				mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
-				break;
+//			case NAVDRAWER_ITEM_RATE:
+//				rateApp();
+//				mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
+//				break;
 //			case NAVDRAWER_ITEM_FEEDBACK:
 //				openFeedback();
 //				mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);

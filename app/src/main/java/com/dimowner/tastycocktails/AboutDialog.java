@@ -21,11 +21,14 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -112,12 +115,20 @@ public class AboutDialog extends DialogFragment {
 		TextView content = view.findViewById(R.id.about_txt_content);
 		content.setText(aboutBody);
 		TextView btnLicences = view.findViewById(R.id.about_btn_licences);
+		TextView btnRate = view.findViewById(R.id.about_btn_rate);
 		if (AndroidUtils.isAndroid5()) {
 			btnLicences.setCompoundDrawablesWithIntrinsicBounds(R.drawable.dna, 0, 0, 0);
+			btnRate.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_round_thumbs_up_down_24px, 0, 0, 0);
+			btnRate.setCompoundDrawablePadding((int)getContext().getResources().getDimension(R.dimen.padding_small));
+			btnLicences.setCompoundDrawablePadding((int)getContext().getResources().getDimension(R.dimen.padding_small));
 		}
 		btnLicences.setOnClickListener(v -> {
 			dismiss();
 			startActivity(new Intent(getContext(), LicenceActivity.class));
+		});
+		btnRate.setOnClickListener(v -> {
+			dismiss();
+			rateApp();
 		});
 
 		AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
@@ -140,6 +151,28 @@ public class AboutDialog extends DialogFragment {
 		if (activity instanceof DialogInterface.OnDismissListener) {
 			((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
 		}
+	}
+
+	public void rateApp() {
+		try {
+			Intent rateIntent = rateIntentForUrl("market://details");
+			startActivity(rateIntent);
+		} catch (ActivityNotFoundException e) {
+			Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details");
+			startActivity(rateIntent);
+		}
+	}
+
+	private Intent rateIntentForUrl(String url) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, getActivity().getApplicationContext().getPackageName())));
+		int flags = Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
+		if (Build.VERSION.SDK_INT >= 21) {
+			flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
+		} else {
+			flags |= Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
+		}
+		intent.addFlags(flags);
+		return intent;
 	}
 
 //	//Reveal animation for dialog
