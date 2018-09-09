@@ -49,23 +49,25 @@
 
 			<ImageButton
 					android:id="@+id/btn_menu"
-					android:layout_width="56dp"
-					android:layout_height="56dp"
+					android:layout_width="@dimen/circle_button_size"
+					android:layout_height="@dimen/circle_button_size"
 					android:contentDescription="@null"
+					android:layout_margin="@dimen/padding_medium"
 					app:srcCompat="@drawable/round_menu"
 					android:foreground="?attr/selectableItemBackgroundBorderless"
-					android:background="@android:color/transparent"
+					android:background="@drawable/circle_drawable"
 					android:layout_gravity="top|start"
 					/>
 
 			<ImageButton
 					android:id="@+id/btn_favorite"
-					android:layout_width="56dp"
-					android:layout_height="56dp"
+					android:layout_width="@dimen/circle_button_size"
+					android:layout_height="@dimen/circle_button_size"
 					android:contentDescription="@null"
+					android:layout_margin="@dimen/padding_medium"
 					app:srcCompat="@drawable/round_heart_border"
 					android:foreground="?attr/selectableItemBackgroundBorderless"
-					android:background="@android:color/transparent"
+					android:background="@drawable/circle_drawable"
 					android:layout_gravity="top|end"
 					/>
 		</FrameLayout>

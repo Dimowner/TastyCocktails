@@ -183,13 +183,7 @@ public class RandomFragment extends Fragment {
 
 		mAdapter.setOnImageClickListener(this::startIngredientDetailsActivity);
 
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			btnMenu.setImageResource(R.drawable.circle_drawable_menu);
-			btnFavorite.setImageResource(isFavorite ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
-		} else {
-			btnMenu.setImageResource(R.drawable.menu);
-			btnFavorite.setImageResource(isFavorite ? R.drawable.heart : R.drawable.heart_outline);
-		}
+		btnFavorite.setImageResource(isFavorite ? R.drawable.round_heart: R.drawable.round_heart_border);
 
 		mAdapter.setOnSnackBarListener(message -> Snackbar.make(mRoot, message, Snackbar.LENGTH_LONG).show());
 	}
@@ -211,10 +205,10 @@ public class RandomFragment extends Fragment {
 	}
 
 	private void updateFavorite(boolean fav) {
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			btnFavorite.setImageResource(fav ? R.drawable.circle_drawable_heart : R.drawable.circle_drawable_heart_outline);
-		} else {
-			btnFavorite.setImageResource(fav ? R.drawable.heart: R.drawable.heart_outline);
-		}
+//		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			btnFavorite.setImageResource(fav ? R.drawable.round_heart : R.drawable.round_heart_border);
+//		} else {
+//			btnFavorite.setImageResource(fav ? R.drawable.heart: R.drawable.heart_outline);
+//		}
 	}
 }

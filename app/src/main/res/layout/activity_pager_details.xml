@@ -42,20 +42,24 @@
 
 		<ImageButton
 				android:id="@+id/btn_back"
-				android:layout_width="56dp"
-				android:layout_height="56dp"
+				android:layout_width="@dimen/circle_button_size"
+				android:layout_height="@dimen/circle_button_size"
 				android:contentDescription="@null"
+				android:layout_margin="@dimen/padding_medium"
 				android:foreground="?attr/selectableItemBackgroundBorderless"
-				android:background="@android:color/transparent"
+				android:background="@drawable/circle_drawable"
+				app:srcCompat="@drawable/round_arrow_back"
 				android:layout_gravity="top|start"
 				/>
 
 		<ImageButton
 				android:id="@+id/btn_favorite"
-				android:layout_width="56dp"
-				android:layout_height="56dp"
+				android:layout_width="@dimen/circle_button_size"
+				android:layout_height="@dimen/circle_button_size"
 				android:contentDescription="@null"
-				android:background="@android:color/transparent"
+				android:layout_margin="@dimen/padding_medium"
+				android:background="@drawable/circle_drawable"
+				app:srcCompat="@drawable/round_heart_border"
 				android:foreground="?attr/selectableItemBackgroundBorderless"
 				android:layout_gravity="top|end"
 				/>

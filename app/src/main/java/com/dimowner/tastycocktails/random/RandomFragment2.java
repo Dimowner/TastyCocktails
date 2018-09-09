@@ -361,9 +361,9 @@ public class RandomFragment2 extends Fragment {
 
 	private void updateFavorite(Drink d) {
 		if (d != null && d.isFavorite()) {
-			btnFav.setImageResource(R.drawable.circle_drawable_heart);
+			btnFav.setImageResource(R.drawable.round_heart);
 		} else {
-			btnFav.setImageResource(R.drawable.circle_drawable_heart_outline);
+			btnFav.setImageResource(R.drawable.round_heart_border);
 		}
 	}
 

@@ -111,13 +111,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		ImageButton btnBack = findViewById(R.id.btn_back);
 		btnBack.setOnClickListener(v -> finish());
 		btnFav = findViewById(R.id.btn_favorite);
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			btnFav.setImageResource(R.drawable.circle_drawable_heart_outline);
-			btnBack.setImageResource(R.drawable.circle_drawable_arrow);
-		} else {
-			btnFav.setImageResource(R.drawable.heart_outline);
-			btnBack.setImageResource(R.drawable.arrow_left);
-		}
 		btnFav.setOnClickListener(v ->
 				compositeDisposable.add(viewModel.reverseFavorite(ids.get(viewPager.getCurrentItem()))
 						.subscribeOn(Schedulers.io())
@@ -243,19 +236,19 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	}
 
 	private void updateFavorite(Drink d) {
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			if (d != null && d.isFavorite()) {
-				btnFav.setImageResource(R.drawable.circle_drawable_heart);
+				btnFav.setImageResource(R.drawable.round_heart);
 			} else {
-				btnFav.setImageResource(R.drawable.circle_drawable_heart_outline);
+				btnFav.setImageResource(R.drawable.round_heart_border);
 			}
-		} else {
-			if (d != null && d.isFavorite()) {
-				btnFav.setImageResource(R.drawable.heart);
-			} else {
-				btnFav.setImageResource(R.drawable.heart_outline);
-			}
-		}
+//		} else {
+//			if (d != null && d.isFavorite()) {
+//				btnFav.setImageResource(R.drawable.heart);
+//			} else {
+//				btnFav.setImageResource(R.drawable.heart_outline);
+//			}
+//		}
 	}
 
 	private void updateHistory(int pos) {
