@@ -139,6 +139,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private int selectedFilter = -1;
 	private boolean isSearchOpen = false;
+	private boolean openSearchClicked = false;
 
 	public static CocktailsListFragment newInstance(int fragmentType) {
 		CocktailsListFragment fragment = new CocktailsListFragment();
@@ -711,6 +712,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			public boolean onMenuItemActionExpand(MenuItem item) {
 				Timber.v("onMenuItemActionExpand");
 				isSearchOpen = true;
+				openSearchClicked = true;
 				searchView.setQuery(prefs.getLastSearchString(), false);
 				if (touchLayout.getVisibility() == View.VISIBLE) {
 					showMenu();
@@ -750,7 +752,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					mAdapter.applyFilter(newText);
 					extractIds(mAdapter.getData());
 				} else if (fragmentType == TYPE_NORMAL && isSearchOpen) {
-					applySearch(newText, true);
+					if (openSearchClicked && newText.isEmpty()) {
+						openSearchClicked = false;
+						searchView.setQuery(prefs.getLastSearchString(), false);
+					} else {
+						applySearch(newText, true);
+					}
 				}
 				return false;
 			}
@@ -762,9 +769,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		// Set on click listener
 		closeButton.setOnClickListener(v -> {
 			Timber.v("closeBtnClick");
+			isSearchOpen = false;
 			mPresenter.cancelSearch();
 			//Clear query
-			searchView.setQuery("", false);
+//			searchView.setQuery("", false);
 			//Collapse the action view
 			searchView.onActionViewCollapsed();
 			//Collapse the search widget
@@ -994,12 +1002,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			);
 		} else {
 			SearchView searchView = ((SearchView)searchMenu.getActionView());
-			//Collapse the action view
-			searchView.onActionViewCollapsed();
-			//Collapse the search widget
-			searchMenu.collapseActionView();
-			applySearch(searchView.getQuery().toString(), true);
-
+			if (!searchView.isIconified()) {
+				//Collapse the action view
+//				searchView.onActionViewCollapsed();
+				//Collapse the search widget
+				searchMenu.collapseActionView();
+//				applySearch(searchView.getQuery().toString(), true);
+			}
 			touchLayout.setVisibility(View.VISIBLE);
 			if (touchLayout.getHeight() == 0) {
 				touchLayout.setTranslationY(-AndroidUtils.dpToPx(800));
