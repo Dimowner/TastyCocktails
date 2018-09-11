@@ -24,11 +24,14 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.dagger.application.AppComponent;
 import com.dimowner.tastycocktails.dagger.application.AppModule;
 import com.dimowner.tastycocktails.dagger.application.DaggerAppComponent;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AppStartTracker;
+
+import javax.inject.Inject;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
@@ -42,6 +45,8 @@ public class TCApplication extends Application {
 	final static String CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
 	private NetworkStateChangeReceiver networkStateChangeReceiver;
 	private static boolean isConnectedToNetwork = false;
+	@Inject
+	MixPanel mixPanel;
 
 	private AppStartTracker startTracker = new AppStartTracker();
 
@@ -49,8 +54,16 @@ public class TCApplication extends Application {
 		return ((TCApplication) context).getStartTracker();
 	}
 
+	public static void event(Context context, String event) {
+		((TCApplication) context).getMixPanel().trackData(event);
+	}
+
 	private AppStartTracker getStartTracker() {
 		return startTracker;
+	}
+
+	private MixPanel getMixPanel() {
+		return mixPanel;
 	}
 
 	public static boolean isConnected() {
@@ -77,12 +90,15 @@ public class TCApplication extends Application {
 		super.onCreate();
 		Fabric.with(this, new Crashlytics());
 		appComponent = prepareAppComponent().build();
+		appComponent.inject(this);
 
 
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(CONNECTIVITY_ACTION);
 		networkStateChangeReceiver = new NetworkStateChangeReceiver();
 		registerReceiver(networkStateChangeReceiver, intentFilter);
+
+		registerActivityLifecycleCallbacks(mixPanel);
 	}
 
 	@Override

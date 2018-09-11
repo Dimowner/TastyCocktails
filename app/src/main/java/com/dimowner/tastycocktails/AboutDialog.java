@@ -36,9 +36,9 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.widget.TextView;
 
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.licences.LicenceActivity;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 
@@ -141,6 +141,8 @@ public class AboutDialog extends DialogFragment {
 //			View decorView = alertDialog.getWindow().getDecorView();
 //			alertDialog.setOnShowListener(dialogInterface -> revealShow(decorView));
 //		}
+
+		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_ABOUT);
 		return alertDialog;
 	}
 
@@ -154,6 +156,7 @@ public class AboutDialog extends DialogFragment {
 	}
 
 	public void rateApp() {
+		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RATE_APP);
 		try {
 			Intent rateIntent = rateIntentForUrl("market://details");
 			startActivity(rateIntent);

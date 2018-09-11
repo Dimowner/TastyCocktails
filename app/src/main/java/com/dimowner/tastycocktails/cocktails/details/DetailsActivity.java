@@ -34,6 +34,7 @@ import javax.inject.Inject;
 
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.dagger.details.DetailsModule;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 
@@ -102,6 +103,7 @@ public class DetailsActivity extends AppCompatActivity {
 		}
 
 //		AnimationUtil.physBasedRevealAnimation(toolbar.getChildAt(0));
+		TCApplication.event(getApplicationContext(), MixPanel.EVENT_COCKTAIL_DETAILS);
 	}
 
 	@Override

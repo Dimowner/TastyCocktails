@@ -40,6 +40,7 @@ import javax.inject.Inject;
 
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity;
 import com.dimowner.tastycocktails.cocktails.details.IngredientsAdapter;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
@@ -103,7 +104,10 @@ public class RandomFragment extends Fragment {
 			}
 		});
 		fab = view.findViewById(R.id.fab);
-		fab.setOnClickListener(v -> mPresenter.loadRandomDrink());
+		fab.setOnClickListener(v -> {
+				mPresenter.loadRandomDrink();
+				TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_NEW_RANDOM_DRINK);
+			});
 
 		btnFavorite.setOnClickListener(v -> mPresenter.reverseFavorite());
 
@@ -117,6 +121,7 @@ public class RandomFragment extends Fragment {
 
 			mPresenter.bindView(mAdapter);
 		}
+		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RANDOM);
 	}
 
 	@Override

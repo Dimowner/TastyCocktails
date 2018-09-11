@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.bumptech.glide.Glide;
+import com.dimowner.tastycocktails.TCApplication;
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.widget.ThresholdListener;
 import com.dimowner.tastycocktails.widget.photoview.MyPhotoAttacher;
 import com.github.chrisbanes.photoview.PhotoView;

@@ -64,6 +64,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
 import com.dimowner.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
 import com.dimowner.tastycocktails.cocktails.list.EndlessRecyclerViewScrollListener;
@@ -161,6 +162,18 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 		if (getArguments() != null && getArguments().containsKey(EXTRAS_KEY_TYPE)) {
 			fragmentType = getArguments().getInt(EXTRAS_KEY_TYPE);
+		}
+
+		switch (fragmentType) {
+			case TYPE_NORMAL:
+				TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_HOME);
+				break;
+			case TYPE_FAVORITES:
+				TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_FAVORITES);
+				break;
+			case TYPE_HISTORY:
+				TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_HISTORY);
+				break;
 		}
 	}
 

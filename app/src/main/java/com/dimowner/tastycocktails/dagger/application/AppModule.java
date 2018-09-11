@@ -27,6 +27,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.data.LocalRepository;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.data.RemoteRepository;
@@ -71,6 +73,12 @@ public class AppModule {
 		//Remote repo passes last query result into Local repo for saving.
 //		remoteRepository.setOnLoadListener(localRepository::cacheIntoLocalDatabase);
 		return new Repository(localRepository, remoteRepository);
+	}
+
+	@Provides
+	@Singleton
+	MixPanel provideMixPanel() {
+		return new MixPanel();
 	}
 
 	@Provides

@@ -50,6 +50,7 @@ import com.bumptech.glide.request.target.Target;
 import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.cocktails.details.DetailsViewModel;
 import com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity;
 import com.dimowner.tastycocktails.cocktails.details.IngredientItem;
@@ -181,6 +182,8 @@ public class RandomFragment2 extends Fragment {
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(this::showDrink));
 		}
+
+		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RANDOM);
 	}
 
 	private void showDrink(Drink drink) {

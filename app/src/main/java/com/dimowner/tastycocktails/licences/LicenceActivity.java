@@ -27,6 +27,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.dimowner.tastycocktails.R;
+import com.dimowner.tastycocktails.TCApplication;
+import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 
 /**
@@ -56,6 +58,7 @@ public class LicenceActivity extends AppCompatActivity {
 		if (savedInstanceState == null) {
 			AndroidUtils.handleNavigationBarColor(this);
 		}
+		TCApplication.event(getApplicationContext(), MixPanel.EVENT_LICENCES);
 	}
 
 	@Override
