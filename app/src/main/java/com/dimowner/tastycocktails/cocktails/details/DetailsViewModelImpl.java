@@ -11,6 +11,7 @@ import com.dimowner.tastycocktails.data.model.Drink;
 import java.util.Date;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import timber.log.Timber;
 
@@ -30,9 +31,9 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 	}
 
 	@Override
-	public Single<Drink> getDrink(long id, int position) {
-		return repository.getLocalCocktailRx(id)
-				.doOnSuccess(drink -> cacheDrink(drink, position));
+	public Flowable<Drink> getDrink(long id, int position) {
+		return repository.getCocktailRx(id)
+				.doOnNext(drink -> cacheDrink(drink, position));
 	}
 
 	@Override

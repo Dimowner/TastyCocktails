@@ -76,7 +76,16 @@ public class Repository implements RepositoryContract {
 
 	@Override
 	public Flowable<List<Drink>> loadFilteredDrinks(String category, String ingredient, String glass, String alcoholic) {
-		return localRepository.loadFilteredDrinks(category, ingredient, glass, alcoholic);
+		return localRepository.loadFilteredDrinks(category, ingredient, glass, alcoholic)
+				.flatMap(d -> {
+					if (d.size() == 0) {
+						return remoteRepository.loadFilteredDrinks(category, ingredient, glass, alcoholic)
+										.subscribeOn(Schedulers.io())
+										.doOnNext(drinks -> localRepository.cacheDrinks(drinks));
+					} else {
+						return Flowable.just(d);
+					}
+				});
 	}
 
 	@Override

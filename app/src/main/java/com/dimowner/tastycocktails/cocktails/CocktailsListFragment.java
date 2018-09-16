@@ -319,28 +319,46 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		Toolbar toolbar = parentActivity.findViewById(R.id.toolbar);
 		toolbarMenuItemAnimation(toolbar);
 
-//		if (savedInstanceState == null) {
-			initAdapter();
+		initAdapter();
+		if (prefs.isFirstRun()) {
+			Button btnGetStarted = view.findViewById(R.id.get_started);
+			btnGetStarted.setOnClickListener(view1 -> executeFirsRun());
+		}
+	}
 
-			if (prefs.isFirstRun()) {
-				String values[] = getResources().getStringArray(R.array.filter_categories);
-				prefs.setFirstRunDefaultValues(Prefs.SEARCH_TYPE_FILTER, 1, values[1]);
-				Button btnGetStarted = view.findViewById(R.id.get_started);
-				btnGetStarted.setOnClickListener(view1 -> executeFirsRun());
-				categorySpinner.setSelection(1);
+	@Override
+	public void onStart() {
+		super.onStart();
+		mPresenter.bindView(this);
+		if (prefs.isFirstRun()) {
+			String values[] = getResources().getStringArray(R.array.filter_categories);
+			prefs.setFirstRunDefaultValues(Prefs.SEARCH_TYPE_FILTER, 1, values[1]);
+			categorySpinner.setSelection(1);
 
-				mPresenter.loadFilteredList(
-						prefs.getFilterCategory(),
-						prefs.getFilterIngredient(),
-						prefs.getFilterGlass(),
-						prefs.getFilterAlcoholic());
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-					parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-				}
-			} else {
-				loadData();
+			mPresenter.loadFilteredList(
+					prefs.getFilterCategory(),
+					prefs.getFilterIngredient(),
+					prefs.getFilterGlass(),
+					prefs.getFilterAlcoholic());
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 			}
-//		}
+		} else {
+			loadData();
+		}
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		mPresenter.unbindView();
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		mPresenter = null;
+		compositeDisposable.dispose();
 	}
 
 	private void loadData() {
@@ -694,14 +712,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					mPresenter.returnToHistory(item.getId(), item.getHistory());
 				});
 		snackbar.show();
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		mPresenter.unbindView();
-		mPresenter = null;
-		compositeDisposable.dispose();
 	}
 
 	@Override

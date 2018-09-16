@@ -117,7 +117,45 @@ public class RemoteRepository implements RepositoryContract {
 
 	@Override
 	public Flowable<List<Drink>> loadFilteredDrinks(String category, String ingredient, String glass, String alcoholic) {
-		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+		if (category != null && !category.isEmpty()) {
+			return getCocktailApi().searchByCategory(category)
+					.map(ModelMapper::convertDrinksToList)
+					.map(drinks -> {
+						for (int i = 0; i < drinks.size(); i++) {
+							drinks.get(i).setStrCategory(category);
+						}
+						return drinks;
+					});
+		} else if (ingredient != null && !ingredient.isEmpty()) {
+			return getCocktailApi().searchByIngredient(ingredient)
+					.map(ModelMapper::convertDrinksToList)
+					.map(drinks -> {
+						for (int i = 0; i < drinks.size(); i++) {
+							drinks.get(i).setStrIngredient1(ingredient);
+						}
+						return drinks;
+					});
+		} else if (glass != null && !glass.isEmpty()) {
+			return getCocktailApi().searchByGlass(glass)
+					.map(ModelMapper::convertDrinksToList)
+					.map(drinks -> {
+						for (int i = 0; i < drinks.size(); i++) {
+							drinks.get(i).setStrGlass(glass);
+						}
+						return drinks;
+					});
+		} else if (alcoholic != null && !alcoholic.isEmpty()) {
+			return getCocktailApi().searchByAlcoholic(alcoholic)
+					.map(ModelMapper::convertDrinksToList)
+					.map(drinks -> {
+						for (int i = 0; i < drinks.size(); i++) {
+							drinks.get(i).setStrAlcoholic(alcoholic);
+						}
+						return drinks;
+					});
+		} else {
+			throw new UnsupportedOperationException("Error on filter apply!");
+		}
 	}
 
 	@Override

@@ -3,11 +3,12 @@ package com.dimowner.tastycocktails.cocktails.details;
 import com.dimowner.tastycocktails.data.model.Drink;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 public interface DetailsViewModel {
 
-	Single<Drink> getDrink(long id, int position);
+	Flowable<Drink> getDrink(long id, int position);
 
 	Single<Drink> getRandomDrink();
 

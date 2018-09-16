@@ -215,10 +215,10 @@ public class LocalRepository implements RepositoryContract {
 
 	@Override
 	public Flowable<Drink> getCocktailRx(long id) {
-		//This method called here to prevent infinite loop in flowable
-		updateDrinkHistory(id, new Date().getTime())
-				.subscribeOn(Schedulers.io())
-				.subscribe(() -> {}, Timber::e);
+//		//This method called here to prevent infinite loop in flowable
+//		updateDrinkHistory(id, new Date().getTime())
+//				.subscribeOn(Schedulers.io())
+//				.subscribe(() -> {}, Timber::e);
 		return getRepositoriesDao().getDrinkRx(id).distinct();
 //		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
 //			if (count > 0) {
@@ -375,6 +375,7 @@ public class LocalRepository implements RepositoryContract {
 				.subscribe(drinks -> {
 					ArrayList<Long> ids = new ArrayList<>(drinks.size());
 					for (int i = 0; i < drinks.size(); i++) {
+						drinks.get(i).setHistory(0);
 						ids.add(drinks.get(i).getIdDrink());
 						Gson gson = new GsonBuilder().create();
 						String json = gson.toJson(drinks.get(i));
