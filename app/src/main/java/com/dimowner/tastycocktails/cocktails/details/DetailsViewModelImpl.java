@@ -76,9 +76,13 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 
 	private Drink findDrinkById(long id) {
 		for (int i = 0; i < drinks.size(); i++) {
-			long key = drinks.valueAt(i).getIdDrink();
-			if (key == id) {
-				return drinks.valueAt(i);
+			//TODO: find why drink is NULL in some case
+			Drink drink = drinks.valueAt(i);
+			if (drink != null) {
+				long key = drink.getIdDrink();
+				if (key == id) {
+					return drinks.valueAt(i);
+				}
 			}
 		}
 		return null;

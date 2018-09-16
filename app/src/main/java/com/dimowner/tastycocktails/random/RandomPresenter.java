@@ -81,26 +81,28 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 
 	@Override
 	public void reverseFavorite() {
-		if (drink.isFavorite()) {
-			compositeDisposable.add(repository.removeFromFavorites(drink.getIdDrink())
-					.subscribeOn(Schedulers.io())
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(() -> {
+		if (drink != null) {
+			if (drink.isFavorite()) {
+				compositeDisposable.add(repository.removeFromFavorites(drink.getIdDrink())
+						.subscribeOn(Schedulers.io())
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(() -> {
 							drink.inverseFavorite();
-						view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrCategory(),
-								drink.getStrAlcoholic(), drink.getStrGlass(), drink.isFavorite());
+							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrCategory(),
+									drink.getStrAlcoholic(), drink.getStrGlass(), drink.isFavorite());
 							view.showSnackBar(getApplication().getResources().getString(R.string.removed_from_favorites, drink.getStrDrink()));
 						}, Timber::e));
-		} else {
-			compositeDisposable.add(repository.addToFavorites(drink)
-					.subscribeOn(Schedulers.io())
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(() -> {
+			} else {
+				compositeDisposable.add(repository.addToFavorites(drink)
+						.subscribeOn(Schedulers.io())
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(() -> {
 //							drink.inverseFavorite(); //removed intentionally
 							view.showSnackBar(getApplication().getResources().getString(R.string.added_to_favorites, drink.getStrDrink()));
-						view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrCategory(),
-								drink.getStrAlcoholic(), drink.getStrGlass(), drink.isFavorite());
+							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrCategory(),
+									drink.getStrAlcoholic(), drink.getStrGlass(), drink.isFavorite());
 						}, Timber::e));
+			}
 		}
 	}
 
