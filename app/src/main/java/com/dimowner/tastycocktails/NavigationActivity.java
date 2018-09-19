@@ -23,6 +23,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -42,6 +44,11 @@ import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.random.RandomFragment;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AppStartTracker;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 
@@ -116,6 +123,46 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		}
 
 		tracker.activityOnCreateEnd();
+
+		// Write a message to the database
+		FirebaseDatabase database = FirebaseDatabase.getInstance();
+		DatabaseReference myRef = database.getReference("messages");
+
+		// Read from the database
+		myRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+				// This method is called once with the initial value and again
+				// whenever data at this location is updated.
+				MyMessage value = dataSnapshot.getValue(MyMessage.class);
+				Log.v("TAG", "Value is: " + value.toString());
+			}
+
+			@Override
+			public void onCancelled(@NonNull DatabaseError error) {
+				// Failed to read value
+				Log.v("TAG", "Failed to read value.", error.toException());
+			}
+		});
+
+//		MyMessage tempMessage = new MyMessage("Test1");
+//		myRef.push()
+//				.setValue(tempMessage, (databaseError, databaseReference) -> {
+//					if (databaseError == null) {
+////						String key = databaseReference.getKey();
+////						StorageReference storageReference =
+////								FirebaseStorage.getInstance()
+////										.getReference(mFirebaseUser.getUid())
+////										.child(key)
+////										.child(uri.getLastPathSegment());
+////
+////						putImageInStorage(storageReference, uri, key);
+//					} else {
+//						Log.d("TAG", "Unable to write message to database.",
+//								databaseError.toException());
+//					}
+//				});
+//		Timber.v("setValue");
 	}
 
 	@Override

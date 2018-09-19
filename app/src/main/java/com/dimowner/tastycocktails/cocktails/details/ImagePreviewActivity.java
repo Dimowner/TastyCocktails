@@ -63,9 +63,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
 				finishActivity();
 			}
 		});
-		//Way to set custom attacher to PhotoView
-		PhotoViewAttacher a = photoView.getAttacher();
-		a = attacher;
 
 		Glide.with(getApplicationContext())
 				.load(getIntent().getStringExtra(EXTRAS_KEY_IMAGE_PATH))

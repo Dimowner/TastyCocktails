@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.dimowner.tastycocktails.BuildConfig;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import com.dimowner.tastycocktails.R;
@@ -55,16 +56,19 @@ public class MixPanel implements Application.ActivityLifecycleCallbacks {
 	}
 
 	public void trackData(String event, Bundle params) {
-		JSONObject props = new JSONObject();
+		//TODO: find way to send events only in release build
+		if (!BuildConfig.DEBUG) {
+			JSONObject props = new JSONObject();
 
-		for (String key : params.keySet()) {
-			try {
-				props.put(key, params.get(key));
-			} catch (JSONException e) {
-				e.printStackTrace();
+			for (String key : params.keySet()) {
+				try {
+					props.put(key, params.get(key));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
+			mixpanel.track(event, props);
 		}
-		mixpanel.track(event, props);
 	}
 
 	public void trackData(String event) {
