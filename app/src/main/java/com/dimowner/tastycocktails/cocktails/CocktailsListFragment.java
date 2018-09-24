@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -112,6 +113,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private TouchLayout touchLayout;
 	private View filterMenu;
 	private SwipeRefreshLayout mRefreshLayout;
+	private FloatingActionButton btnUp;
 
 	private Spinner categorySpinner;
 	private Spinner ingredientSpinner;
@@ -192,6 +194,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		touchLayout = view.findViewById(R.id.touch_layout);
 		mWelcomePanel = view.findViewById(R.id.welcome_panel);
 		mTxtEmpty = view.findViewById(R.id.txt_empty);
+		btnUp = view.findViewById(R.id.fab);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 
@@ -200,6 +203,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mRefreshLayout.canChildScrollUp();
 			loadData();
 		});
+		btnUp.setOnClickListener(v -> mRecyclerView.smoothScrollToPosition(0));
 
 		//Hide show filters panel on scroll list
 		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

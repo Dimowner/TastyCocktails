@@ -16,6 +16,7 @@
   -->
 <FrameLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/coordinator_root"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -113,4 +114,12 @@
 
 	</ScrollView>
 
+	<android.support.design.widget.FloatingActionButton
+			android:id="@+id/fab"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/padding_standard"
+			android:layout_gravity="bottom|end"
+			app:srcCompat="@drawable/ic_round_arrow_upward_24px"
+			tools:visibility="visible"/>
 </FrameLayout>
