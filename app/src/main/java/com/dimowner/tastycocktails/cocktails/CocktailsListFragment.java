@@ -608,7 +608,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 		mAdapter.setItemClickListener((view1, position) -> {
 			hideKeyboard();
-			startActivity(PagerDetailsActivity.getStartIntent(getContext(), ids, position));
+			if (ids != null && ids.size() > 0) {
+				startActivity(PagerDetailsActivity.getStartIntent(getContext(), ids, position));
+			} else {
+				Timber.e("Can't open preview! ids is NULL or empty");
+			}
 		});
 //				startDetailsActivity(mAdapter.getItem(position), view1));
 		mAdapter.setOnFavoriteClickListener((view12, position, id, action) -> {

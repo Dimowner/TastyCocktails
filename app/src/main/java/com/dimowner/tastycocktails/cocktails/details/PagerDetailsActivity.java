@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
-import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.dagger.details.DetailsModule;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
@@ -33,18 +32,18 @@ import timber.log.Timber;
 
 public class PagerDetailsActivity  extends AppCompatActivity {
 
-	public static final int TYPE_SEARCH = 1;
-	public static final int TYPE_FILETERS= 2;
-	public static final int TYPE_FAVORITES= 3;
-	public static final int TYPE_HISTORY= 4;
-
-	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
-	public static final String EXTRAS_KEY_TYPE = "details_type";
-	public static final String EXTRAS_KEY_ACTIVE_FILTER = "active_filter";
-	public static final String EXTRAS_KEY_FILTER_VALUE = "filter_value";
+//	public static final int TYPE_SEARCH = 1;
+//	public static final int TYPE_FILETERS= 2;
+//	public static final int TYPE_FAVORITES= 3;
+//	public static final int TYPE_HISTORY= 4;
+//
+//	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
+//	public static final String EXTRAS_KEY_TYPE = "details_type";
+//	public static final String EXTRAS_KEY_ACTIVE_FILTER = "active_filter";
+//	public static final String EXTRAS_KEY_FILTER_VALUE = "filter_value";
 	public static final String EXTRAS_KEY_IDS = "items_ids";
 	public static final String EXTRAS_KEY_ACTIVE_ITEM_POS = "active_item_pos";
-	public static final String EXTRAS_KEY_ID = "cocktail_id";
+//	public static final String EXTRAS_KEY_ID = "cocktail_id";
 
 	@Inject
 	DetailsViewModel viewModel;
@@ -71,24 +70,24 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		return i;
 	}
 
-	public static Intent getStartIntent(Context context, int type) {
-		Intent i = new Intent(context, PagerDetailsActivity.class);
-		i.putExtra(EXTRAS_KEY_TYPE, type);
-		if (type == TYPE_FILETERS) {
-			throw new RuntimeException("Not appropriate method call. Please call another getStartIntent for this type with additional params");
-		}
-		return i;
-	}
-
-	public static Intent getStartIntent(Context context, int type, int activeFilter, String filterValue) {
-		Intent i = new Intent(context, PagerDetailsActivity.class);
-		i.putExtra(EXTRAS_KEY_TYPE, type);
-		if (type == TYPE_FILETERS) {
-			i.putExtra(EXTRAS_KEY_ACTIVE_FILTER, activeFilter);
-			i.putExtra(EXTRAS_KEY_FILTER_VALUE, filterValue);
-		}
-		return i;
-	}
+//	public static Intent getStartIntent(Context context, int type) {
+//		Intent i = new Intent(context, PagerDetailsActivity.class);
+//		i.putExtra(EXTRAS_KEY_TYPE, type);
+//		if (type == TYPE_FILETERS) {
+//			throw new RuntimeException("Not appropriate method call. Please call another getStartIntent for this type with additional params");
+//		}
+//		return i;
+//	}
+//
+//	public static Intent getStartIntent(Context context, int type, int activeFilter, String filterValue) {
+//		Intent i = new Intent(context, PagerDetailsActivity.class);
+//		i.putExtra(EXTRAS_KEY_TYPE, type);
+//		if (type == TYPE_FILETERS) {
+//			i.putExtra(EXTRAS_KEY_ACTIVE_FILTER, activeFilter);
+//			i.putExtra(EXTRAS_KEY_FILTER_VALUE, filterValue);
+//		}
+//		return i;
+//	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
@@ -35,6 +36,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import timber.log.Timber;
 
+import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
@@ -262,6 +264,8 @@ public class RemoteRepository implements RepositoryContract {
 			interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 			OkHttpClient client = new OkHttpClient.Builder()
 					.addInterceptor(interceptor)
+					.connectTimeout(AppConstants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+					.readTimeout(AppConstants.READ_TIMEOUT, TimeUnit.SECONDS)
 					.build();
 
 			retrofit = new Retrofit.Builder()
