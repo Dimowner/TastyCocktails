@@ -42,6 +42,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -143,6 +144,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private int selectedFilter = -1;
 	private boolean isSearchOpen = false;
 	private boolean openSearchClicked = false;
+	private int defaultBtnUpY = 0;
+
 
 	public static CocktailsListFragment newInstance(int fragmentType) {
 		CocktailsListFragment fragment = new CocktailsListFragment();
@@ -205,24 +208,29 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		});
 		btnUp.setOnClickListener(v -> mRecyclerView.smoothScrollToPosition(0));
 
+		//Calculate position by default for btn up
+		ViewTreeObserver vto = btnUp.getViewTreeObserver();
+		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				ViewTreeObserver obs = btnUp.getViewTreeObserver();
+				defaultBtnUpY = btnUp.getHeight() + (int) getResources().getDimension(R.dimen.padding_huge);
+				btnUp.setTranslationY(defaultBtnUpY);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+					obs.removeOnGlobalLayoutListener(this);
+				} else {
+					obs.removeGlobalOnLayoutListener(this);
+				}
+			}
+		});
+
 		//Hide show filters panel on scroll list
 		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-				if (touchLayout.getVisibility() == View.VISIBLE) {
-					float inset = touchLayout.getTranslationY() - dy;
-					touchLayout.setReturnPositionY(inset);
-					if (touchLayout.getTranslationY() <= -touchLayout.getHeight()) {
-						touchLayout.setVisibility(View.GONE);
-						AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
-					}
-					if (touchLayout.getTranslationY() <= 0 && inset > 0) {
-						touchLayout.setTranslationY(0);
-					} else {
-						touchLayout.setTranslationY(inset);
-					}
-				}
+				handleFiltersPanelScroll(dy);
+				handleBtnUpScroll(dy);
 			}
 		});
 
@@ -1052,6 +1060,33 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 //							touchLayout.setElevation(getResources().getDimension(R.dimen.toolbar_elevation)));
 		}
 		touchLayout.setReturnPositionY(0);
+	}
+
+	private void handleBtnUpScroll(int dy) {
+		if (btnUp != null && ((dy < 0 && btnUp.getTranslationY() < defaultBtnUpY)
+				|| (dy > 0 && btnUp.getTranslationY() > 0))) {
+
+			float inset = btnUp.getTranslationY() - dy;
+			if (inset < 0) { inset = 0; }
+			if (inset > defaultBtnUpY) { inset = defaultBtnUpY; }
+			btnUp.setTranslationY(inset);
+		}
+	}
+
+	private void handleFiltersPanelScroll(int dy) {
+		if (touchLayout.getVisibility() == View.VISIBLE) {
+			float inset = touchLayout.getTranslationY() - dy;
+			touchLayout.setReturnPositionY(inset);
+			if (touchLayout.getTranslationY() <= -touchLayout.getHeight()) {
+				touchLayout.setVisibility(View.GONE);
+				AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
+			}
+			if (touchLayout.getTranslationY() <= 0 && inset > 0) {
+				touchLayout.setTranslationY(0);
+			} else {
+				touchLayout.setTranslationY(inset);
+			}
+		}
 	}
 
 	public class MyScrollListener extends EndlessRecyclerViewScrollListener {
