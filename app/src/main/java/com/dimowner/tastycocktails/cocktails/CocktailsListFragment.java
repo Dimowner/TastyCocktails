@@ -29,7 +29,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -98,6 +97,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	public static final int FILTER_TYPE_INGREDIENT = 2;
 	public static final int FILTER_TYPE_GLASS = 3;
 	public static final int FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC = 4;
+	public static final int ITEM_COUNT_WITHOUT_BTN_UP = 15;
 
 	public static final String EXTRAS_KEY_TYPE = "search_fragment_type";
 
@@ -122,6 +122,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private Spinner alcoholicSpinner;
 
 	private CocktailsRecyclerAdapter mAdapter;
+	private HorizontalDividerItemDecoration dividerItemDecoration;
 
 	private MenuItem searchMenu;
 
@@ -238,7 +239,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		RecyclerView.LayoutManager mLayoutManager = new AppLinearLayoutManager(getContext());
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		if (getContext() != null) {
-			mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), ((AppLinearLayoutManager) mLayoutManager).getOrientation()));
+			dividerItemDecoration = new HorizontalDividerItemDecoration(getContext());
+			mRecyclerView.addItemDecoration(dividerItemDecoration);
 		}
 		mRecyclerView.addOnScrollListener(new MyScrollListener(mLayoutManager));
 
@@ -924,6 +926,16 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	@Override
 	public void displayData(List<ListItem> data) {
 		extractIds(data);
+		//Handle btnUp show logic.
+		if (data.size() > ITEM_COUNT_WITHOUT_BTN_UP) {
+			btnUp.setVisibility(View.VISIBLE);
+			mAdapter.showFooter(true);
+			dividerItemDecoration.showDividerForLastItem(false);
+		} else {
+			btnUp.setVisibility(View.GONE);
+			mAdapter.showFooter(false);
+			dividerItemDecoration.showDividerForLastItem(true);
+		}
 		if (prefs.isFirstRun() && fragmentType == TYPE_NORMAL) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.VISIBLE);

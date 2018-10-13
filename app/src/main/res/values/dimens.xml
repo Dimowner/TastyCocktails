@@ -38,4 +38,6 @@
 	<dimen name="under_toolbar_elevation">2dp</dimen>
 	<dimen name="filters_label_width">110dp</dimen>
 
+	<dimen name="footer_height">90dp</dimen>
+
 </resources>

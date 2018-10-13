@@ -54,8 +54,9 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private final static int VIEW_TYPE_NORMAL = 1;
 	private final static int VIEW_TYPE_PROGRESS = 2;
+	private final static int VIEW_TYPE_FOOTER = 3;
 
-	private boolean showFooter;
+	private boolean showFooter = true;
 
 	private List<ListItem> mBaseData = new ArrayList<>();
 
@@ -109,6 +110,15 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		}
 	}
 
+	public static class FooterViewHolder extends RecyclerView.ViewHolder {
+		final View view;
+
+		FooterViewHolder(View itemView){
+			super(itemView);
+			view = itemView;
+		}
+	}
+
 	public CocktailsRecyclerAdapter(int searchFragmentType, int layoutResId, Prefs prefs) {
 		this.mShowingData = new ArrayList<>();
 		this.searchFragmentType = searchFragmentType;
@@ -136,6 +146,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			View v = LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.list_item_progress, parent, false);
 			return new LoadingViewHolder(v);
+		} else if (viewType == VIEW_TYPE_FOOTER) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_footer, parent, false);
+			v.setMinimumHeight(R.dimen.padding_huge);
+			return new FooterViewHolder(v);
 		} else {
 			return null;
 		}
@@ -219,7 +234,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	@Override
 	public int getItemViewType(int position) {
-		return position >= mShowingData.size() ? VIEW_TYPE_PROGRESS : VIEW_TYPE_NORMAL;
+		return position >= mShowingData.size() ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
 	}
 
 	public ListItem getItem(int pos) {
