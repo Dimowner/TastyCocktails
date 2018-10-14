@@ -36,7 +36,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.dimowner.tastycocktails.R;

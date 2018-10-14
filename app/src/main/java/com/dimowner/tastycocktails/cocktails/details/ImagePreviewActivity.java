@@ -62,6 +62,8 @@ public class ImagePreviewActivity extends AppCompatActivity {
 			public void onBottomThreshold() {
 				finishActivity();
 			}
+			@Override public void onTouchDown() { }
+			@Override public void onTouchUp() { }
 		});
 		//Way to set custom attacher to PhotoView
 		PhotoViewAttacher a = photoView.getAttacher();

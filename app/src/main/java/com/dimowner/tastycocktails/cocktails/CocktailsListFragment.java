@@ -47,7 +47,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -145,6 +144,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private int selectedFilter = -1;
 	private boolean isSearchOpen = false;
 	private boolean openSearchClicked = false;
+	private boolean onPanelTouch = false;
 	private int defaultBtnUpY = 0;
 
 
@@ -328,6 +328,16 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				public void onBottomThreshold() {
 					invertMenuButton();
 					showMenu();
+				}
+
+				@Override
+				public void onTouchDown() {
+					onPanelTouch = true;
+				}
+
+				@Override
+				public void onTouchUp() {
+					onPanelTouch = false;
 				}
 			});
 		}
@@ -1087,7 +1097,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	private void handleFiltersPanelScroll(int dy) {
-		if (touchLayout.getVisibility() == View.VISIBLE) {
+		if (touchLayout.getVisibility() == View.VISIBLE && !onPanelTouch) {
 			float inset = touchLayout.getTranslationY() - dy;
 			touchLayout.setReturnPositionY(inset);
 			if (touchLayout.getTranslationY() <= -touchLayout.getHeight()) {
