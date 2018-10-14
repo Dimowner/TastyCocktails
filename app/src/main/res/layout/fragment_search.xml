@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/coordinator_root"
@@ -122,4 +122,4 @@
 			android:layout_gravity="bottom|end"
 			app:srcCompat="@drawable/ic_round_arrow_upward_24px"
 			tools:visibility="visible"/>
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

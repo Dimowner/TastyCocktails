@@ -92,10 +92,7 @@ public class Repository implements RepositoryContract {
 	public Single<Drink> getRandomCocktail() {
 		if (TCApplication.isConnected()) {
 			return remoteRepository.getRandomCocktail()
-					.doOnSuccess(drink -> {
-						drink.setHistory(new Date().getTime());
-						localRepository.cacheIntoLocalDatabase(drink);
-					});
+					.doOnSuccess(drink -> localRepository.cacheIntoLocalDatabase(drink));
 		} else {
 			return localRepository.getRandomCocktail()
 					.doOnSuccess(drink -> {

@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -109,7 +110,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private RecyclerView mRecyclerView;
 	private ScrollView mWelcomePanel;
 	private TextView mTxtEmpty;
-	private FrameLayout mRoot;
+	private CoordinatorLayout mRoot;
 	private TouchLayout touchLayout;
 	private View filterMenu;
 	private SwipeRefreshLayout mRefreshLayout;
@@ -238,7 +239,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		RecyclerView.LayoutManager mLayoutManager = new AppLinearLayoutManager(getContext());
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		if (getContext() != null) {
-			dividerItemDecoration = new HorizontalDividerItemDecoration(getContext());
+			dividerItemDecoration = new HorizontalDividerItemDecoration(getContext(), ((AppLinearLayoutManager) mLayoutManager).getOrientation());
 			mRecyclerView.addItemDecoration(dividerItemDecoration);
 		}
 
@@ -253,12 +254,14 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		}
 
-		if (!prefs.isDrinksCached()) {
+		if (!prefs.isDrinksCached() && !prefs.isCacheFailed()) {
 			compositeDisposable.add(mPresenter.firstRunInitialization(getContext())
 					.subscribe(drinks1 -> {
 						Timber.d("Succeed to cache %d drinks!", drinks1.length);
 						if (drinks1.length > 0) {
 							prefs.setDrinksCached();
+						} else {
+							prefs.setCacheFailed();
 						}
 					}, Timber::e));
 		}

@@ -9,6 +9,7 @@ public class Prefs {
 
 	private static final String PREF_KEY_IS_FIRST_RUN = "is_first_run";
 	private static final String PREF_KEY_IS_DRINKS_CACHED = "is_cached_drinks3";
+	private static final String PREF_KEY_IS_CACHE_FAILED = "is_cache_failed";
 	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
 	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
 
@@ -47,6 +48,16 @@ public class Prefs {
 	public void setDrinksCached() {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putBoolean(PREF_KEY_IS_DRINKS_CACHED, true);
+		editor.apply();
+	}
+
+	public boolean isCacheFailed() {
+		return sharedPreferences.contains(PREF_KEY_IS_CACHE_FAILED) && sharedPreferences.getBoolean(PREF_KEY_IS_CACHE_FAILED, false);
+	}
+
+	public void setCacheFailed() {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_CACHE_FAILED, true);
 		editor.apply();
 	}
 
