@@ -17,10 +17,7 @@
 package com.dimowner.tastycocktails.dagger.details;
 
 import dagger.Subcomponent;
-import com.dimowner.tastycocktails.cocktails.details.DetailsActivity;
 import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
-import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity2;
-import com.dimowner.tastycocktails.random.RandomFragment2;
 
 /**
  * Created on 15.08.2017.
@@ -30,11 +27,5 @@ import com.dimowner.tastycocktails.random.RandomFragment2;
 @DetailsScoupe
 public interface DetailsComponent {
 
-	void injectDetails(DetailsActivity activity);
-
 	void injectPagerDetails(PagerDetailsActivity activity);
-
-	void injectPagerDetails2(PagerDetailsActivity2 activity);
-
-	void injectRandomFragment2(RandomFragment2 fragment);
 }

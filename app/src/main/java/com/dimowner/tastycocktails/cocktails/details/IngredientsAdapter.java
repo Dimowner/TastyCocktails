@@ -18,12 +18,10 @@ package com.dimowner.tastycocktails.cocktails.details;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.AbsSavedState;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -429,88 +427,38 @@ public class IngredientsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		this.onSnackBarListener = onSnackBarListener;
 	}
 
-	/**
-	 * Save adapters state
-	 * @return adapter state.
-	 */
-	public Parcelable onSaveInstanceState() {
-		SavedState ss = new SavedState(AbsSavedState.EMPTY_STATE);
-		ss.items = mShowingData.toArray(new IngredientItem[0]);
-		ss.name = name;
-		ss.description = description;
-		ss.imageUrl = imageUrl;
-		ss.category = category;
-		ss.alcoholic = alcoholic;
-		ss.glass = glass;
-		return ss;
+	public void onSaveAdapterState(Bundle bundle) {
+		if (mShowingData.size() > 0) {
+			//Convert List to ArrayList to prevent possible cast exception.
+			int size = mShowingData.size();
+			ArrayList<IngredientItem> list = new ArrayList<>(size);
+			for (int i = 0; i < size; i++) {
+				list.add(mShowingData.get(i));
+			}
+			bundle.putParcelableArrayList("ing_ad_showing_data", list);
+		}
+		bundle.putString("ing_ad_name", name);
+		bundle.putString("ing_ad_description", description);
+		bundle.putString("ing_ad_image_url", imageUrl);
+		bundle.putString("ing_ad_category", category);
+		bundle.putString("ing_ad_alcoholic", alcoholic);
+		bundle.putString("ing_ad_glass", glass);
+		bundle.putBoolean("ing_ad_multi_window", isInMultiWindow);
 	}
 
-	/**
-	 * Restore adapters state
-	 * @param state Adapter state.
-	 */
-	public void onRestoreInstanceState(Parcelable state) {
-		SavedState ss = (SavedState) state;
-		mShowingData = new ArrayList<>();
-		Collections.addAll(mShowingData, ss.items);
-		name = ss.name;
-		description = ss.description;
-		imageUrl = ss.imageUrl;
-		category = ss.category;
-		alcoholic  = ss.alcoholic;
-		glass = ss.glass;
-		notifyDataSetChanged();
-	}
-
-
-	/**
-	 * Object state
-	 */
-	public static class SavedState extends View.BaseSavedState {
-		SavedState(Parcelable superState) {
-			super(superState);
+	public void onRestoreAdapterSate(Bundle bundle) {
+		if (bundle.containsKey("ing_ad_showing_data")) {
+			mShowingData = bundle.getParcelableArrayList("ing_ad_showing_data");
+		} else {
+			mShowingData = new ArrayList<>();
 		}
-
-		private SavedState(Parcel in) {
-			super(in);
-			items = (IngredientItem[]) in.readParcelableArray(getClass().getClassLoader());
-			String[] strings = new String[6];
-			in.readStringArray(strings);
-			name = strings[0];
-			description = strings[1];
-			imageUrl = strings[2];
-			category = strings[3];
-			alcoholic = strings[4];
-			glass = strings[5];
-		}
-
-		@Override
-		public void writeToParcel(Parcel out, int flags) {
-			super.writeToParcel(out, flags);
-			out.writeParcelableArray(items, flags);
-			out.writeStringArray(new String[] {name, description, imageUrl, category, alcoholic, glass});
-		}
-
-		IngredientItem[] items;
-		String name;
-		String description;
-		String imageUrl;
-		String category;
-		String alcoholic;
-		String glass;
-
-		public static final Parcelable.Creator<SavedState> CREATOR =
-				new Parcelable.Creator<SavedState>() {
-					@Override
-					public SavedState createFromParcel(Parcel in) {
-						return new SavedState(in);
-					}
-
-					@Override
-					public SavedState[] newArray(int size) {
-						return new SavedState[size];
-					}
-				};
+		name = bundle.getString("ing_ad_name");
+		description = bundle.getString("ing_ad_description");
+		imageUrl = bundle.getString("ing_ad_image_url");
+		category = bundle.getString("ing_ad_category");
+		alcoholic = bundle.getString("ing_ad_alcoholic");
+		glass = bundle.getString("ing_ad_glass");
+		isInMultiWindow = bundle.getBoolean("ing_ad_multi_window");
 	}
 
 	public interface ItemClickListener{

@@ -1103,9 +1103,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	/**
-	 * Simple extension of LinearLayoutManager for the sole purpose of showing what happens
-	 * when predictive animations (which are enabled by default in LinearLayoutManager) are
-	 * not enabled. This behavior is toggled via a checkbox in the UI.
+	 * Layout to ensure Predictive animation is disabled to prevent app crash when it is ON.
 	 */
 	public class AppLinearLayoutManager extends LinearLayoutManager {
 		AppLinearLayoutManager(Context context) {
@@ -1114,7 +1112,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 		@Override
 		public boolean supportsPredictiveItemAnimations() {
-			return true;
+			return false;
 		}
 	}
 

@@ -17,11 +17,8 @@
 package com.dimowner.tastycocktails.cocktails.list;
 
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.AbsSavedState;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -301,63 +298,62 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		this.itemLongClickListener = itemLongClickListener;
 	}
 
-	/**
-	 * Save adapters state
-	 * @return adapter state.
-	 */
-	public Parcelable onSaveInstanceState() {
-//		TODO: fix save adapters state according to it's data
-		SavedState ss = new SavedState(AbsSavedState.EMPTY_STATE);
-		ss.items = mShowingData.toArray(new ListItem[0]);
-		return ss;
-	}
-
-	/**
-	 * Restore adapters state
-	 * @param state Adapter state.
-	 */
-	public void onRestoreInstanceState(Parcelable state) {
-		SavedState ss = (SavedState) state;
-		mShowingData = new ArrayList<>();
-		Collections.addAll(mShowingData, ss.items);
-		notifyDataSetChanged();
-	}
-
-
-	/**
-	 * Object state
-	 */
-	public static class SavedState extends View.BaseSavedState {
-		SavedState(Parcelable superState) {
-			super(superState);
-		}
-
-		private SavedState(Parcel in) {
-			super(in);
-			items = (ListItem[]) in.readParcelableArray(getClass().getClassLoader());
-		}
-
-		@Override
-		public void writeToParcel(Parcel out, int flags) {
-			super.writeToParcel(out, flags);
-			out.writeParcelableArray(items, flags);
-		}
-
-		ListItem[] items;
-
-		public static final Parcelable.Creator<SavedState> CREATOR =
-				new Parcelable.Creator<SavedState>() {
-					@Override
-					public SavedState createFromParcel(Parcel in) {
-						return new SavedState(in);
-					}
-
-					@Override
-					public SavedState[] newArray(int size) {
-						return new SavedState[size];
-					}
-				};
-	}
+//	/**
+////	 * Save adapters state
+////	 * @return adapter state.
+////	 */
+////	public Parcelable onSaveInstanceState() {
+////		SavedState ss = new SavedState(AbsSavedState.EMPTY_STATE);
+////		ss.items = mShowingData.toArray(new ListItem[0]);
+////		return ss;
+////	}
+////
+////	/**
+////	 * Restore adapters state
+////	 * @param state Adapter state.
+////	 */
+////	public void onRestoreInstanceState(Parcelable state) {
+////		SavedState ss = (SavedState) state;
+////		mShowingData = new ArrayList<>();
+////		Collections.addAll(mShowingData, ss.items);
+////		notifyDataSetChanged();
+////	}
+//
+//
+//	/**
+//	 * Object state
+//	 */
+//	public static class SavedState extends View.BaseSavedState {
+//		SavedState(Parcelable superState) {
+//			super(superState);
+//		}
+//
+//		private SavedState(Parcel in) {
+//			super(in);
+//			items = (ListItem[]) in.readParcelableArray(getClass().getClassLoader());
+//		}
+//
+//		@Override
+//		public void writeToParcel(Parcel out, int flags) {
+//			super.writeToParcel(out, flags);
+//			out.writeParcelableArray(items, flags);
+//		}
+//
+//		ListItem[] items;
+//
+//		public static final Parcelable.Creator<SavedState> CREATOR =
+//				new Parcelable.Creator<SavedState>() {
+//					@Override
+//					public SavedState createFromParcel(Parcel in) {
+//						return new SavedState(in);
+//					}
+//
+//					@Override
+//					public SavedState[] newArray(int size) {
+//						return new SavedState[size];
+//					}
+//				};
+//	}
 
 	public interface ItemClickListener{
 		void onItemClick(View view, int position);

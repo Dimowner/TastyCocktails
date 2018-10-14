@@ -53,7 +53,7 @@ import com.dimowner.tastycocktails.util.AnimationUtil;
  */
 public class RandomFragment extends Fragment {
 
-	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
+//	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 	public final static String TAG = "RandomFragment";
 
 	@Inject
@@ -147,14 +147,15 @@ public class RandomFragment extends Fragment {
 		outState.putBoolean("is_favorite", isFavorite);
 		outState.putBoolean("is_created", isCreated);
 		if (mAdapter != null) {
-			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
+//			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
+			mAdapter.onSaveAdapterState(outState);
 		}
 	}
 
 	@Override
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
+		if (savedInstanceState != null) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
 			isCreated = savedInstanceState.getBoolean("is_created");
 //			isCreated = false;
@@ -162,7 +163,8 @@ public class RandomFragment extends Fragment {
 			initAdapter();
 
 			mPresenter.bindView(mAdapter);
-			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+//			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+			mAdapter.onRestoreAdapterSate(savedInstanceState);
 			fab.setVisibility(View.VISIBLE);
 		}
 	}

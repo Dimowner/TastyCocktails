@@ -41,7 +41,6 @@ import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.random.RandomFragment;
 import com.dimowner.tastycocktails.util.AndroidUtils;
-import com.dimowner.tastycocktails.util.AppStartTracker;
 
 import javax.inject.Inject;
 
@@ -75,20 +74,20 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 	private int curActiveItem = NAVDRAWER_ITEM_COCKTAILS;
 
-	private AppStartTracker tracker;
+//	private AppStartTracker tracker;
 
 	@Inject Prefs prefs;
 
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		tracker = TCApplication.getAppStartTracker(getApplicationContext());
-		tracker.activityOnCreate();
+//		tracker = TCApplication.getAppStartTracker(getApplicationContext());
+//		tracker.activityOnCreate();
 		setTheme(R.style.AppTheme_TransparentStatusBar);
 		super.onCreate(savedInstanceState);
-		tracker.activityContentViewBefore();
+//		tracker.activityContentViewBefore();
 		setContentView(R.layout.base_nav_activity);
-		tracker.activityContentViewAfter();
+//		tracker.activityContentViewAfter();
 
 		TCApplication.get(getApplicationContext()).applicationComponent().inject(this);
 
@@ -115,19 +114,19 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			disableMenu();
 		}
 
-		tracker.activityOnCreateEnd();
+//		tracker.activityOnCreateEnd();
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		tracker.activityOnStart();
-	}
+//	@Override
+//	protected void onStart() {
+//		super.onStart();
+//		tracker.activityOnStart();
+//	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		tracker.activityOnResume();
+//		tracker.activityOnResume();
 //		Timber.v(tracker.getResults());
 		if (getSelfNavDrawerItem() > NAVDRAWER_ITEM_INVALID) {
 			mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
