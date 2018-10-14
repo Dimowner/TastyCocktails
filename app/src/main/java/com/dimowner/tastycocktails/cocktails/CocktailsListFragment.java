@@ -68,7 +68,6 @@ import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
 import com.dimowner.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
-import com.dimowner.tastycocktails.cocktails.list.EndlessRecyclerViewScrollListener;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsModule;
 import com.dimowner.tastycocktails.data.Prefs;
@@ -242,7 +241,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			dividerItemDecoration = new HorizontalDividerItemDecoration(getContext());
 			mRecyclerView.addItemDecoration(dividerItemDecoration);
 		}
-		mRecyclerView.addOnScrollListener(new MyScrollListener(mLayoutManager));
 
 		mPresenter.bindView(this);
 
@@ -614,9 +612,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private void initAdapter() {
 		if (mAdapter == null) {
 			if (fragmentType == TYPE_HISTORY) {
-				mAdapter = new CocktailsRecyclerAdapter(fragmentType, R.layout.list_item_history, prefs);
+				mAdapter = new CocktailsRecyclerAdapter(R.layout.list_item_history);
 			} else {
-				mAdapter = new CocktailsRecyclerAdapter(fragmentType, R.layout.list_item2, prefs);
+				mAdapter = new CocktailsRecyclerAdapter(R.layout.list_item2);
 			}
 			mRecyclerView.setAdapter(mAdapter);
 		}
@@ -1098,21 +1096,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			} else {
 				touchLayout.setTranslationY(inset);
 			}
-		}
-	}
-
-	public class MyScrollListener extends EndlessRecyclerViewScrollListener {
-
-		<L extends RecyclerView.LayoutManager> MyScrollListener(L layoutManager) {
-			super(layoutManager);
-		}
-
-		@Override
-		public void onLoadMore(int page, int totalItemsCount) {
-			Timber.d("onLoadMore page = " + page + " count = " + totalItemsCount);
-//			if (fragmentType == TYPE_HISTORY) {
-//				mPresenter.loadHistory(page);
-//			}
 		}
 	}
 

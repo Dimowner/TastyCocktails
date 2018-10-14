@@ -43,8 +43,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dimowner.tastycocktails.R;
-import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
-import com.dimowner.tastycocktails.data.Prefs;
 
 /**
  * Created on 26.07.2017.
@@ -56,17 +54,13 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	private final static int VIEW_TYPE_PROGRESS = 2;
 	private final static int VIEW_TYPE_FOOTER = 3;
 
-	private boolean showFooter = true;
+	private boolean showFooter;
 
 	private List<ListItem> mBaseData = new ArrayList<>();
 
 	private String filterStr = "";
 
 	private List<ListItem> mShowingData;
-
-	private Prefs prefs;
-
-	private int searchFragmentType = CocktailsListFragment.TYPE_NORMAL;
 
 	private ItemClickListener itemClickListener;
 
@@ -119,21 +113,14 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		}
 	}
 
-	public CocktailsRecyclerAdapter(int searchFragmentType, int layoutResId, Prefs prefs) {
+	public CocktailsRecyclerAdapter(int layoutResId) {
 		this.mShowingData = new ArrayList<>();
-		this.searchFragmentType = searchFragmentType;
-		this.prefs = prefs;
 		this.itemLayoutResId = layoutResId;
 	}
 
 	public void showFooter(boolean show) {
 		if (showFooter == show) return;
 		showFooter = show;
-		if (showFooter) {
-			notifyItemInserted(mShowingData.size() + 1);
-		} else {
-			notifyItemRemoved(mShowingData.size() + 1);
-		}
 	}
 
 	@NonNull
@@ -149,7 +136,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		} else if (viewType == VIEW_TYPE_FOOTER) {
 			View v = LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.list_footer, parent, false);
-			v.setMinimumHeight(R.dimen.padding_huge);
 			return new FooterViewHolder(v);
 		} else {
 			return null;
@@ -262,10 +248,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		return mShowingData;
 	}
 
-	public void addItems(List<ListItem> items) {
-		mShowingData.addAll(items);
-		notifyItemRangeInserted(mShowingData.size() - items.size() - 1, items.size());
-	}
+//	public void addItems(List<ListItem> items) {
+//		mShowingData.addAll(items);
+//		notifyItemRangeInserted(mShowingData.size() - items.size() - 1, items.size());
+//	}
 
 	/**
 	 * Update showing data by applying search filter.
