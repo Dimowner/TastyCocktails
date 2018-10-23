@@ -53,7 +53,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 9
-def versionPatch = 47
+def versionPatch = 48
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -147,7 +147,7 @@ android.variantFilter { variant ->
 dependencies {
 
 	implementation "com.mixpanel.android:mixpanel-android:5.+"
-	implementation "com.google.android.gms:play-services-gcm:15.0.1"
+//	implementation "com.google.android.gms:play-services-gcm:15.0.1"
 
 	// Android
 	implementation "com.android.support:support-v4:$versions.support"
@@ -197,6 +197,9 @@ dependencies {
 	androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
 		exclude group: 'com.android.support', module: 'support-annotations'
 	})
+
+	implementation 'com.google.android.gms:play-services-ads:17.0.0'
+
 	testImplementation 'junit:junit:4.12'
 	testImplementation 'org.mockito:mockito-core:2.9.0'
 

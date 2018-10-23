@@ -41,6 +41,7 @@ import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.random.RandomFragment;
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.google.android.gms.ads.MobileAds;
 
 import javax.inject.Inject;
 
@@ -114,6 +115,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			disableMenu();
 		}
 
+		MobileAds.initialize(this, "ca-app-pub-7578142287229298~2306258743");
 //		tracker.activityOnCreateEnd();
 	}
 

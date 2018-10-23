@@ -114,6 +114,17 @@
 
 	</ScrollView>
 
+	<com.google.android.gms.ads.doubleclick.PublisherAdView
+			android:id="@+id/publisherAdView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentBottom="true"
+			android:layout_gravity="bottom|end"
+			app:adSize="SMART_BANNER"
+			app:adUnitId="/6499/example/banner"/>
+	<!--ca-app-pub-7578142287229298/2205637659-->
+
 	<android.support.design.widget.FloatingActionButton
 			android:id="@+id/fab"
 			android:layout_width="wrap_content"
