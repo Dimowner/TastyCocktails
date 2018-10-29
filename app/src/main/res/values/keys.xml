@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="mixpanel_token" translatable="false">3bed21592dc7ef6cd767c16028e8dee2</string>
+	<string name="ad_mob_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+	<string name="bottom_banner_id" translatable="false">/6499/example/banner</string>
 </resources>

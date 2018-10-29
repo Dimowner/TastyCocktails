@@ -15,54 +15,74 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<FrameLayout
+<LinearLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:id="@+id/coordinator_root"
+		android:id="@+id/linear_root"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-
-	<View
-			android:layout_width="match_parent"
-			android:layout_height="1px"
-			android:background="@color/grey"
-			android:layout_gravity="bottom"
-			/>
-
-	<android.support.v4.view.ViewPager
-			android:id="@+id/pager"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			/>
+		android:layout_height="match_parent"
+		android:orientation="vertical">
 
 	<FrameLayout
-			android:id="@+id/title_bar"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:app="http://schemas.android.com/apk/res-auto"
+			android:id="@+id/frame_root"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+			android:layout_height="0dp"
+			android:layout_weight="1">
 
-		<ImageButton
-				android:id="@+id/btn_back"
-				android:layout_width="@dimen/circle_button_size"
-				android:layout_height="@dimen/circle_button_size"
-				android:contentDescription="@null"
-				android:layout_margin="@dimen/padding_medium"
-				android:foreground="?attr/selectableItemBackgroundBorderless"
-				android:background="@drawable/circle_drawable"
-				app:srcCompat="@drawable/round_arrow_back"
-				android:layout_gravity="top|start"
+		<View
+				android:layout_width="match_parent"
+				android:layout_height="1px"
+				android:layout_gravity="bottom"
+				android:background="@color/grey"
 				/>
 
-		<ImageButton
-				android:id="@+id/btn_favorite"
-				android:layout_width="@dimen/circle_button_size"
-				android:layout_height="@dimen/circle_button_size"
-				android:contentDescription="@null"
-				android:layout_margin="@dimen/padding_medium"
-				android:background="@drawable/circle_drawable"
-				app:srcCompat="@drawable/round_heart_border"
-				android:foreground="?attr/selectableItemBackgroundBorderless"
-				android:layout_gravity="top|end"
+		<android.support.v4.view.ViewPager
+				android:id="@+id/pager"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
 				/>
+
+		<FrameLayout
+				android:id="@+id/title_bar"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+			<ImageButton
+					android:id="@+id/btn_back"
+					android:layout_width="@dimen/circle_button_size"
+					android:layout_height="@dimen/circle_button_size"
+					android:layout_gravity="top|start"
+					android:layout_margin="@dimen/padding_medium"
+					android:background="@drawable/circle_drawable"
+					android:contentDescription="@null"
+					android:foreground="?attr/selectableItemBackgroundBorderless"
+					app:srcCompat="@drawable/round_arrow_back"
+					/>
+
+			<ImageButton
+					android:id="@+id/btn_favorite"
+					android:layout_width="@dimen/circle_button_size"
+					android:layout_height="@dimen/circle_button_size"
+					android:layout_gravity="top|end"
+					android:layout_margin="@dimen/padding_medium"
+					android:background="@drawable/circle_drawable"
+					android:contentDescription="@null"
+					android:foreground="?attr/selectableItemBackgroundBorderless"
+					app:srcCompat="@drawable/round_heart_border"
+					/>
+		</FrameLayout>
+
 	</FrameLayout>
 
-</FrameLayout>
+	<com.google.android.gms.ads.doubleclick.PublisherAdView
+			android:id="@+id/publisherAdView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|center"
+			app:adSize="SMART_BANNER"
+			app:adUnitId="@string/bottom_banner_id"/>
+	<!--app:adUnitId="/6499/example/banner"/>-->
+
+</LinearLayout>

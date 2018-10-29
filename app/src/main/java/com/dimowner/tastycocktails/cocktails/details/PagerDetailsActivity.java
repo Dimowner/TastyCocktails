@@ -19,6 +19,8 @@ import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.dagger.details.DetailsModule;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -187,6 +189,12 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		if (savedInstanceState == null) {
 			AndroidUtils.handleNavigationBarColor(this);
 		}
+
+		PublisherAdView mPublisherAdView = findViewById(R.id.publisherAdView);
+		PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
+//				.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
+				.build();
+		mPublisherAdView.loadAd(adRequest);
 	}
 
 	@Override

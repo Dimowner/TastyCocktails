@@ -269,33 +269,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					}, Timber::e));
 		}
 
-		PublisherAdView mPublisherAdView = view.findViewById(R.id.publisherAdView);
-		PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
-		mPublisherAdView.loadAd(adRequest);
-		mPublisherAdView.setAdListener(new AdListener() {
-			@Override public void onAdLoaded() {
-				// Code to be executed when an ad finishes loading.
-				Timber.v("onAdLoaded");
-			}
-			@Override public void onAdFailedToLoad(int errorCode) {
-				// Code to be executed when an ad request fails.
-				Timber.v("onAdFailedToLoad code: " + errorCode);
-			}
-			@Override public void onAdOpened() {
-				// Code to be executed when an ad opens an overlay that
-				// covers the screen.
-				Timber.v("onAdOpened");
-			}
-			@Override public void onAdLeftApplication() {
-				// Code to be executed when the user has left the app.
-				Timber.v("onAdLeftApplication");
-			}
-			@Override public void onAdClosed() {
-				// Code to be executed when when the user is about to return
-				// to the app after tapping on an ad.
-				Timber.v("onAdClosed");
-			}
-		});
+		if (!prefs.isFirstRun()) {
+			PublisherAdView mPublisherAdView = view.findViewById(R.id.publisherAdView);
+			PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
+//					.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
+					.build();
+			mPublisherAdView.loadAd(adRequest);
+		}
 
 		if (fragmentType == TYPE_HISTORY) {
 			ItemTouchHelper.SimpleCallback itemTouchHelperCallback =

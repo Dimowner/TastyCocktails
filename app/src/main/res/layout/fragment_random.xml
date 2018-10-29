@@ -14,72 +14,92 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:id="@+id/coordinator"
+		android:id="@+id/linear_root"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:orientation="vertical">
 
-	<FrameLayout
-			android:id="@+id/root"
+	<android.support.design.widget.CoordinatorLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:app="http://schemas.android.com/apk/res-auto"
+			android:id="@+id/coordinator"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@color/background"
-			>
-
-		<View
-				android:layout_width="match_parent"
-				android:layout_height="1px"
-				android:background="@color/grey"
-				android:layout_gravity="bottom"
-				/>
-
-		<android.support.v7.widget.RecyclerView
-				android:id="@+id/recycler_view"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:orientation="vertical"
-				/>
+			android:layout_height="0dp"
+			android:layout_weight="1">
 
 		<FrameLayout
-				android:id="@+id/title_bar"
+				android:id="@+id/root"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="match_parent"
+				android:background="@color/background"
+				>
 
-			<ImageButton
-					android:id="@+id/btn_menu"
-					android:layout_width="@dimen/circle_button_size"
-					android:layout_height="@dimen/circle_button_size"
-					android:contentDescription="@null"
-					android:layout_margin="@dimen/padding_medium"
-					app:srcCompat="@drawable/round_menu"
-					android:foreground="?attr/selectableItemBackgroundBorderless"
-					android:background="@drawable/circle_drawable"
-					android:layout_gravity="top|start"
+			<View
+					android:layout_width="match_parent"
+					android:layout_height="1px"
+					android:layout_gravity="bottom"
+					android:background="@color/grey"
 					/>
 
-			<ImageButton
-					android:id="@+id/btn_favorite"
-					android:layout_width="@dimen/circle_button_size"
-					android:layout_height="@dimen/circle_button_size"
-					android:contentDescription="@null"
-					android:layout_margin="@dimen/padding_medium"
-					app:srcCompat="@drawable/round_heart_border"
-					android:foreground="?attr/selectableItemBackgroundBorderless"
-					android:background="@drawable/circle_drawable"
-					android:layout_gravity="top|end"
+			<android.support.v7.widget.RecyclerView
+					android:id="@+id/recycler_view"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:orientation="vertical"
 					/>
+
+			<FrameLayout
+					android:id="@+id/title_bar"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+				<ImageButton
+						android:id="@+id/btn_menu"
+						android:layout_width="@dimen/circle_button_size"
+						android:layout_height="@dimen/circle_button_size"
+						android:layout_gravity="top|start"
+						android:layout_margin="@dimen/padding_medium"
+						android:background="@drawable/circle_drawable"
+						android:contentDescription="@null"
+						android:foreground="?attr/selectableItemBackgroundBorderless"
+						app:srcCompat="@drawable/round_menu"
+						/>
+
+				<ImageButton
+						android:id="@+id/btn_favorite"
+						android:layout_width="@dimen/circle_button_size"
+						android:layout_height="@dimen/circle_button_size"
+						android:layout_gravity="top|end"
+						android:layout_margin="@dimen/padding_medium"
+						android:background="@drawable/circle_drawable"
+						android:contentDescription="@null"
+						android:foreground="?attr/selectableItemBackgroundBorderless"
+						app:srcCompat="@drawable/round_heart_border"
+						/>
+			</FrameLayout>
+
 		</FrameLayout>
 
-	</FrameLayout>
+		<android.support.design.widget.FloatingActionButton
+				android:id="@+id/fab"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="bottom|end"
+				android:layout_margin="@dimen/padding_standard"
+				android:visibility="gone"
+				app:srcCompat="@drawable/dice_5"/>
+	</android.support.design.widget.CoordinatorLayout>
 
-	<android.support.design.widget.FloatingActionButton
-			android:id="@+id/fab"
+	<com.google.android.gms.ads.doubleclick.PublisherAdView
+			android:id="@+id/publisherAdView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/padding_standard"
-			android:layout_gravity="bottom|end"
-			android:visibility="gone"
-			app:srcCompat="@drawable/dice_5"/>
-</android.support.design.widget.CoordinatorLayout>
+			android:layout_gravity="bottom|center"
+			app:adSize="SMART_BANNER"
+			app:adUnitId="@string/bottom_banner_id"/>
+	<!--app:adUnitId="/6499/example/banner"/>-->
+
+</LinearLayout>

@@ -46,6 +46,8 @@ import com.dimowner.tastycocktails.cocktails.details.IngredientsAdapter;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AnimationUtil;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 /**
  * Created on 27.07.2017.
@@ -121,6 +123,13 @@ public class RandomFragment extends Fragment {
 
 			mPresenter.bindView(mAdapter);
 		}
+
+		PublisherAdView mPublisherAdView = view.findViewById(R.id.publisherAdView);
+		PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
+//				.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
+				.build();
+		mPublisherAdView.loadAd(adRequest);
+
 		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RANDOM);
 	}
 

@@ -115,7 +115,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			disableMenu();
 		}
 
-		MobileAds.initialize(this, "ca-app-pub-7578142287229298~2306258743");
+		MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_id));
 //		tracker.activityOnCreateEnd();
 	}
 
