@@ -270,8 +270,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 
 		if (!prefs.isFirstRun()) {
-			adView.setVisibility(View.VISIBLE);
 			adView = view.findViewById(R.id.publisherAdView);
+			adView.setVisibility(View.VISIBLE);
 			if (adView != null) {
 				AdRequest adRequest = new AdRequest.Builder()
 //					.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
