@@ -133,8 +133,9 @@ public class RandomFragment extends Fragment {
 		if (adView != null) {
 			if (prefs.isShowAds()) {
 				AdRequest adRequest = new AdRequest.Builder()
-//						.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-//						.addTestDevice("849A8D331C1E0F2AE74C7330D0BEF9D8")
+						.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
+						.addTestDevice("849A8D331C1E0F2AE74C7330D0BEF9D8")
+						.addTestDevice("53ECB11D7A7CCB1BCC9B40BAF5F5DAE7")
 						.build();
 				adView.loadAd(adRequest);
 			} else {

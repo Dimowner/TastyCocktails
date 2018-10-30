@@ -35,6 +35,8 @@ public class MixPanel implements Application.ActivityLifecycleCallbacks {
 	public static final String EVENT_NEW_RANDOM_DRINK = "new_random_drink";
 	public static final String EVENT_SHOW_MENU = "show_menu";
 	public static final String EVENT_HIDE = "hide_menu";
+	public static final String EVENT_DISABLE_ADS = "disable_ads";
+	public static final String EVENT_ENABLE_ADS = "enable_ads";
 
 	private MixpanelAPI mixpanel;
 

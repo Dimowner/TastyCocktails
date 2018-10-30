@@ -35,7 +35,15 @@ public class SettingsActivity extends AppCompatActivity {
 		} else {
 			showAdsSwitch.setChecked(false);
 		}
-		showAdsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> prefs.setShowAds(isChecked));
+
+		showAdsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+			prefs.setShowAds(isChecked);
+			if (isChecked) {
+				TCApplication.event(getApplicationContext(), MixPanel.EVENT_ENABLE_ADS);
+			} else {
+				TCApplication.event(getApplicationContext(), MixPanel.EVENT_DISABLE_ADS);
+			}
+		});
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
 			getWindow().setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
