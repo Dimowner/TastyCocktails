@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.dagger.details.DetailsModule;
+import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.google.android.gms.ads.AdRequest;
@@ -49,6 +50,9 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 
 	@Inject
 	DetailsViewModel viewModel;
+
+	@Inject
+	Prefs prefs;
 
 	private Stack<IngredientsAdapter2> adaptersPool;
 
@@ -193,10 +197,15 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 
 		adView = findViewById(R.id.publisherAdView);
 		if (adView != null) {
-			AdRequest adRequest = new AdRequest.Builder()
-//					.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-					.build();
-			adView.loadAd(adRequest);
+			if (prefs.isShowAds()) {
+				AdRequest adRequest = new AdRequest.Builder()
+//						.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
+//						.addTestDevice("849A8D331C1E0F2AE74C7330D0BEF9D8")
+						.build();
+				adView.loadAd(adRequest);
+			} else {
+				adView.setVisibility(View.GONE);
+			}
 		}
 	}
 
@@ -210,7 +219,11 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	public void onResume() {
 		super.onResume();
 		if (adView != null) {
-			adView.resume();
+			if (prefs.isShowAds()) {
+				adView.resume();
+			} else {
+				adView.setVisibility(View.GONE);
+			}
 		}
 	}
 

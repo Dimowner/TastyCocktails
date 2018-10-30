@@ -29,6 +29,7 @@ import com.dimowner.tastycocktails.dagger.details.DetailsModule;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailComponent;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
 import com.dimowner.tastycocktails.data.LocalRepository;
+import com.dimowner.tastycocktails.settings.SettingsActivity;
 
 /**
  * Created on 27.07.2017.
@@ -43,5 +44,6 @@ public interface AppComponent {
 	DetailsComponent plus(DetailsModule detailsModule);
 	void inject(LocalRepository repository);
 	void inject(NavigationActivity activity);
+	void inject(SettingsActivity activity);
 	void inject(TCApplication application);
 }

@@ -12,6 +12,7 @@ public class Prefs {
 	private static final String PREF_KEY_IS_CACHE_FAILED = "is_cache_failed";
 	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
 	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
+	private static final String PREF_KEY_IS_SHOW_ADS = "is_show_ads";
 
 	private static final String PREF_KEY_FILTER_CATEGORY = "filter_category";
 	private static final String PREF_KEY_FILTER_CATEGORY_POS = "filter_category_pos";
@@ -38,6 +39,16 @@ public class Prefs {
 	public void firstRunExecuted() {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putBoolean(PREF_KEY_IS_FIRST_RUN, false);
+		editor.apply();
+	}
+
+	public boolean isShowAds() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_ADS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_ADS, true);
+	}
+
+	public void setShowAds(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_ADS, b);
 		editor.apply();
 	}
 

@@ -31,6 +31,7 @@
 	<dimen name="text_size_xmedium">16sp</dimen>
 	<dimen name="text_size_large">18sp</dimen>
 	<dimen name="text_size_xlarge">20sp</dimen>
+	<dimen name="text_size_largest">24sp</dimen>
 
 	<dimen name="nav_header_height">200dp</dimen>
 

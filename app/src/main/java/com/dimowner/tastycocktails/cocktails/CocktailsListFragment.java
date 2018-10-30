@@ -272,11 +272,16 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		if (!prefs.isFirstRun()) {
 			adView = view.findViewById(R.id.publisherAdView);
 			adView.setVisibility(View.VISIBLE);
-			if (adView != null) {
-				AdRequest adRequest = new AdRequest.Builder()
-//					.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-						.build();
-				adView.loadAd(adRequest);
+			if (adView != null ) {
+				if (prefs.isShowAds()) {
+					AdRequest adRequest = new AdRequest.Builder()
+//							.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
+//							.addTestDevice("849A8D331C1E0F2AE74C7330D0BEF9D8")
+							.build();
+					adView.loadAd(adRequest);
+				} else {
+					adView.setVisibility(View.GONE);
+				}
 			}
 		}
 
@@ -391,7 +396,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	public void onResume() {
 		super.onResume();
 		if (adView != null) {
-			adView.resume();
+			if (prefs.isShowAds()) {
+				adView.resume();
+			} else {
+				adView.setVisibility(View.GONE);
+			}
 		}
 	}
 
