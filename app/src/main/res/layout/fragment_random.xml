@@ -93,13 +93,11 @@
 				app:srcCompat="@drawable/dice_5"/>
 	</android.support.design.widget.CoordinatorLayout>
 
-	<com.google.android.gms.ads.doubleclick.PublisherAdView
+	<com.google.android.gms.ads.AdView
 			android:id="@+id/publisherAdView"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_gravity="bottom|center"
 			app:adSize="SMART_BANNER"
 			app:adUnitId="@string/bottom_banner_id"/>
-	<!--app:adUnitId="/6499/example/banner"/>-->
 
 </LinearLayout>

@@ -76,9 +76,8 @@ import com.dimowner.tastycocktails.util.AnimationUtil;
 import com.dimowner.tastycocktails.util.UIUtil;
 import com.dimowner.tastycocktails.widget.ThresholdListener;
 import com.dimowner.tastycocktails.widget.TouchLayout;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import timber.log.Timber;
 
@@ -117,6 +116,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private View filterMenu;
 	private SwipeRefreshLayout mRefreshLayout;
 	private FloatingActionButton btnUp;
+	private AdView adView;
 
 	private Spinner categorySpinner;
 	private Spinner ingredientSpinner;
@@ -270,11 +270,14 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 
 		if (!prefs.isFirstRun()) {
-			PublisherAdView mPublisherAdView = view.findViewById(R.id.publisherAdView);
-			PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
+			adView.setVisibility(View.VISIBLE);
+			adView = view.findViewById(R.id.publisherAdView);
+			if (adView != null) {
+				AdRequest adRequest = new AdRequest.Builder()
 //					.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-					.build();
-			mPublisherAdView.loadAd(adRequest);
+						.build();
+				adView.loadAd(adRequest);
+			}
 		}
 
 		if (fragmentType == TYPE_HISTORY) {
@@ -385,6 +388,22 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (adView != null) {
+			adView.resume();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		if (adView != null) {
+			adView.pause();
+		}
+		super.onPause();
+	}
+
+	@Override
 	public void onStop() {
 		super.onStop();
 		mPresenter.unbindView();
@@ -392,6 +411,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	@Override
 	public void onDestroyView() {
+		if (adView != null) {
+			adView.destroy();
+		}
 		super.onDestroyView();
 		mPresenter = null;
 		compositeDisposable.dispose();

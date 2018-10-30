@@ -46,8 +46,8 @@ import com.dimowner.tastycocktails.cocktails.details.IngredientsAdapter;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AnimationUtil;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 /**
  * Created on 27.07.2017.
@@ -71,6 +71,7 @@ public class RandomFragment extends Fragment {
 	private ImageButton btnFavorite;
 	private FloatingActionButton fab;
 	private CoordinatorLayout mRoot;
+	private AdView adView;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,11 +125,13 @@ public class RandomFragment extends Fragment {
 			mPresenter.bindView(mAdapter);
 		}
 
-		PublisherAdView mPublisherAdView = view.findViewById(R.id.publisherAdView);
-		PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
-//				.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-				.build();
-		mPublisherAdView.loadAd(adRequest);
+		adView = view.findViewById(R.id.publisherAdView);
+		if (adView != null) {
+			AdRequest adRequest = new AdRequest.Builder()
+//					.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
+					.build();
+			adView.loadAd(adRequest);
+		}
 
 		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RANDOM);
 	}
@@ -136,12 +139,23 @@ public class RandomFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		if (adView != null) {
+			adView.resume();
+		}
 		if (!isCreated) {
 			mPresenter.loadRandomDrink();
 			fab.setVisibility(View.VISIBLE);
 			AnimationUtil.physBasedRevealAnimation(fab);
 			isCreated = true;
 		}
+	}
+
+	@Override
+	public void onPause() {
+		if (adView != null) {
+			adView.pause();
+		}
+		super.onPause();
 	}
 
 	@Override
@@ -206,6 +220,9 @@ public class RandomFragment extends Fragment {
 
 	@Override
 	public void onDestroyView() {
+		if (adView != null) {
+			adView.destroy();
+		}
 		super.onDestroyView();
 		mPresenter.unbindView();
 		mPresenter = null;

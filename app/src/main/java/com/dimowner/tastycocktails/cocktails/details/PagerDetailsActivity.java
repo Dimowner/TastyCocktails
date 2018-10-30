@@ -19,8 +19,8 @@ import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.dagger.details.DetailsModule;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -55,6 +55,7 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	private FrameLayout titleBar;
 	private ViewPager viewPager;
 	private ImageButton btnFav;
+	private AdView adView;
 
 	private DetailsPagerAdapter pagerAdapter;
 
@@ -190,11 +191,13 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 			AndroidUtils.handleNavigationBarColor(this);
 		}
 
-		PublisherAdView mPublisherAdView = findViewById(R.id.publisherAdView);
-		PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
-//				.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-				.build();
-		mPublisherAdView.loadAd(adRequest);
+		adView = findViewById(R.id.publisherAdView);
+		if (adView != null) {
+			AdRequest adRequest = new AdRequest.Builder()
+//					.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
+					.build();
+			adView.loadAd(adRequest);
+		}
 	}
 
 	@Override
@@ -204,7 +207,26 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (adView != null) {
+			adView.resume();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		if (adView != null) {
+			adView.pause();
+		}
+		super.onPause();
+	}
+
+	@Override
 	protected void onDestroy() {
+		if (adView != null) {
+			adView.destroy();
+		}
 		super.onDestroy();
 		compositeDisposable.dispose();
 	}
