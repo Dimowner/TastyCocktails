@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dimowner.tastycocktails.R;
+import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
+import com.dimowner.tastycocktails.util.TimeUtils;
 
 /**
  * Created on 26.07.2017.
@@ -65,6 +67,9 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	private ItemLongClickListener itemLongClickListener;
 
 	private int itemLayoutResId;
+
+	//In what type of list is adapter use: normal, fav, history;
+	private int type = CocktailsListFragment.TYPE_UNKNOWN;
 
 
 	public class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -114,6 +119,12 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		this.itemLayoutResId = layoutResId;
 	}
 
+	public CocktailsRecyclerAdapter(int type, int layoutResId) {
+		this.mShowingData = new ArrayList<>();
+		this.itemLayoutResId = layoutResId;
+		this.type = type;
+	}
+
 	public void showFooter(boolean show) {
 		if (showFooter == show) return;
 		showFooter = show;
@@ -144,7 +155,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			int pos = h.getAdapterPosition();
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
-			holder.description.setText(mShowingData.get(pos).getCategory());
+			if (type == CocktailsListFragment.TYPE_HISTORY) {
+				holder.description.setText(TimeUtils.formatTime(mShowingData.get(pos).getHistory()));
+			} else {
+				holder.description.setText(mShowingData.get(pos).getCategory());
+			}
 
 			if (mShowingData.get(pos).getAvatar_url() != null) {
 				Glide.with(holder.view.getContext())

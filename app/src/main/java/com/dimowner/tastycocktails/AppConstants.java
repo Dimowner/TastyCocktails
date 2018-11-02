@@ -18,4 +18,7 @@ public class AppConstants {
 
 	public static final int CONNECTION_TIMEOUT = 30; //Seconds
 	public static final int READ_TIMEOUT = 45; //Seconds
+
+	public static final int TIME_FORMAT_24H = 11;
+	public static final int TIME_FORMAT_12H = 12;
 }

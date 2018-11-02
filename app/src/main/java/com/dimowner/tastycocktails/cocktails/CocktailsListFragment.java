@@ -668,7 +668,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private void initAdapter() {
 		if (mAdapter == null) {
 			if (fragmentType == TYPE_HISTORY) {
-				mAdapter = new CocktailsRecyclerAdapter(R.layout.list_item_history);
+				mAdapter = new CocktailsRecyclerAdapter(TYPE_HISTORY, R.layout.list_item_history);
 			} else {
 				mAdapter = new CocktailsRecyclerAdapter(R.layout.list_item2);
 			}

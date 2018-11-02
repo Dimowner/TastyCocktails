@@ -31,6 +31,7 @@ public class ListItem implements Parcelable {
 	private final String alcoholic;
 	private final String glass;
 	private final String avatar_url;
+	/** Time stamp when last time user opened this cocktail details. */
 	private final long history;
 	private final boolean isFavorite;
 
