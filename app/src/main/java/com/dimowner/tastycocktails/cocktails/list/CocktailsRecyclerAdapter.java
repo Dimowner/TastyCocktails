@@ -51,6 +51,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	private final static int VIEW_TYPE_NORMAL = 1;
 	private final static int VIEW_TYPE_PROGRESS = 2;
 	private final static int VIEW_TYPE_FOOTER = 3;
+	private final static int VIEW_TYPE_INSTRUCTIONS_HEADER = 4;
 
 	private boolean showFooter;
 
@@ -67,6 +68,8 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	private ItemLongClickListener itemLongClickListener;
 
 	private int itemLayoutResId;
+
+	private boolean showInstructions = true;
 
 	//In what type of list is adapter use: normal, fav, history;
 	private int type = CocktailsListFragment.TYPE_UNKNOWN;
@@ -114,6 +117,15 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		}
 	}
 
+	public static class InstructionsViewHolder extends RecyclerView.ViewHolder {
+		final View view;
+
+		InstructionsViewHolder(View itemView){
+			super(itemView);
+			view = itemView;
+		}
+	}
+
 	public CocktailsRecyclerAdapter(int layoutResId) {
 		this.mShowingData = new ArrayList<>();
 		this.itemLayoutResId = layoutResId;
@@ -144,6 +156,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			View v = LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.list_footer, parent, false);
 			return new FooterViewHolder(v);
+		} else if (viewType == VIEW_TYPE_INSTRUCTIONS_HEADER) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item_history_instructions, parent, false);
+			return new InstructionsViewHolder(v);
 		} else {
 			return null;
 		}
@@ -211,6 +227,8 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			});
 		} else if (h.getItemViewType() == VIEW_TYPE_PROGRESS) {
 			//Do nothing
+		} else if (h.getItemViewType() == VIEW_TYPE_INSTRUCTIONS_HEADER) {
+			//Do nothing
 		}
 //		//Set transition names
 //		Resources res = holder.view.getResources();
@@ -226,12 +244,16 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	@Override
 	public int getItemCount() {
-		return mShowingData.size() + (showFooter ? 1 : 0);
+		return mShowingData.size() + (showFooter ? 1 : 0) + (showInstructions ? 1 : 0);
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		return position >= mShowingData.size() ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
+		if (showInstructions && position == 0) {
+			return VIEW_TYPE_INSTRUCTIONS_HEADER;
+		} else {
+			return position >= mShowingData.size() ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
+		}
 	}
 
 	public ListItem getItem(int pos) {

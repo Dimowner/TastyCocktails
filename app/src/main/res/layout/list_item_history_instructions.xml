@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorAccent"
+		android:drawableStart="@drawable/round_info_white"
+		android:drawableLeft="@drawable/round_info_white"
+		android:drawableEnd="@drawable/round_close"
+		android:drawableRight="@drawable/round_close"
+		android:gravity="center"
+		android:padding="@dimen/padding_standard"
+		android:text="Swipe left to remove item from history"
+		android:textColor="@color/white"
+		android:textSize="@dimen/text_size_xmedium"
+		/>
