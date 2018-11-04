@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
@@ -20,14 +21,17 @@ import com.dimowner.tastycocktails.dagger.details.DetailsModule;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.dimowner.tastycocktails.util.AnimationUtil;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -59,6 +63,7 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	private FrameLayout titleBar;
 	private ViewPager viewPager;
 	private ImageButton btnFav;
+	private TextView txtInstructions;
 	private AdView adView;
 
 	private DetailsPagerAdapter pagerAdapter;
@@ -125,14 +130,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 						.subscribe(() -> updateFavorite(viewModel.getCachedDrink(viewPager.getCurrentItem())), Timber::e))
 		);
 		viewPager = findViewById(R.id.pager);
-		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-			@Override public void onPageSelected(int position) {
-				updateFavorite(viewModel.getCachedDrink(position));
-				updateHistory(position);
-			}
-			@Override public void onPageScrollStateChanged(int state) {}
-		});
 
 		adaptersPool = new Stack<>();
 
@@ -185,6 +182,44 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		});
 		viewPager.setAdapter(pagerAdapter);
 		viewPager.setCurrentItem(activeItem, false);
+		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+			@Override public void onPageSelected(int position) {
+				updateFavorite(viewModel.getCachedDrink(position));
+				updateHistory(position);
+				if (txtInstructions != null) {
+					AnimationUtil.verticalSpringAnimation(
+							txtInstructions,
+							txtInstructions.getHeight(),
+							(animation, canceled, value, velocity) -> {
+								txtInstructions.setVisibility(View.GONE);
+								prefs.setShowDetailsInstructions(false);
+							});
+				}
+			}
+			@Override public void onPageScrollStateChanged(int state) {}
+		});
+
+		if (prefs.isShowDetailsInstructions()) {
+			txtInstructions = findViewById(R.id.txtInstructions);
+			compositeDisposable.add(Completable.complete().delay(600, TimeUnit.MILLISECONDS)
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(
+							() -> {
+								txtInstructions.setVisibility(View.VISIBLE);
+								txtInstructions.setTranslationY(500);// Here should be instructions panel height.
+								AnimationUtil.verticalSpringAnimation(txtInstructions, 0);
+								txtInstructions.setOnClickListener(v ->
+										AnimationUtil.verticalSpringAnimation(
+												txtInstructions,
+												txtInstructions.getHeight(),
+												(animation, canceled, value, velocity) -> {
+													txtInstructions.setVisibility(View.GONE);
+													prefs.setShowDetailsInstructions(false);
+												}));
+							}
+					));
+		}
 
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			// Set the padding to match the Status Bar height
@@ -197,7 +232,7 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 
 		adView = findViewById(R.id.publisherAdView);
 		if (adView != null) {
-			if (prefs.isShowAds()) {
+			if (prefs.isShowAds() && !prefs.isShowDetailsInstructions()) {
 				AdRequest adRequest = new AdRequest.Builder()
 						.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
 						.addTestDevice("849A8D331C1E0F2AE74C7330D0BEF9D8")

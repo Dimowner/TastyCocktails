@@ -22,6 +22,7 @@ import dagger.Component;
 
 import com.dimowner.tastycocktails.NavigationActivity;
 import com.dimowner.tastycocktails.TCApplication;
+import com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsComponent;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsModule;
 import com.dimowner.tastycocktails.dagger.details.DetailsComponent;
@@ -45,5 +46,6 @@ public interface AppComponent {
 	void inject(LocalRepository repository);
 	void inject(NavigationActivity activity);
 	void inject(SettingsActivity activity);
+	void inject(ImagePreviewActivity activity);
 	void inject(TCApplication application);
 }

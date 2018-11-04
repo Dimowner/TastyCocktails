@@ -74,6 +74,23 @@
 					/>
 		</FrameLayout>
 
+		<TextView
+				android:id="@+id/txtInstructions"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@color/colorAccent"
+				android:drawableStart="@drawable/round_arrow_back"
+				android:drawableLeft="@drawable/round_arrow_back"
+				android:drawableEnd="@drawable/ic_round_arrow_forward"
+				android:drawableRight="@drawable/ic_round_arrow_forward"
+				android:gravity="center"
+				android:layout_gravity="bottom"
+				android:visibility="gone"
+				android:padding="@dimen/padding_big"
+				android:text="@string/swipe_to_next"
+				android:textColor="@color/white"
+				android:textSize="@dimen/text_size_xmedium"
+				/>
 	</FrameLayout>
 
 	<com.google.android.gms.ads.AdView

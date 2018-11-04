@@ -10,7 +10,7 @@
 		android:drawableRight="@drawable/round_close"
 		android:gravity="center"
 		android:padding="@dimen/padding_standard"
-		android:text="Swipe left to remove item from history"
+		android:text="@string/swipe_left_to_remove"
 		android:textColor="@color/white"
 		android:textSize="@dimen/text_size_xmedium"
 		/>
