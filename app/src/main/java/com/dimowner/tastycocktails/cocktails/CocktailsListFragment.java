@@ -298,7 +298,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 						@Override
 						public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-							if (viewHolder != null) {
+							if (viewHolder instanceof CocktailsRecyclerAdapter.ItemViewHolder) {
 								final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
 								getDefaultUIUtil().onSelected(foregroundView);
 							}
@@ -308,15 +308,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
 															 RecyclerView.ViewHolder viewHolder, float dX, float dY,
 															 int actionState, boolean isCurrentlyActive) {
-							final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
-							getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
-									actionState, isCurrentlyActive);
+							if (viewHolder instanceof CocktailsRecyclerAdapter.ItemViewHolder) {
+								final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder) viewHolder).getContainer();
+								getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+										actionState, isCurrentlyActive);
+							}
 						}
 
 						@Override
 						public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-							final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
-							getDefaultUIUtil().clearView(foregroundView);
+							if (viewHolder instanceof CocktailsRecyclerAdapter.ItemViewHolder) {
+								final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder) viewHolder).getContainer();
+								getDefaultUIUtil().clearView(foregroundView);
+							}
 						}
 
 						@Override
@@ -331,7 +335,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						public void onChildDraw(Canvas c, RecyclerView recyclerView,
 														RecyclerView.ViewHolder viewHolder, float dX, float dY,
 														int actionState, boolean isCurrentlyActive) {
-							getDefaultUIUtil().onDraw(c, recyclerView, ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer(), dX, dY, actionState, isCurrentlyActive);
+							if (viewHolder instanceof CocktailsRecyclerAdapter.ItemViewHolder) {
+								getDefaultUIUtil().onDraw(c, recyclerView, ((CocktailsRecyclerAdapter.ItemViewHolder) viewHolder).getContainer(), dX, dY, actionState, isCurrentlyActive);
+							}
 						}
 					};
 			new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
@@ -669,6 +675,11 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		if (mAdapter == null) {
 			if (fragmentType == TYPE_HISTORY) {
 				mAdapter = new CocktailsRecyclerAdapter(TYPE_HISTORY, R.layout.list_item_history);
+				boolean show = prefs.isShowHistoryInstructions();
+				mAdapter.showInstructions(show);
+				if (show) {
+					mAdapter.setInstructionsInteractionListener(() -> prefs.setShowHistoryInstructions(false));
+				}
 			} else {
 				mAdapter = new CocktailsRecyclerAdapter(R.layout.list_item2);
 			}

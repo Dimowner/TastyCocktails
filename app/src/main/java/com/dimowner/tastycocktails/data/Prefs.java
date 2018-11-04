@@ -14,6 +14,11 @@ public class Prefs {
 	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
 	private static final String PREF_KEY_IS_SHOW_ADS = "is_show_ads";
 
+	private static final String PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS = "is_show_history_instructions";
+	private static final String PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS = "is_show_details_instructions";
+	private static final String PREF_KEY_IS_SHOW_FILTERS_PANEL_INSTRUCTIONS = "is_show_filters_panel_instructions";
+	private static final String PREF_KEY_IS_SHOW_IMAGE_PREVIEW_INSTRUCTIONS = "is_show_image_preview_instructions";
+
 	private static final String PREF_KEY_FILTER_CATEGORY = "filter_category";
 	private static final String PREF_KEY_FILTER_CATEGORY_POS = "filter_category_pos";
 	private static final String PREF_KEY_FILTER_INGREDIENT = "filter_ingredient";
@@ -49,6 +54,46 @@ public class Prefs {
 	public void setShowAds(boolean b) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putBoolean(PREF_KEY_IS_SHOW_ADS, b);
+		editor.apply();
+	}
+
+	public boolean isShowHistoryInstructions() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS, true);
+	}
+
+	public void setShowHistoryInstructions(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS, b);
+		editor.apply();
+	}
+
+	public boolean isShowDetailsInstructions() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS, true);
+	}
+
+	public void setShowDetailsInstructions(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS, b);
+		editor.apply();
+	}
+
+	public boolean isShowFiltersPanelInstructions() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_FILTERS_PANEL_INSTRUCTIONS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_FILTERS_PANEL_INSTRUCTIONS, true);
+	}
+
+	public void setShowFiltersPanelInstructions(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_FILTERS_PANEL_INSTRUCTIONS, b);
+		editor.apply();
+	}
+
+	public boolean isShowImagePreviewInstructions() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_IMAGE_PREVIEW_INSTRUCTIONS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_IMAGE_PREVIEW_INSTRUCTIONS, true);
+	}
+
+	public void setShowImagePreviewInstructions(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_IMAGE_PREVIEW_INSTRUCTIONS, b);
 		editor.apply();
 	}
 

@@ -42,6 +42,8 @@ import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 import com.dimowner.tastycocktails.util.TimeUtils;
 
+import static com.dimowner.tastycocktails.cocktails.CocktailsListFragment.TYPE_HISTORY;
+
 /**
  * Created on 26.07.2017.
  * @author Dimowner
@@ -67,9 +69,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private ItemLongClickListener itemLongClickListener;
 
+	private InstructionsInteractionListener instructionsInteractionListener;
+
 	private int itemLayoutResId;
 
-	private boolean showInstructions = true;
+	private boolean showInstructions = false;
 
 	//In what type of list is adapter use: normal, fav, history;
 	private int type = CocktailsListFragment.TYPE_UNKNOWN;
@@ -137,6 +141,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		this.type = type;
 	}
 
+	public void showInstructions(boolean show) {
+		if (showInstructions == show) return;
+		showInstructions = show;
+	}
+
 	public void showFooter(boolean show) {
 		if (showFooter == show) return;
 		showFooter = show;
@@ -169,9 +178,12 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	public void onBindViewHolder(final RecyclerView.ViewHolder h, final int position1) {
 		if (h.getItemViewType() == VIEW_TYPE_NORMAL) {
 			int pos = h.getAdapterPosition();
+			if (showInstructions) {
+				pos-=1;
+			}
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
-			if (type == CocktailsListFragment.TYPE_HISTORY) {
+			if (type == TYPE_HISTORY) {
 				holder.description.setText(TimeUtils.formatTime(mShowingData.get(pos).getHistory()));
 			} else {
 				holder.description.setText(mShowingData.get(pos).getCategory());
@@ -200,14 +212,15 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 				holder.image.setImageResource(R.drawable.no_image);
 			}
 
+			int finalPos = pos;
 			holder.btnFev.setOnClickListener(v -> {
 				if (onFavoriteClickListener != null) {
 					onFavoriteClickListener.onFavoriteClick(
-							holder.btnFev, h.getAdapterPosition(), (int) mShowingData.get(h.getAdapterPosition()).getId(), -1);
+							holder.btnFev, finalPos, (int) mShowingData.get(finalPos).getId(), -1);
 				}
 			});
 
-			if (mShowingData.get(holder.getAdapterPosition()).isFavorite()) {
+			if (mShowingData.get(pos).isFavorite()) {
 				holder.btnFev.setImageResource(R.drawable.round_heart_grey);
 			} else {
 				holder.btnFev.setImageResource(R.drawable.round_heart_border_grey);
@@ -215,19 +228,26 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 			holder.view.setOnClickListener(v -> {
 				if (itemClickListener != null) {
-					itemClickListener.onItemClick(v, h.getAdapterPosition());
+					itemClickListener.onItemClick(v, finalPos);
 				}
 			});
 
 			holder.view.setOnLongClickListener(v -> {
 				if (itemLongClickListener != null) {
-					itemLongClickListener.onItemLongClick(v, mShowingData.get(h.getAdapterPosition()).getId(), h.getAdapterPosition());
+					itemLongClickListener.onItemLongClick(v, mShowingData.get(finalPos).getId(), h.getAdapterPosition());
 				}
 				return true;
 			});
 		} else if (h.getItemViewType() == VIEW_TYPE_PROGRESS) {
 			//Do nothing
 		} else if (h.getItemViewType() == VIEW_TYPE_INSTRUCTIONS_HEADER) {
+			h.itemView.setOnClickListener(v -> {
+				if (instructionsInteractionListener != null) {
+					instructionsInteractionListener.onInstructionClosed();
+					showInstructions = false;
+					notifyItemRemoved(0);
+				}
+			});
 			//Do nothing
 		}
 //		//Set transition names
@@ -249,8 +269,12 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	@Override
 	public int getItemViewType(int position) {
-		if (showInstructions && position == 0) {
-			return VIEW_TYPE_INSTRUCTIONS_HEADER;
+		if (showInstructions) {
+			if (position == 0) {
+				return VIEW_TYPE_INSTRUCTIONS_HEADER;
+			} else {
+				return position >= mShowingData.size() + 1 ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
+			}
 		} else {
 			return position >= mShowingData.size() ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
 		}
@@ -334,6 +358,9 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		this.itemLongClickListener = itemLongClickListener;
 	}
 
+	public void setInstructionsInteractionListener(InstructionsInteractionListener instructionsInteractionListener) {
+		this.instructionsInteractionListener = instructionsInteractionListener;
+	}
 //	/**
 ////	 * Save adapters state
 ////	 * @return adapter state.
@@ -401,5 +428,9 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	public interface OnFavoriteClickListener {
 		void onFavoriteClick(ImageView view, int position, int id, int action);
+	}
+
+	public interface InstructionsInteractionListener {
+		void onInstructionClosed();
 	}
 }
