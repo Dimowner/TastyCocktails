@@ -38,7 +38,7 @@
 				android:layout_gravity="start|left"
 				android:background="?android:selectableItemBackground"
 				android:padding="@dimen/padding_standard"
-				app:srcCompat="@drawable/round_arrow_back"/>
+				android:src="@drawable/round_arrow_back"/>
 
 		<TextView
 				style="@style/Text.SectionLabel"

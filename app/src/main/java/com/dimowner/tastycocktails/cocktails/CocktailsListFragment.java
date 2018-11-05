@@ -429,12 +429,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	@Override
 	public void onResume() {
 		super.onResume();
-		advHandler.onResume();
+		if (advHandler != null) { advHandler.onResume(); }
 	}
 
 	@Override
 	public void onPause() {
-		advHandler.onPause();
+		if (advHandler != null) { advHandler.onPause(); }
 		super.onPause();
 	}
 
@@ -446,7 +446,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	@Override
 	public void onDestroyView() {
-		advHandler.onDestroy();
+		if (advHandler != null) { advHandler.onDestroy(); }
 		super.onDestroyView();
 		mPresenter = null;
 		compositeDisposable.dispose();

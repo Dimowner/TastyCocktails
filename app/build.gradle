@@ -53,7 +53,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 9
-def versionPatch = 59
+def versionPatch = 9
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -64,7 +64,7 @@ android {
 		versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
 		versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-		vectorDrawables.useSupportLibrary = true
+//		vectorDrawables.useSupportLibrary = true //Disable this flag to prevent app crashes. Without this flag for devices below Android 5.0 will be created png versions of each vector image.
 	}
 
 	def keystorePropertiesFile = rootProject.file("keystore.properties")

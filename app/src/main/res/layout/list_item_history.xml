@@ -43,7 +43,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:contentDescription="@null"
-				app:srcCompat="@drawable/round_delete_forever"
+				android:src="@drawable/round_delete_forever"
 				android:layout_gravity="center"
 				android:layout_margin="@dimen/padding_standard"
 				/>

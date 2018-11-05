@@ -58,7 +58,7 @@
 					android:background="@drawable/circle_drawable"
 					android:contentDescription="@null"
 					android:foreground="?attr/selectableItemBackgroundBorderless"
-					app:srcCompat="@drawable/round_arrow_back"
+					android:src="@drawable/round_arrow_back"
 					/>
 
 			<ImageButton
@@ -70,7 +70,7 @@
 					android:background="@drawable/circle_drawable"
 					android:contentDescription="@null"
 					android:foreground="?attr/selectableItemBackgroundBorderless"
-					app:srcCompat="@drawable/round_heart_border"
+					android:src="@drawable/round_heart_border"
 					/>
 		</FrameLayout>
 

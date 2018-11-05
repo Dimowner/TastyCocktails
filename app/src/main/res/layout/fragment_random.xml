@@ -65,7 +65,7 @@
 						android:background="@drawable/circle_drawable"
 						android:contentDescription="@null"
 						android:foreground="?attr/selectableItemBackgroundBorderless"
-						app:srcCompat="@drawable/round_menu"
+						android:src="@drawable/round_menu"
 						/>
 
 				<ImageButton
@@ -77,7 +77,7 @@
 						android:background="@drawable/circle_drawable"
 						android:contentDescription="@null"
 						android:foreground="?attr/selectableItemBackgroundBorderless"
-						app:srcCompat="@drawable/round_heart_border"
+						android:src="@drawable/round_heart_border"
 						/>
 			</FrameLayout>
 
@@ -90,7 +90,7 @@
 				android:layout_gravity="bottom|end"
 				android:layout_margin="@dimen/padding_standard"
 				android:visibility="gone"
-				app:srcCompat="@drawable/dice_5"/>
+				android:src="@drawable/dice_5"/>
 	</android.support.design.widget.CoordinatorLayout>
 
 	<com.google.android.gms.ads.AdView
