@@ -59,10 +59,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
@@ -116,6 +119,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private View filterMenu;
 	private SwipeRefreshLayout mRefreshLayout;
 	private FloatingActionButton btnUp;
+	private TextView txtInstructions;
+	private TextView txtFiltersInstructions;
 	private AdView adView;
 
 	private Spinner categorySpinner;
@@ -269,7 +274,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					}, Timber::e));
 		}
 
-		if (!prefs.isFirstRun()) {
+		if (!prefs.isFirstRun() && !(fragmentType == TYPE_HISTORY && prefs.isShowHistoryInstructions())) {
 			adView = view.findViewById(R.id.publisherAdView);
 			adView.setVisibility(View.VISIBLE);
 			if (adView != null ) {
@@ -287,6 +292,27 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 
 		if (fragmentType == TYPE_HISTORY) {
+			if (prefs.isShowHistoryInstructions()) {
+				txtInstructions = view.findViewById(R.id.txtInstructions);
+				compositeDisposable.add(Completable.complete().delay(AppConstants.SHOW_INSTRUCTIONS_DELAY_MILLS, TimeUnit.MILLISECONDS)
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(
+								() -> {
+									txtInstructions.setVisibility(View.VISIBLE);
+									txtInstructions.setTranslationY(500);// Here should be instructions panel height.
+									AnimationUtil.verticalSpringAnimation(txtInstructions, 0);
+									txtInstructions.setOnClickListener(v ->
+											AnimationUtil.verticalSpringAnimation(
+													txtInstructions,
+													txtInstructions.getHeight(),
+													(animation, canceled, value, velocity) -> {
+														txtInstructions.setVisibility(View.GONE);
+														prefs.setShowHistoryInstructions(false);
+													}));
+								}
+						));
+			}
+
 			ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
 					new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 						@Override
@@ -329,6 +355,15 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 							ListItem item = mAdapter.getItem(pos);
 							mPresenter.removeFromHistory(item.getId());
 							showSnackBarRemoveFromHistory(item, pos);
+							if (txtInstructions.getVisibility() == View.VISIBLE) {
+								AnimationUtil.verticalSpringAnimation(
+										txtInstructions,
+										txtInstructions.getHeight(),
+										(animation, canceled, value, velocity) -> {
+											txtInstructions.setVisibility(View.GONE);
+														prefs.setShowHistoryInstructions(false);
+										});
+							}
 						}
 
 						@Override
@@ -348,12 +383,14 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				public void onTopThreshold() {
 					invertMenuButton();
 					showMenu();
+					hideFiltersPanelInstructions();
 				}
 
 				@Override
 				public void onBottomThreshold() {
 					invertMenuButton();
 					showMenu();
+					hideFiltersPanelInstructions();
 				}
 
 				@Override
@@ -461,6 +498,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	private void initFiltersPanel(View view) {
+		if (prefs.isShowFiltersPanelInstructions()) {
+			txtFiltersInstructions = view.findViewById(R.id.txtFiltersInstructions);
+			compositeDisposable.add(Completable.complete().delay(AppConstants.SHOW_INSTRUCTIONS_DELAY_MILLS, TimeUnit.MILLISECONDS)
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(() -> txtFiltersInstructions.setVisibility(View.VISIBLE)));
+		}
 		//Init CATEGORY filter
 		categorySpinner = view.findViewById(R.id.filter_categories);
 		// Create an ArrayAdapter using the string array and a default spinner layout
@@ -654,6 +697,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		});
 	}
 
+	private void hideFiltersPanelInstructions() {
+		prefs.setShowFiltersPanelInstructions(false);
+		if (txtFiltersInstructions != null) {
+			txtFiltersInstructions.setVisibility(View.GONE);
+		}
+	}
+
 	private void onFilterSelected() {
 		if (isChangedFilter) {
 			applyFilters();
@@ -675,11 +725,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		if (mAdapter == null) {
 			if (fragmentType == TYPE_HISTORY) {
 				mAdapter = new CocktailsRecyclerAdapter(TYPE_HISTORY, R.layout.list_item_history);
-				boolean show = prefs.isShowHistoryInstructions();
-				mAdapter.showInstructions(show);
-				if (show) {
-					mAdapter.setInstructionsInteractionListener(() -> prefs.setShowHistoryInstructions(false));
-				}
 			} else {
 				mAdapter = new CocktailsRecyclerAdapter(R.layout.list_item2);
 			}
@@ -993,9 +1038,15 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		extractIds(data);
 		//Handle btnUp show logic.
 		if (data.size() > ITEM_COUNT_WITHOUT_BTN_UP) {
-			btnUp.setVisibility(View.VISIBLE);
-			mAdapter.showFooter(true);
-			dividerItemDecoration.showDividerForLastItem(false);
+			if (fragmentType == TYPE_HISTORY && prefs.isShowHistoryInstructions()) {
+				btnUp.setVisibility(View.GONE);
+				mAdapter.showFooter(false);
+				dividerItemDecoration.showDividerForLastItem(true);
+			} else {
+				btnUp.setVisibility(View.VISIBLE);
+				mAdapter.showFooter(true);
+				dividerItemDecoration.showDividerForLastItem(false);
+			}
 		} else {
 			btnUp.setVisibility(View.GONE);
 			mAdapter.showFooter(false);

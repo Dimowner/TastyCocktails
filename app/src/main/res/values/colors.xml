@@ -38,5 +38,6 @@
 	<color name="circle_drawable">#47575757</color>
 
 	<color name="grey">#757575</color>
+	<color name="light_grey">#999999</color>
 
 </resources>

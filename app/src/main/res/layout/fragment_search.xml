@@ -131,6 +131,24 @@
 				android:layout_margin="@dimen/padding_standard"
 				app:srcCompat="@drawable/ic_round_arrow_upward_24px"
 				tools:visibility="visible"/>
+
+		<TextView
+				android:id="@+id/txtInstructions"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@color/colorAccent"
+				android:drawableStart="@drawable/round_info_white"
+				android:drawableLeft="@drawable/round_info_white"
+				android:drawableEnd="@drawable/round_close"
+				android:drawableRight="@drawable/round_close"
+				android:gravity="center"
+				android:visibility="gone"
+				android:layout_gravity="bottom"
+				android:padding="@dimen/padding_big"
+				android:text="@string/swipe_left_to_remove"
+				android:textColor="@color/white"
+				android:textSize="@dimen/text_size_xmedium"
+				/>
 	</android.support.design.widget.CoordinatorLayout>
 
 	<com.google.android.gms.ads.AdView

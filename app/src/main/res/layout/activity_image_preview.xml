@@ -27,7 +27,7 @@
 			android:visibility="gone"
 			android:layout_gravity="bottom"
 			android:padding="@dimen/padding_big"
-			android:text="@string/swipe_to_top_or_bottom_to_close"
+			android:text="@string/pull_to_top_or_bottom_to_close"
 			android:textColor="@color/white"
 			android:textSize="@dimen/text_size_xmedium"
 			/>

@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.util.AnimationUtil;
@@ -77,10 +78,12 @@ public class ImagePreviewActivity extends AppCompatActivity {
 			@Override
 			public void onTopThreshold() {
 				finishActivity();
+				prefs.setShowImagePreviewInstructions(false);
 			}
 			@Override
 			public void onBottomThreshold() {
 				finishActivity();
+				prefs.setShowImagePreviewInstructions(false);
 			}
 			@Override public void onTouchDown() { }
 			@Override public void onTouchUp() { }
@@ -98,7 +101,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
 		if (prefs.isShowImagePreviewInstructions()) {
 			txtInstructions = findViewById(R.id.txtInstructions);
-			disposable = Completable.complete().delay(600, TimeUnit.MILLISECONDS)
+			disposable = Completable.complete().delay(AppConstants.SHOW_INSTRUCTIONS_DELAY_MILLS, TimeUnit.MILLISECONDS)
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(
 							() -> {

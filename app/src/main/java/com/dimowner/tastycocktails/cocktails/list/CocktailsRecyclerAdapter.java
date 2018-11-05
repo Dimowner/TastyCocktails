@@ -53,7 +53,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	private final static int VIEW_TYPE_NORMAL = 1;
 	private final static int VIEW_TYPE_PROGRESS = 2;
 	private final static int VIEW_TYPE_FOOTER = 3;
-	private final static int VIEW_TYPE_INSTRUCTIONS_HEADER = 4;
 
 	private boolean showFooter;
 
@@ -69,11 +68,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private ItemLongClickListener itemLongClickListener;
 
-	private InstructionsInteractionListener instructionsInteractionListener;
-
 	private int itemLayoutResId;
-
-	private boolean showInstructions = false;
 
 	//In what type of list is adapter use: normal, fav, history;
 	private int type = CocktailsListFragment.TYPE_UNKNOWN;
@@ -81,11 +76,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	public class ItemViewHolder extends RecyclerView.ViewHolder {
 		TextView name;
- 		TextView description;
+		TextView description;
 		ImageView image;
 		ImageView btnFev;
- 		View view;
- 		LinearLayout container;
+		View view;
+		LinearLayout container;
 
 		public ItemViewHolder(View itemView) {
 			super(itemView);
@@ -121,15 +116,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		}
 	}
 
-	public static class InstructionsViewHolder extends RecyclerView.ViewHolder {
-		final View view;
-
-		InstructionsViewHolder(View itemView){
-			super(itemView);
-			view = itemView;
-		}
-	}
-
 	public CocktailsRecyclerAdapter(int layoutResId) {
 		this.mShowingData = new ArrayList<>();
 		this.itemLayoutResId = layoutResId;
@@ -139,11 +125,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		this.mShowingData = new ArrayList<>();
 		this.itemLayoutResId = layoutResId;
 		this.type = type;
-	}
-
-	public void showInstructions(boolean show) {
-		if (showInstructions == show) return;
-		showInstructions = show;
 	}
 
 	public void showFooter(boolean show) {
@@ -165,10 +146,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			View v = LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.list_footer, parent, false);
 			return new FooterViewHolder(v);
-		} else if (viewType == VIEW_TYPE_INSTRUCTIONS_HEADER) {
-			View v = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.list_item_history_instructions, parent, false);
-			return new InstructionsViewHolder(v);
 		} else {
 			return null;
 		}
@@ -178,9 +155,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	public void onBindViewHolder(final RecyclerView.ViewHolder h, final int position1) {
 		if (h.getItemViewType() == VIEW_TYPE_NORMAL) {
 			int pos = h.getAdapterPosition();
-			if (showInstructions) {
-				pos-=1;
-			}
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
 			if (type == TYPE_HISTORY) {
@@ -240,15 +214,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			});
 		} else if (h.getItemViewType() == VIEW_TYPE_PROGRESS) {
 			//Do nothing
-		} else if (h.getItemViewType() == VIEW_TYPE_INSTRUCTIONS_HEADER) {
-			h.itemView.setOnClickListener(v -> {
-				if (instructionsInteractionListener != null) {
-					instructionsInteractionListener.onInstructionClosed();
-					showInstructions = false;
-					notifyItemRemoved(0);
-				}
-			});
-			//Do nothing
 		}
 //		//Set transition names
 //		Resources res = holder.view.getResources();
@@ -264,20 +229,12 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	@Override
 	public int getItemCount() {
-		return mShowingData.size() + (showFooter ? 1 : 0) + (showInstructions ? 1 : 0);
+		return mShowingData.size() + (showFooter ? 1 : 0);
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		if (showInstructions) {
-			if (position == 0) {
-				return VIEW_TYPE_INSTRUCTIONS_HEADER;
-			} else {
-				return position >= mShowingData.size() + 1 ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
-			}
-		} else {
-			return position >= mShowingData.size() ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
-		}
+		return position >= mShowingData.size() ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
 	}
 
 	public ListItem getItem(int pos) {
@@ -358,9 +315,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		this.itemLongClickListener = itemLongClickListener;
 	}
 
-	public void setInstructionsInteractionListener(InstructionsInteractionListener instructionsInteractionListener) {
-		this.instructionsInteractionListener = instructionsInteractionListener;
-	}
 //	/**
 ////	 * Save adapters state
 ////	 * @return adapter state.
@@ -428,9 +382,5 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	public interface OnFavoriteClickListener {
 		void onFavoriteClick(ImageView view, int position, int id, int action);
-	}
-
-	public interface InstructionsInteractionListener {
-		void onInstructionClosed();
 	}
 }

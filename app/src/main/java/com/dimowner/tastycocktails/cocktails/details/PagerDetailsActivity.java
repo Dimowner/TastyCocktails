@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.dagger.details.DetailsModule;
@@ -182,12 +183,13 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		});
 		viewPager.setAdapter(pagerAdapter);
 		viewPager.setCurrentItem(activeItem, false);
+		updateHistory(activeItem);
 		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 			@Override public void onPageSelected(int position) {
 				updateFavorite(viewModel.getCachedDrink(position));
 				updateHistory(position);
-				if (txtInstructions != null) {
+				if (txtInstructions != null && ids.size() > 2) {
 					AnimationUtil.verticalSpringAnimation(
 							txtInstructions,
 							txtInstructions.getHeight(),
@@ -200,9 +202,9 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 			@Override public void onPageScrollStateChanged(int state) {}
 		});
 
-		if (prefs.isShowDetailsInstructions()) {
+		if (prefs.isShowDetailsInstructions() && ids.size() > 2) {
 			txtInstructions = findViewById(R.id.txtInstructions);
-			compositeDisposable.add(Completable.complete().delay(600, TimeUnit.MILLISECONDS)
+			compositeDisposable.add(Completable.complete().delay(AppConstants.SHOW_INSTRUCTIONS_DELAY_MILLS, TimeUnit.MILLISECONDS)
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(
 							() -> {

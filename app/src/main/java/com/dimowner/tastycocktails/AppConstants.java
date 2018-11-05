@@ -21,4 +21,6 @@ public class AppConstants {
 
 	public static final int TIME_FORMAT_24H = 11;
 	public static final int TIME_FORMAT_12H = 12;
+
+	public static final int SHOW_INSTRUCTIONS_DELAY_MILLS = 800;
 }
