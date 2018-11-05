@@ -154,7 +154,8 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	@Override
 	public void onBindViewHolder(final RecyclerView.ViewHolder h, final int position1) {
 		if (h.getItemViewType() == VIEW_TYPE_NORMAL) {
-			int pos = h.getAdapterPosition();
+//			int pos = h.getAdapterPosition();
+			final int pos = position1;
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
 			if (type == TYPE_HISTORY) {
@@ -186,11 +187,11 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 				holder.image.setImageResource(R.drawable.no_image);
 			}
 
-			int finalPos = pos;
+			final int id = (int) mShowingData.get(pos).getId();
 			holder.btnFev.setOnClickListener(v -> {
 				if (onFavoriteClickListener != null) {
 					onFavoriteClickListener.onFavoriteClick(
-							holder.btnFev, finalPos, (int) mShowingData.get(finalPos).getId(), -1);
+							holder.btnFev, findPositionForId(id), id, -1);
 				}
 			});
 
@@ -202,13 +203,13 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 			holder.view.setOnClickListener(v -> {
 				if (itemClickListener != null) {
-					itemClickListener.onItemClick(v, finalPos);
+					itemClickListener.onItemClick(v, findPositionForId(id));
 				}
 			});
 
 			holder.view.setOnLongClickListener(v -> {
 				if (itemLongClickListener != null) {
-					itemLongClickListener.onItemLongClick(v, mShowingData.get(finalPos).getId(), h.getAdapterPosition());
+					itemLongClickListener.onItemLongClick(v, id, findPositionForId(id));
 				}
 				return true;
 			});
@@ -220,6 +221,15 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 //		ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
 //		ViewCompat.setTransitionName(holder.description, res.getString(R.string.list_item_content_transition));
 //		ViewCompat.setTransitionName(holder.image, res.getString(R.string.list_item_image_transition));
+	}
+
+	private int findPositionForId(int id) {
+		for (int i = 0; i < mShowingData.size(); i++) {
+			if (id == mShowingData.get(i).getId()) {
+				return i;
+			}
+		}
+		return 0;
 	}
 
 	@Override

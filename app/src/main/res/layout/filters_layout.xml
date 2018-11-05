@@ -120,7 +120,7 @@
 				android:padding="@dimen/padding_small"
 				android:text="@string/pull_to_close"
 				android:textColor="@color/light_grey"
-				android:textSize="@dimen/text_size_xmedium"
+				android:textSize="@dimen/text_size_medium"
 				/>
 
 		<Button

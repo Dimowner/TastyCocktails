@@ -123,9 +123,11 @@ public class ImagePreviewActivity extends AppCompatActivity {
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			// Set the padding to match the Status Bar height
 			toolbar.setPadding(0, AndroidUtils.getStatusBarHeight(getApplicationContext()), 0, 0);
-			int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-			if (resourceId > 0) {
-				navigationBarHeight = getResources().getDimensionPixelSize(resourceId);
+			if (hasNavBar()) {
+				int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+				if (resourceId > 0) {
+					navigationBarHeight = getResources().getDimensionPixelSize(resourceId);
+				}
 			}
 		}
 
@@ -174,5 +176,10 @@ public class ImagePreviewActivity extends AppCompatActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		container.setBackgroundResource(android.R.color.transparent);
+	}
+
+	public boolean hasNavBar () {
+		int id = getResources().getIdentifier("config_showNavigationBar", "bool", "android");
+		return id > 0 && getResources().getBoolean(id);
 	}
 }

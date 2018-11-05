@@ -298,17 +298,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(
 								() -> {
-									txtInstructions.setVisibility(View.VISIBLE);
-									txtInstructions.setTranslationY(500);// Here should be instructions panel height.
-									AnimationUtil.verticalSpringAnimation(txtInstructions, 0);
-									txtInstructions.setOnClickListener(v ->
-											AnimationUtil.verticalSpringAnimation(
-													txtInstructions,
-													txtInstructions.getHeight(),
-													(animation, canceled, value, velocity) -> {
-														txtInstructions.setVisibility(View.GONE);
-														prefs.setShowHistoryInstructions(false);
-													}));
+									if (mAdapter.getItemCount() > 0) {
+										txtInstructions.setVisibility(View.VISIBLE);
+										txtInstructions.setTranslationY(500);// Here should be instructions panel height.
+										AnimationUtil.verticalSpringAnimation(txtInstructions, 0);
+										txtInstructions.setOnClickListener(v ->
+												AnimationUtil.verticalSpringAnimation(
+														txtInstructions,
+														txtInstructions.getHeight(),
+														(animation, canceled, value, velocity) -> {
+															txtInstructions.setVisibility(View.GONE);
+															prefs.setShowHistoryInstructions(false);
+														}));
+									}
 								}
 						));
 			}
@@ -1066,10 +1068,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mTxtEmpty.setVisibility(View.VISIBLE);
 			if (fragmentType == TYPE_FAVORITES) {
 				mTxtEmpty.setText(R.string.no_favorite_drinks);
+				mTxtEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.round_heart_grey_64, 0, 0);
 			} else if (fragmentType == TYPE_HISTORY) {
 				mTxtEmpty.setText(R.string.history_is_empty);
+				mTxtEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.round_history_64, 0, 0);
 			} else {
-				mTxtEmpty.setText(R.string.empty);
+				mTxtEmpty.setText(R.string.nothing_was_found);
+				mTxtEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.round_local_bar_64, 0, 0);
 			}
 		} else {
 			if (mRecyclerView.getVisibility() != View.VISIBLE) {
