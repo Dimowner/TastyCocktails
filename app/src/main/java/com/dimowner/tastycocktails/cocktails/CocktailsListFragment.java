@@ -357,7 +357,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 							ListItem item = mAdapter.getItem(pos);
 							mPresenter.removeFromHistory(item.getId());
 							showSnackBarRemoveFromHistory(item, pos);
-							if (txtInstructions.getVisibility() == View.VISIBLE) {
+							if (txtInstructions != null && txtInstructions.getVisibility() == View.VISIBLE) {
 								AnimationUtil.verticalSpringAnimation(
 										txtInstructions,
 										txtInstructions.getHeight(),

@@ -46,10 +46,10 @@
 				android:icon="@drawable/ic_round_settings_24px"
 				android:title="@string/nav_settings"/>
 
-		<item
-				android:id="@+id/nav_about"
-				android:icon="@drawable/round_info"
-				android:title="@string/nav_about"/>
+		<!--<item-->
+				<!--android:id="@+id/nav_about"-->
+				<!--android:icon="@drawable/round_info"-->
+				<!--android:title="@string/nav_about"/>-->
 
 		<!--<item-->
 				<!--android:id="@+id/nav_rate"-->
