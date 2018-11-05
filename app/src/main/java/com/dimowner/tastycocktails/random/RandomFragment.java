@@ -38,6 +38,7 @@ import android.widget.ImageButton;
 
 import javax.inject.Inject;
 
+import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
@@ -47,7 +48,6 @@ import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AnimationUtil;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 /**
@@ -75,7 +75,7 @@ public class RandomFragment extends Fragment {
 	private ImageButton btnFavorite;
 	private FloatingActionButton fab;
 	private CoordinatorLayout mRoot;
-	private AdView adView;
+	private AdvHandler advHandler;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,19 +129,8 @@ public class RandomFragment extends Fragment {
 			mPresenter.bindView(mAdapter);
 		}
 
-		adView = view.findViewById(R.id.publisherAdView);
-		if (adView != null) {
-			if (prefs.isShowAds()) {
-				AdRequest adRequest = new AdRequest.Builder()
-						.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-						.addTestDevice("849A8D331C1E0F2AE74C7330D0BEF9D8")
-						.addTestDevice("53ECB11D7A7CCB1BCC9B40BAF5F5DAE7")
-						.build();
-				adView.loadAd(adRequest);
-			} else {
-				adView.setVisibility(View.GONE);
-			}
-		}
+		AdView adView = view.findViewById(R.id.adView);
+		advHandler = new AdvHandler(adView, prefs);
 
 		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RANDOM);
 	}
@@ -149,13 +138,7 @@ public class RandomFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (adView != null) {
-			if (prefs.isShowAds()) {
-				adView.resume();
-			} else {
-				adView.setVisibility(View.GONE);
-			}
-		}
+		advHandler.onResume();
 		if (!isCreated) {
 			mPresenter.loadRandomDrink();
 			fab.setVisibility(View.VISIBLE);
@@ -166,9 +149,7 @@ public class RandomFragment extends Fragment {
 
 	@Override
 	public void onPause() {
-		if (adView != null) {
-			adView.pause();
-		}
+		advHandler.onPause();
 		super.onPause();
 	}
 
@@ -234,9 +215,7 @@ public class RandomFragment extends Fragment {
 
 	@Override
 	public void onDestroyView() {
-		if (adView != null) {
-			adView.destroy();
-		}
+		advHandler.onDestroy();
 		super.onDestroyView();
 		mPresenter.unbindView();
 		mPresenter = null;

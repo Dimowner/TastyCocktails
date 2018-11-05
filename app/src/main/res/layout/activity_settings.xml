@@ -130,4 +130,15 @@
 			app:layout_constraintTop_toBottomOf="@+id/btnRate"
 			/>
 
+
+	<com.google.android.gms.ads.AdView
+			android:id="@+id/adView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:visibility="gone"
+			app:adSize="SMART_BANNER"
+			app:adUnitId="@string/bottom_banner_id"
+			app:layout_constraintBottom_toBottomOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

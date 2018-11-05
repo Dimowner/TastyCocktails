@@ -65,6 +65,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
@@ -79,7 +80,6 @@ import com.dimowner.tastycocktails.util.AnimationUtil;
 import com.dimowner.tastycocktails.util.UIUtil;
 import com.dimowner.tastycocktails.widget.ThresholdListener;
 import com.dimowner.tastycocktails.widget.TouchLayout;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import timber.log.Timber;
@@ -121,7 +121,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private FloatingActionButton btnUp;
 	private TextView txtInstructions;
 	private TextView txtFiltersInstructions;
-	private AdView adView;
+	private AdvHandler advHandler;
 
 	private Spinner categorySpinner;
 	private Spinner ingredientSpinner;
@@ -275,20 +275,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		}
 
 		if (!prefs.isFirstRun() && !(fragmentType == TYPE_HISTORY && prefs.isShowHistoryInstructions())) {
-			adView = view.findViewById(R.id.publisherAdView);
-			adView.setVisibility(View.VISIBLE);
-			if (adView != null ) {
-				if (prefs.isShowAds()) {
-					AdRequest adRequest = new AdRequest.Builder()
-							.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-							.addTestDevice("849A8D331C1E0F2AE74C7330D0BEF9D8")
-							.addTestDevice("53ECB11D7A7CCB1BCC9B40BAF5F5DAE7")
-							.build();
-					adView.loadAd(adRequest);
-				} else {
-					adView.setVisibility(View.GONE);
-				}
-			}
+			AdView adView = view.findViewById(R.id.adView);
+ 			advHandler = new AdvHandler(adView, prefs);
 		}
 
 		if (fragmentType == TYPE_HISTORY) {
@@ -441,20 +429,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (adView != null) {
-			if (prefs.isShowAds()) {
-				adView.resume();
-			} else {
-				adView.setVisibility(View.GONE);
-			}
-		}
+		advHandler.onResume();
 	}
 
 	@Override
 	public void onPause() {
-		if (adView != null) {
-			adView.pause();
-		}
+		advHandler.onPause();
 		super.onPause();
 	}
 
@@ -466,9 +446,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	@Override
 	public void onDestroyView() {
-		if (adView != null) {
-			adView.destroy();
-		}
+		advHandler.onDestroy();
 		super.onDestroyView();
 		mPresenter = null;
 		compositeDisposable.dispose();

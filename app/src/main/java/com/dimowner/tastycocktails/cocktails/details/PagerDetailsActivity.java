@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
@@ -23,7 +24,6 @@ import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AnimationUtil;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
@@ -65,7 +65,8 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	private ViewPager viewPager;
 	private ImageButton btnFav;
 	private TextView txtInstructions;
-	private AdView adView;
+
+	private AdvHandler advHandler;
 
 	private DetailsPagerAdapter pagerAdapter;
 
@@ -82,25 +83,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		i.putExtra(EXTRAS_KEY_ACTIVE_ITEM_POS, activeItemPosition);
 		return i;
 	}
-
-//	public static Intent getStartIntent(Context context, int type) {
-//		Intent i = new Intent(context, PagerDetailsActivity.class);
-//		i.putExtra(EXTRAS_KEY_TYPE, type);
-//		if (type == TYPE_FILETERS) {
-//			throw new RuntimeException("Not appropriate method call. Please call another getStartIntent for this type with additional params");
-//		}
-//		return i;
-//	}
-//
-//	public static Intent getStartIntent(Context context, int type, int activeFilter, String filterValue) {
-//		Intent i = new Intent(context, PagerDetailsActivity.class);
-//		i.putExtra(EXTRAS_KEY_TYPE, type);
-//		if (type == TYPE_FILETERS) {
-//			i.putExtra(EXTRAS_KEY_ACTIVE_FILTER, activeFilter);
-//			i.putExtra(EXTRAS_KEY_FILTER_VALUE, filterValue);
-//		}
-//		return i;
-//	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -232,19 +214,8 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 			AndroidUtils.handleNavigationBarColor(this);
 		}
 
-		adView = findViewById(R.id.publisherAdView);
-		if (adView != null) {
-			if (prefs.isShowAds() && !prefs.isShowDetailsInstructions()) {
-				AdRequest adRequest = new AdRequest.Builder()
-						.addTestDevice("3CDE42B77B78065EF7879C6A83E0AF4B")
-						.addTestDevice("849A8D331C1E0F2AE74C7330D0BEF9D8")
-						.addTestDevice("53ECB11D7A7CCB1BCC9B40BAF5F5DAE7")
-						.build();
-				adView.loadAd(adRequest);
-			} else {
-				adView.setVisibility(View.GONE);
-			}
-		}
+		AdView adView = findViewById(R.id.adView);
+		advHandler = new AdvHandler(adView, prefs);
 	}
 
 	@Override
@@ -256,28 +227,18 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (adView != null) {
-			if (prefs.isShowAds()) {
-				adView.resume();
-			} else {
-				adView.setVisibility(View.GONE);
-			}
-		}
+		advHandler.onResume();
 	}
 
 	@Override
 	public void onPause() {
-		if (adView != null) {
-			adView.pause();
-		}
+		advHandler.onPause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		if (adView != null) {
-			adView.destroy();
-		}
+		advHandler.onDestroy();
 		super.onDestroy();
 		compositeDisposable.dispose();
 	}
@@ -317,19 +278,11 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	}
 
 	private void updateFavorite(Drink d) {
-//		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			if (d != null && d.isFavorite()) {
-				btnFav.setImageResource(R.drawable.round_heart);
-			} else {
-				btnFav.setImageResource(R.drawable.round_heart_border);
-			}
-//		} else {
-//			if (d != null && d.isFavorite()) {
-//				btnFav.setImageResource(R.drawable.heart);
-//			} else {
-//				btnFav.setImageResource(R.drawable.heart_outline);
-//			}
-//		}
+		if (d != null && d.isFavorite()) {
+			btnFav.setImageResource(R.drawable.round_heart);
+		} else {
+			btnFav.setImageResource(R.drawable.round_heart_border);
+		}
 	}
 
 	private void updateHistory(int pos) {

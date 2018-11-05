@@ -17,17 +17,21 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.dimowner.tastycocktails.AboutDialog;
+import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.licences.LicenceActivity;
+import com.google.android.gms.ads.AdView;
 
 import javax.inject.Inject;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
 	@Inject Prefs prefs;
+
+	private AdvHandler advHandler;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +69,29 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
 			getWindow().setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
 		}
+
+		AdView adView = findViewById(R.id.adView);
+		advHandler = new AdvHandler(adView, prefs);
+
 		TCApplication.event(getApplicationContext(), MixPanel.EVENT_SETTINGS);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		advHandler.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		advHandler.onResume();
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		advHandler.onDestroy();
+		super.onDestroy();
 	}
 
 	private void showAboutDialog() {
