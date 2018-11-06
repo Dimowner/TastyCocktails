@@ -125,46 +125,6 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 		MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_id));
 //		tracker.activityOnCreateEnd();
-
-		// Write a message to the database
-		FirebaseDatabase database = FirebaseDatabase.getInstance();
-		DatabaseReference myRef = database.getReference("messages");
-
-		// Read from the database
-		myRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-				// This method is called once with the initial value and again
-				// whenever data at this location is updated.
-				MyMessage value = dataSnapshot.getValue(MyMessage.class);
-				Log.v("TAG", "Value is: " + value.toString());
-			}
-
-			@Override
-			public void onCancelled(@NonNull DatabaseError error) {
-				// Failed to read value
-				Log.v("TAG", "Failed to read value.", error.toException());
-			}
-		});
-
-//		MyMessage tempMessage = new MyMessage("Test1");
-//		myRef.push()
-//				.setValue(tempMessage, (databaseError, databaseReference) -> {
-//					if (databaseError == null) {
-////						String key = databaseReference.getKey();
-////						StorageReference storageReference =
-////								FirebaseStorage.getInstance()
-////										.getReference(mFirebaseUser.getUid())
-////										.child(key)
-////										.child(uri.getLastPathSegment());
-////
-////						putImageInStorage(storageReference, uri, key);
-//					} else {
-//						Log.d("TAG", "Unable to write message to database.",
-//								databaseError.toException());
-//					}
-//				});
-//		Timber.v("setValue");
 	}
 
 //	@Override

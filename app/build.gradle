@@ -52,7 +52,7 @@ ext.versions = [
 		logInterceptor	  : "3.8.1",
 
 		firebaseVersion  : "16.0.4",
-		firebaseAuth     : "16.0.2"
+//		firebaseAuth     : "16.0.5"
 ]
 
 def versionMajor = 0
