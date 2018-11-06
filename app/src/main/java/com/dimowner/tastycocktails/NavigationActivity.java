@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -42,8 +41,9 @@ import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.random.RandomFragment;
+import com.dimowner.tastycocktails.settings.SettingsActivity;
 import com.dimowner.tastycocktails.util.AndroidUtils;
-import com.dimowner.tastycocktails.util.AppStartTracker;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -125,7 +125,6 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 		MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_id));
 //		tracker.activityOnCreateEnd();
-		tracker.activityOnCreateEnd();
 
 		// Write a message to the database
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
