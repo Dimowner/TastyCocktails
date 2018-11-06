@@ -140,4 +140,93 @@ public class ModelMapper {
 	private static String getIngredientImageUrl(String ingredientName) {
 		return AppConstants.BASE_INGREDIENT_PATH + ingredientName + ".png";
 	}
+
+	public static FirebaseDrink drinkToFirebaseDrink(Drink d) {
+		return new FirebaseDrink(
+				d.getIdDrink(),
+				0,
+				d.getStrDrink(),
+				d.getStrCategory(),
+				d.getStrAlcoholic(),
+				d.getStrGlass(),
+				d.getStrInstructions(),
+				d.getStrDrinkThumb(),
+				d.getStrIngredient1(),
+				d.getStrIngredient2(),
+				d.getStrIngredient3(),
+				d.getStrIngredient4(),
+				d.getStrIngredient5(),
+				d.getStrIngredient6(),
+				d.getStrIngredient7(),
+				d.getStrIngredient8(),
+				d.getStrIngredient9(),
+				d.getStrIngredient10(),
+				d.getStrIngredient11(),
+				d.getStrIngredient12(),
+				d.getStrIngredient13(),
+				d.getStrIngredient14(),
+				d.getStrIngredient15(),
+				d.getStrMeasure1(),
+				d.getStrMeasure2(),
+				d.getStrMeasure3(),
+				d.getStrMeasure4(),
+				d.getStrMeasure5(),
+				d.getStrMeasure6(),
+				d.getStrMeasure7(),
+				d.getStrMeasure8(),
+				d.getStrMeasure9(),
+				d.getStrMeasure10(),
+				d.getStrMeasure11(),
+				d.getStrMeasure12(),
+				d.getStrMeasure13(),
+				d.getStrMeasure14(),
+				d.getStrMeasure15()
+			);
+	}
+
+	public static Drink firebaseDrinkToDrink(FirebaseDrink d) {
+		return new Drink(
+				d.getIdDrink(),
+				false,
+				d.getStrDrink(),
+				d.getStrCategory(),
+				d.getStrAlcoholic(),
+				d.getStrGlass(),
+				d.getStrInstructions(),
+				d.getStrDrinkThumb(),
+				false,
+				0,
+				d.getStrIngredient1(),
+				d.getStrIngredient2(),
+				d.getStrIngredient3(),
+				d.getStrIngredient4(),
+				d.getStrIngredient5(),
+				d.getStrIngredient6(),
+				d.getStrIngredient7(),
+				d.getStrIngredient8(),
+				d.getStrIngredient9(),
+				d.getStrIngredient10(),
+				d.getStrIngredient11(),
+				d.getStrIngredient12(),
+				d.getStrIngredient13(),
+				d.getStrIngredient14(),
+				d.getStrIngredient15(),
+				d.getStrMeasure1(),
+				d.getStrMeasure2(),
+				d.getStrMeasure3(),
+				d.getStrMeasure4(),
+				d.getStrMeasure5(),
+				d.getStrMeasure6(),
+				d.getStrMeasure7(),
+				d.getStrMeasure8(),
+				d.getStrMeasure9(),
+				d.getStrMeasure10(),
+				d.getStrMeasure11(),
+				d.getStrMeasure12(),
+				d.getStrMeasure13(),
+				d.getStrMeasure14(),
+				d.getStrMeasure15()
+		);
+	}
+
 }

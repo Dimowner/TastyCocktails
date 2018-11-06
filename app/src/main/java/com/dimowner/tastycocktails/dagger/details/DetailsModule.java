@@ -22,8 +22,8 @@ import android.support.v4.app.FragmentActivity;
 
 import dagger.Module;
 import dagger.Provides;
-import com.dimowner.tastycocktails.cocktails.details.DetailsContract;
-import com.dimowner.tastycocktails.cocktails.details.DetailsPresenter;
+
+import com.dimowner.tastycocktails.FirebaseHandler;
 import com.dimowner.tastycocktails.cocktails.details.DetailsViewModel;
 import com.dimowner.tastycocktails.cocktails.details.DetailsViewModelImpl;
 import com.dimowner.tastycocktails.data.Repository;
@@ -44,22 +44,9 @@ public class DetailsModule {
 		this.fragment = null;
 	}
 
-	public DetailsModule(Fragment fragment) {
-		this.activity = null;
-		this.fragment = fragment;
-	}
-
 	@Provides
 	@DetailsScoupe
-	DetailsContract.UserActionsListener provideDetailsPresenter(Repository repository) {
-		DetailsPresenter presenter = ViewModelProviders.of(activity).get(DetailsPresenter.class);
-		presenter.setRepository(repository);
-		return presenter;
-	}
-
-	@Provides
-	@DetailsScoupe
-	DetailsViewModel provideDetailsViewModel(Repository repository) {
+	DetailsViewModel provideDetailsViewModel(Repository repository, FirebaseHandler firebaseHandler) {
 		DetailsViewModelImpl viewModel;
 		if (activity != null) {
 			viewModel = ViewModelProviders.of(activity).get(DetailsViewModelImpl.class);
@@ -67,6 +54,7 @@ public class DetailsModule {
 			viewModel = ViewModelProviders.of(fragment).get(DetailsViewModelImpl.class);
 		}
 		viewModel.setRepository(repository);
+		viewModel.setFirebaseHandler(firebaseHandler);
 		return viewModel;
 	}
 }

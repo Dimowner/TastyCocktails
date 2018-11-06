@@ -22,6 +22,7 @@ import android.support.v4.app.Fragment;
 import dagger.Module;
 import dagger.Provides;
 
+import com.dimowner.tastycocktails.FirebaseHandler;
 import com.dimowner.tastycocktails.cocktails.details.DetailsViewModel;
 import com.dimowner.tastycocktails.cocktails.details.DetailsViewModelImpl;
 import com.dimowner.tastycocktails.dagger.details.DetailsScoupe;
@@ -44,9 +45,11 @@ public class RandomCocktailModule {
 
 	@Provides
 	@RandomCocktailScope
-	RandomContract.UserActionsListener provideDetailsPresenter(Repository repository) {
+	RandomContract.UserActionsListener provideDetailsPresenter(Repository repository, FirebaseHandler firebaseHandler) {
 		RandomPresenter presenter = ViewModelProviders.of(fragment).get(RandomPresenter.class);
+//		MyViewModel model = ViewModelProviders.of(this).get(MyViewModel.class);
 		presenter.setRepository(repository);
+		presenter.setFirebaseHandler(firebaseHandler);
 		return presenter;
 	}
 

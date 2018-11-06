@@ -31,6 +31,8 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import com.dimowner.tastycocktails.FirebaseHandler;
 import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
@@ -49,6 +51,8 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 
 	private RepositoryContract repository;
 
+	private FirebaseHandler firebaseHandler;
+
 	private CocktailsListContract.View view;
 
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -59,6 +63,10 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 
 	public void setRepository(RepositoryContract repository) {
 		this.repository = repository;
+	}
+
+	public void setFirebaseHandler(FirebaseHandler firebaseHandler) {
+		this.firebaseHandler = firebaseHandler;
 	}
 
 	@Override
@@ -217,7 +225,18 @@ public class CocktailsListPresenter extends AndroidViewModel implements Cocktail
 
 	@Override
 	public Completable reverseFavorite(long id) {
-		return repository.reverseFavorite(id);
+		return repository.reverseFavorite(id)
+				.doOnComplete(() -> {
+					compositeDisposable.add(repository.getLocalCocktailRx(id)
+							.subscribeOn(Schedulers.io())
+							.subscribe(drink -> {
+								if (drink.isFavorite()) {
+									firebaseHandler.likeDrink(drink.getIdDrink());
+								} else {
+									firebaseHandler.unlikeDrink(drink.getIdDrink());
+								}
+							}));
+				});
 	}
 
 	@Override

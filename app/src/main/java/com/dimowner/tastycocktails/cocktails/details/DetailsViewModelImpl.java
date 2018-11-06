@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
+import com.dimowner.tastycocktails.FirebaseHandler;
 import com.dimowner.tastycocktails.data.RepositoryContract;
 import com.dimowner.tastycocktails.data.model.Drink;
 
@@ -21,6 +22,8 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 
 	private SparseArray<Drink> drinks;
 
+	private FirebaseHandler firebaseHandler;
+
 	public DetailsViewModelImpl(@NonNull Application application) {
 		super(application);
 		drinks = new SparseArray<>();
@@ -28,6 +31,10 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 
 	public void setRepository(RepositoryContract repository) {
 		this.repository = repository;
+	}
+
+	public void setFirebaseHandler(FirebaseHandler firebaseHandler) {
+		this.firebaseHandler = firebaseHandler;
 	}
 
 	@Override
@@ -65,9 +72,13 @@ public class DetailsViewModelImpl extends AndroidViewModel implements DetailsVie
 		if (drink != null) {
 			if (drink.isFavorite()) {
 				return repository.removeFromFavorites(drink.getIdDrink())
-						.doOnComplete(drink::inverseFavorite);
+						.doOnComplete(() -> {
+							drink.inverseFavorite();
+							firebaseHandler.unlikeDrink(drink.getIdDrink());
+						});
 			} else {
-				return repository.addToFavorites(drink);
+				return repository.addToFavorites(drink)
+						.doOnComplete(() -> firebaseHandler.likeDrink(drink.getIdDrink()));
 			}
 
 		} else {

@@ -25,6 +25,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import com.dimowner.tastycocktails.FirebaseHandler;
 import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
@@ -46,6 +47,8 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 
 	private Drink drink;
 
+	private FirebaseHandler firebaseHandler;
+
 	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 	public RandomPresenter(Application application) {
@@ -54,6 +57,10 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 
 	public void setRepository(RepositoryContract repository) {
 		this.repository = repository;
+	}
+
+	public void setFirebaseHandler(FirebaseHandler firebaseHandler) {
+		this.firebaseHandler = firebaseHandler;
 	}
 
 	@Override
@@ -87,6 +94,7 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(() -> {
+							firebaseHandler.unlikeDrink(drink.getIdDrink());
 							drink.inverseFavorite();
 							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrCategory(),
 									drink.getStrAlcoholic(), drink.getStrGlass(), drink.isFavorite());
@@ -97,6 +105,7 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe(() -> {
+							firebaseHandler.likeDrink(drink.getIdDrink());
 //							drink.inverseFavorite(); //removed intentionally
 							view.showSnackBar(getApplication().getResources().getString(R.string.added_to_favorites, drink.getStrDrink()));
 							view.displayData(drink.getStrDrink(), drink.getStrInstructions(), drink.getStrCategory(),

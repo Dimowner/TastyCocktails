@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+import com.dimowner.tastycocktails.FirebaseHandler;
 import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.data.LocalRepository;
 import com.dimowner.tastycocktails.data.Prefs;
@@ -94,6 +95,12 @@ public class AppModule {
 	@Singleton
 	Context provideContext() {
 		return appContext;
+	}
+
+	@Provides
+	@Singleton
+	FirebaseHandler provideFirebaseHandler() {
+		return new FirebaseHandler();
 	}
 
 	/**
