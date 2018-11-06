@@ -67,7 +67,8 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 	protected static final int NAVDRAWER_ITEM_COCKTAILS	= R.id.nav_cocktails;
 	protected static final int NAVDRAWER_ITEM_RANDOM 		= R.id.nav_random;
 	protected static final int NAVDRAWER_ITEM_HISTORY     = R.id.nav_history;
-	protected static final int NAVDRAWER_ITEM_ABOUT			= R.id.nav_about;
+//	protected static final int NAVDRAWER_ITEM_ABOUT			= R.id.nav_about;
+	protected static final int NAVDRAWER_ITEM_SETTINGS 	= R.id.nav_settings;
 //	protected static final int NAVDRAWER_ITEM_RATE			= R.id.nav_rate;
 //	protected static final int NAVDRAWER_ITEM_FEEDBACK		= R.id.nav_feedback;
 	protected static final int NAVDRAWER_ITEM_INVALID		= -1;
@@ -82,20 +83,20 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 	private int curActiveItem = NAVDRAWER_ITEM_COCKTAILS;
 
-	private AppStartTracker tracker;
+//	private AppStartTracker tracker;
 
 	@Inject Prefs prefs;
 
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		tracker = TCApplication.getAppStartTracker(getApplicationContext());
-		tracker.activityOnCreate();
+//		tracker = TCApplication.getAppStartTracker(getApplicationContext());
+//		tracker.activityOnCreate();
 		setTheme(R.style.AppTheme_TransparentStatusBar);
 		super.onCreate(savedInstanceState);
-		tracker.activityContentViewBefore();
+//		tracker.activityContentViewBefore();
 		setContentView(R.layout.base_nav_activity);
-		tracker.activityContentViewAfter();
+//		tracker.activityContentViewAfter();
 
 		TCApplication.get(getApplicationContext()).applicationComponent().inject(this);
 
@@ -122,6 +123,8 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			disableMenu();
 		}
 
+		MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_id));
+//		tracker.activityOnCreateEnd();
 		tracker.activityOnCreateEnd();
 
 		// Write a message to the database
@@ -165,16 +168,16 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 //		Timber.v("setValue");
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		tracker.activityOnStart();
-	}
+//	@Override
+//	protected void onStart() {
+//		super.onStart();
+//		tracker.activityOnStart();
+//	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		tracker.activityOnResume();
+//		tracker.activityOnResume();
 //		Timber.v(tracker.getResults());
 		if (getSelfNavDrawerItem() > NAVDRAWER_ITEM_INVALID) {
 			mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
@@ -309,9 +312,12 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 				startHistory();
 				curActiveItem = NAVDRAWER_ITEM_HISTORY;
 				break;
-			case NAVDRAWER_ITEM_ABOUT:
-				showAboutDialog();
+			case NAVDRAWER_ITEM_SETTINGS:
+				startSettings();
 				break;
+//			case NAVDRAWER_ITEM_ABOUT:
+//				showAboutDialog();
+//				break;
 //			case NAVDRAWER_ITEM_RATE:
 //				rateApp();
 //				mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
@@ -445,16 +451,20 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		ft.commit();
 	}
 
-	private void showAboutDialog() {
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		Fragment prev = fm.findFragmentByTag("dialog_about");
-		if (prev != null) {
-			ft.remove(prev);
-		}
-		ft.addToBackStack(null);
-		AboutDialog dialog = new AboutDialog();
-		dialog.show(ft, "dialog_about");
+//	private void showAboutDialog() {
+//		FragmentManager fm = getSupportFragmentManager();
+//		FragmentTransaction ft = fm.beginTransaction();
+//		Fragment prev = fm.findFragmentByTag("dialog_about");
+//		if (prev != null) {
+//			ft.remove(prev);
+//		}
+//		ft.addToBackStack(null);
+//		AboutDialog dialog = new AboutDialog();
+//		dialog.show(ft, "dialog_about");
+//	}
+
+	private void startSettings() {
+		startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
 	}
 
 	@Override

@@ -36,31 +36,31 @@
 			android:paddingBottom="@dimen/padding_small"
 			/>
 
-	<TextView
-			style="@style/TextView.Label"
-			android:id="@+id/about_btn_licences"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/padding_small"
-			android:textColor="@color/blue"
-			android:textSize="@dimen/text_size_xmedium"
-			android:textStyle="bold"
-			android:background="?attr/selectableItemBackground"
-			android:clickable="true"
-			android:focusable="true"
-			android:text="@string/open_source_licences"/>
+	<!--<TextView-->
+			<!--style="@style/TextView.Label"-->
+			<!--android:id="@+id/about_btn_licences"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:padding="@dimen/padding_small"-->
+			<!--android:textColor="@color/blue"-->
+			<!--android:textSize="@dimen/text_size_xmedium"-->
+			<!--android:textStyle="bold"-->
+			<!--android:background="?attr/selectableItemBackground"-->
+			<!--android:clickable="true"-->
+			<!--android:focusable="true"-->
+			<!--android:text="@string/open_source_licences"/>-->
 
-	<TextView
-			style="@style/TextView.Label"
-			android:id="@+id/about_btn_rate"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/padding_small"
-			android:textColor="@color/blue"
-			android:textSize="@dimen/text_size_xmedium"
-			android:textStyle="bold"
-			android:background="?attr/selectableItemBackground"
-			android:clickable="true"
-			android:focusable="true"
-			android:text="@string/rate_app"/>
+	<!--<TextView-->
+			<!--style="@style/TextView.Label"-->
+			<!--android:id="@+id/about_btn_rate"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:padding="@dimen/padding_small"-->
+			<!--android:textColor="@color/blue"-->
+			<!--android:textSize="@dimen/text_size_xmedium"-->
+			<!--android:textStyle="bold"-->
+			<!--android:background="?attr/selectableItemBackground"-->
+			<!--android:clickable="true"-->
+			<!--android:focusable="true"-->
+			<!--android:text="@string/rate_app"/>-->
 </LinearLayout>

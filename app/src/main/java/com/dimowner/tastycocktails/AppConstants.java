@@ -8,11 +8,19 @@ package com.dimowner.tastycocktails;
 public class AppConstants {
 	private AppConstants() {}
 
-	public static String BASE_INGREDIENT_PATH = "http://www.thecocktaildb.com/images/ingredients/";
+	public static final String BASE_INGREDIENT_PATH = "http://www.thecocktaildb.com/images/ingredients/";
 
-	public static String FEEDBACK_EMAIL = "dimmony@gmail.com";
-	public static String FEEDBACK_SUBJECT = "Tasty Cocktails feedback";
+	public static final String FEEDBACK_EMAIL = "dimmony@gmail.com";
+	public static final String FEEDBACK_SUBJECT = "Tasty Cocktails feedback";
 
-	public static String APP_DIRECTORY = "TastyCocktails";
+	public static final String APP_DIRECTORY = "TastyCocktails";
 	public static final String LOG_FILE_NAME = "Log.txt";
+
+	public static final int CONNECTION_TIMEOUT = 30; //Seconds
+	public static final int READ_TIMEOUT = 45; //Seconds
+
+	public static final int TIME_FORMAT_24H = 11;
+	public static final int TIME_FORMAT_12H = 12;
+
+	public static final int SHOW_INSTRUCTIONS_DELAY_MILLS = 800;
 }

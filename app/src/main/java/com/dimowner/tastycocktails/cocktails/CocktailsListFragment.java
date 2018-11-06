@@ -23,12 +23,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -41,11 +42,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -58,16 +59,19 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import com.dimowner.tastycocktails.AdvHandler;
+import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
 import com.dimowner.tastycocktails.cocktails.list.CocktailsRecyclerAdapter;
-import com.dimowner.tastycocktails.cocktails.list.EndlessRecyclerViewScrollListener;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsModule;
 import com.dimowner.tastycocktails.data.Prefs;
@@ -76,6 +80,7 @@ import com.dimowner.tastycocktails.util.AnimationUtil;
 import com.dimowner.tastycocktails.util.UIUtil;
 import com.dimowner.tastycocktails.widget.ThresholdListener;
 import com.dimowner.tastycocktails.widget.TouchLayout;
+import com.google.android.gms.ads.AdView;
 
 import timber.log.Timber;
 
@@ -96,6 +101,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	public static final int FILTER_TYPE_INGREDIENT = 2;
 	public static final int FILTER_TYPE_GLASS = 3;
 	public static final int FILTER_TYPE_ALCOHOLIC_NON_ALCOHOLIC = 4;
+	public static final int ITEM_COUNT_WITHOUT_BTN_UP = 15;
 
 	public static final String EXTRAS_KEY_TYPE = "search_fragment_type";
 
@@ -108,10 +114,14 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private RecyclerView mRecyclerView;
 	private ScrollView mWelcomePanel;
 	private TextView mTxtEmpty;
-	private FrameLayout mRoot;
+	private CoordinatorLayout mRoot;
 	private TouchLayout touchLayout;
 	private View filterMenu;
 	private SwipeRefreshLayout mRefreshLayout;
+	private FloatingActionButton btnUp;
+	private TextView txtInstructions;
+	private TextView txtFiltersInstructions;
+	private AdvHandler advHandler;
 
 	private Spinner categorySpinner;
 	private Spinner ingredientSpinner;
@@ -119,6 +129,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private Spinner alcoholicSpinner;
 
 	private CocktailsRecyclerAdapter mAdapter;
+	private HorizontalDividerItemDecoration dividerItemDecoration;
 
 	private MenuItem searchMenu;
 
@@ -141,6 +152,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private int selectedFilter = -1;
 	private boolean isSearchOpen = false;
 	private boolean openSearchClicked = false;
+	private boolean onPanelTouch = false;
+	private int defaultBtnUpY = 0;
+
 
 	public static CocktailsListFragment newInstance(int fragmentType) {
 		CocktailsListFragment fragment = new CocktailsListFragment();
@@ -192,6 +206,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		touchLayout = view.findViewById(R.id.touch_layout);
 		mWelcomePanel = view.findViewById(R.id.welcome_panel);
 		mTxtEmpty = view.findViewById(R.id.txt_empty);
+		btnUp = view.findViewById(R.id.fab);
 		mRecyclerView = view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 
@@ -200,25 +215,31 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mRefreshLayout.canChildScrollUp();
 			loadData();
 		});
+		btnUp.setOnClickListener(v -> mRecyclerView.smoothScrollToPosition(0));
+
+		//Calculate position by default for btn up
+		ViewTreeObserver vto = btnUp.getViewTreeObserver();
+		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				ViewTreeObserver obs = btnUp.getViewTreeObserver();
+				defaultBtnUpY = btnUp.getHeight() + (int) getResources().getDimension(R.dimen.padding_huge);
+				btnUp.setTranslationY(defaultBtnUpY);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+					obs.removeOnGlobalLayoutListener(this);
+				} else {
+					obs.removeGlobalOnLayoutListener(this);
+				}
+			}
+		});
 
 		//Hide show filters panel on scroll list
 		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-				if (touchLayout.getVisibility() == View.VISIBLE) {
-					float inset = touchLayout.getTranslationY() - dy;
-					touchLayout.setReturnPositionY(inset);
-					if (touchLayout.getTranslationY() <= -touchLayout.getHeight()) {
-						touchLayout.setVisibility(View.GONE);
-						AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
-					}
-					if (touchLayout.getTranslationY() <= 0 && inset > 0) {
-						touchLayout.setTranslationY(0);
-					} else {
-						touchLayout.setTranslationY(inset);
-					}
-				}
+				handleFiltersPanelScroll(dy);
+				handleBtnUpScroll(dy);
 			}
 		});
 
@@ -226,9 +247,9 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		RecyclerView.LayoutManager mLayoutManager = new AppLinearLayoutManager(getContext());
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		if (getContext() != null) {
-			mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), ((AppLinearLayoutManager) mLayoutManager).getOrientation()));
+			dividerItemDecoration = new HorizontalDividerItemDecoration(getContext(), ((AppLinearLayoutManager) mLayoutManager).getOrientation());
+			mRecyclerView.addItemDecoration(dividerItemDecoration);
 		}
-		mRecyclerView.addOnScrollListener(new MyScrollListener(mLayoutManager));
 
 		mPresenter.bindView(this);
 
@@ -241,17 +262,47 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		}
 
-		if (!prefs.isDrinksCached()) {
+		if (!prefs.isDrinksCached() && !prefs.isCacheFailed()) {
 			compositeDisposable.add(mPresenter.firstRunInitialization(getContext())
 					.subscribe(drinks1 -> {
 						Timber.d("Succeed to cache %d drinks!", drinks1.length);
 						if (drinks1.length > 0) {
 							prefs.setDrinksCached();
+						} else {
+							prefs.setCacheFailed();
 						}
 					}, Timber::e));
 		}
 
+		if (!prefs.isFirstRun() && !(fragmentType == TYPE_HISTORY && prefs.isShowHistoryInstructions())) {
+			AdView adView = view.findViewById(R.id.adView);
+ 			advHandler = new AdvHandler(adView, prefs);
+		}
+
 		if (fragmentType == TYPE_HISTORY) {
+			if (prefs.isShowHistoryInstructions()) {
+				txtInstructions = view.findViewById(R.id.txtInstructions);
+				compositeDisposable.add(Completable.complete().delay(AppConstants.SHOW_INSTRUCTIONS_DELAY_MILLS, TimeUnit.MILLISECONDS)
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(
+								() -> {
+									if (mAdapter.getItemCount() > 0) {
+										txtInstructions.setVisibility(View.VISIBLE);
+										txtInstructions.setTranslationY(500);// Here should be instructions panel height.
+										AnimationUtil.verticalSpringAnimation(txtInstructions, 0);
+										txtInstructions.setOnClickListener(v ->
+												AnimationUtil.verticalSpringAnimation(
+														txtInstructions,
+														txtInstructions.getHeight(),
+														(animation, canceled, value, velocity) -> {
+															txtInstructions.setVisibility(View.GONE);
+															prefs.setShowHistoryInstructions(false);
+														}));
+									}
+								}
+						));
+			}
+
 			ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
 					new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 						@Override
@@ -263,7 +314,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 						@Override
 						public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-							if (viewHolder != null) {
+							if (viewHolder instanceof CocktailsRecyclerAdapter.ItemViewHolder) {
 								final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
 								getDefaultUIUtil().onSelected(foregroundView);
 							}
@@ -273,15 +324,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 						public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
 															 RecyclerView.ViewHolder viewHolder, float dX, float dY,
 															 int actionState, boolean isCurrentlyActive) {
-							final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
-							getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
-									actionState, isCurrentlyActive);
+							if (viewHolder instanceof CocktailsRecyclerAdapter.ItemViewHolder) {
+								final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder) viewHolder).getContainer();
+								getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+										actionState, isCurrentlyActive);
+							}
 						}
 
 						@Override
 						public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-							final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer();
-							getDefaultUIUtil().clearView(foregroundView);
+							if (viewHolder instanceof CocktailsRecyclerAdapter.ItemViewHolder) {
+								final View foregroundView = ((CocktailsRecyclerAdapter.ItemViewHolder) viewHolder).getContainer();
+								getDefaultUIUtil().clearView(foregroundView);
+							}
 						}
 
 						@Override
@@ -290,13 +345,24 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 							ListItem item = mAdapter.getItem(pos);
 							mPresenter.removeFromHistory(item.getId());
 							showSnackBarRemoveFromHistory(item, pos);
+							if (txtInstructions != null && txtInstructions.getVisibility() == View.VISIBLE) {
+								AnimationUtil.verticalSpringAnimation(
+										txtInstructions,
+										txtInstructions.getHeight(),
+										(animation, canceled, value, velocity) -> {
+											txtInstructions.setVisibility(View.GONE);
+														prefs.setShowHistoryInstructions(false);
+										});
+							}
 						}
 
 						@Override
 						public void onChildDraw(Canvas c, RecyclerView recyclerView,
 														RecyclerView.ViewHolder viewHolder, float dX, float dY,
 														int actionState, boolean isCurrentlyActive) {
-							getDefaultUIUtil().onDraw(c, recyclerView, ((CocktailsRecyclerAdapter.ItemViewHolder)viewHolder).getContainer(), dX, dY, actionState, isCurrentlyActive);
+							if (viewHolder instanceof CocktailsRecyclerAdapter.ItemViewHolder) {
+								getDefaultUIUtil().onDraw(c, recyclerView, ((CocktailsRecyclerAdapter.ItemViewHolder) viewHolder).getContainer(), dX, dY, actionState, isCurrentlyActive);
+							}
 						}
 					};
 			new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
@@ -307,12 +373,24 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				public void onTopThreshold() {
 					invertMenuButton();
 					showMenu();
+					hideFiltersPanelInstructions();
 				}
 
 				@Override
 				public void onBottomThreshold() {
 					invertMenuButton();
 					showMenu();
+					hideFiltersPanelInstructions();
+				}
+
+				@Override
+				public void onTouchDown() {
+					onPanelTouch = true;
+				}
+
+				@Override
+				public void onTouchUp() {
+					onPanelTouch = false;
 				}
 			});
 		}
@@ -349,6 +427,18 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (advHandler != null) { advHandler.onResume(); }
+	}
+
+	@Override
+	public void onPause() {
+		if (advHandler != null) { advHandler.onPause(); }
+		super.onPause();
+	}
+
+	@Override
 	public void onStop() {
 		super.onStop();
 		mPresenter.unbindView();
@@ -356,6 +446,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	@Override
 	public void onDestroyView() {
+		if (advHandler != null) { advHandler.onDestroy(); }
 		super.onDestroyView();
 		mPresenter = null;
 		compositeDisposable.dispose();
@@ -387,6 +478,12 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	}
 
 	private void initFiltersPanel(View view) {
+		if (prefs.isShowFiltersPanelInstructions()) {
+			txtFiltersInstructions = view.findViewById(R.id.txtFiltersInstructions);
+			compositeDisposable.add(Completable.complete().delay(AppConstants.SHOW_INSTRUCTIONS_DELAY_MILLS, TimeUnit.MILLISECONDS)
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(() -> txtFiltersInstructions.setVisibility(View.VISIBLE)));
+		}
 		//Init CATEGORY filter
 		categorySpinner = view.findViewById(R.id.filter_categories);
 		// Create an ArrayAdapter using the string array and a default spinner layout
@@ -580,6 +677,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		});
 	}
 
+	private void hideFiltersPanelInstructions() {
+		prefs.setShowFiltersPanelInstructions(false);
+		if (txtFiltersInstructions != null) {
+			txtFiltersInstructions.setVisibility(View.GONE);
+		}
+	}
+
 	private void onFilterSelected() {
 		if (isChangedFilter) {
 			applyFilters();
@@ -600,15 +704,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private void initAdapter() {
 		if (mAdapter == null) {
 			if (fragmentType == TYPE_HISTORY) {
-				mAdapter = new CocktailsRecyclerAdapter(fragmentType, R.layout.list_item_history, prefs);
+				mAdapter = new CocktailsRecyclerAdapter(TYPE_HISTORY, R.layout.list_item_history);
 			} else {
-				mAdapter = new CocktailsRecyclerAdapter(fragmentType, R.layout.list_item2, prefs);
+				mAdapter = new CocktailsRecyclerAdapter(R.layout.list_item2);
 			}
 			mRecyclerView.setAdapter(mAdapter);
 		}
 		mAdapter.setItemClickListener((view1, position) -> {
 			hideKeyboard();
-			startActivity(PagerDetailsActivity.getStartIntent(getContext(), ids, position));
+			if (ids != null && ids.size() > 0) {
+				startActivity(PagerDetailsActivity.getStartIntent(getContext(), ids, position));
+			} else {
+				Timber.e("Can't open preview! ids is NULL or empty");
+			}
 		});
 //				startDetailsActivity(mAdapter.getItem(position), view1));
 		mAdapter.setOnFavoriteClickListener((view12, position, id, action) -> {
@@ -908,6 +1016,22 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	@Override
 	public void displayData(List<ListItem> data) {
 		extractIds(data);
+		//Handle btnUp show logic.
+		if (data.size() > ITEM_COUNT_WITHOUT_BTN_UP) {
+			if (fragmentType == TYPE_HISTORY && prefs.isShowHistoryInstructions()) {
+				btnUp.setVisibility(View.GONE);
+				mAdapter.showFooter(false);
+				dividerItemDecoration.showDividerForLastItem(true);
+			} else {
+				btnUp.setVisibility(View.VISIBLE);
+				mAdapter.showFooter(true);
+				dividerItemDecoration.showDividerForLastItem(false);
+			}
+		} else {
+			btnUp.setVisibility(View.GONE);
+			mAdapter.showFooter(false);
+			dividerItemDecoration.showDividerForLastItem(true);
+		}
 		if (prefs.isFirstRun() && fragmentType == TYPE_NORMAL) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.VISIBLE);
@@ -922,10 +1046,13 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mTxtEmpty.setVisibility(View.VISIBLE);
 			if (fragmentType == TYPE_FAVORITES) {
 				mTxtEmpty.setText(R.string.no_favorite_drinks);
+				mTxtEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.round_heart_grey_64, 0, 0);
 			} else if (fragmentType == TYPE_HISTORY) {
 				mTxtEmpty.setText(R.string.history_is_empty);
+				mTxtEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.round_history_64, 0, 0);
 			} else {
-				mTxtEmpty.setText(R.string.empty);
+				mTxtEmpty.setText(R.string.nothing_was_found);
+				mTxtEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.round_local_bar_64, 0, 0);
 			}
 		} else {
 			if (mRecyclerView.getVisibility() != View.VISIBLE) {
@@ -1046,25 +1173,35 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		touchLayout.setReturnPositionY(0);
 	}
 
-	public class MyScrollListener extends EndlessRecyclerViewScrollListener {
+	private void handleBtnUpScroll(int dy) {
+		if (btnUp != null && ((dy < 0 && btnUp.getTranslationY() < defaultBtnUpY)
+				|| (dy > 0 && btnUp.getTranslationY() > 0))) {
 
-		<L extends RecyclerView.LayoutManager> MyScrollListener(L layoutManager) {
-			super(layoutManager);
+			float inset = btnUp.getTranslationY() - dy;
+			if (inset < 0) { inset = 0; }
+			if (inset > defaultBtnUpY) { inset = defaultBtnUpY; }
+			btnUp.setTranslationY(inset);
 		}
+	}
 
-		@Override
-		public void onLoadMore(int page, int totalItemsCount) {
-			Timber.d("onLoadMore page = " + page + " count = " + totalItemsCount);
-//			if (fragmentType == TYPE_HISTORY) {
-//				mPresenter.loadHistory(page);
-//			}
+	private void handleFiltersPanelScroll(int dy) {
+		if (touchLayout.getVisibility() == View.VISIBLE && !onPanelTouch) {
+			float inset = touchLayout.getTranslationY() - dy;
+			touchLayout.setReturnPositionY(inset);
+			if (touchLayout.getTranslationY() <= -touchLayout.getHeight()) {
+				touchLayout.setVisibility(View.GONE);
+				AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
+			}
+			if (touchLayout.getTranslationY() <= 0 && inset > 0) {
+				touchLayout.setTranslationY(0);
+			} else {
+				touchLayout.setTranslationY(inset);
+			}
 		}
 	}
 
 	/**
-	 * Simple extension of LinearLayoutManager for the sole purpose of showing what happens
-	 * when predictive animations (which are enabled by default in LinearLayoutManager) are
-	 * not enabled. This behavior is toggled via a checkbox in the UI.
+	 * Layout to ensure Predictive animation is disabled to prevent app crash when it is ON.
 	 */
 	public class AppLinearLayoutManager extends LinearLayoutManager {
 		AppLinearLayoutManager(Context context) {
@@ -1073,7 +1210,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 		@Override
 		public boolean supportsPredictiveItemAnimations() {
-			return true;
+			return false;
 		}
 	}
 

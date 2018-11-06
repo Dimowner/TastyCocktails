@@ -78,7 +78,6 @@ public class TouchLayout extends FrameLayout {
 			switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 				case MotionEvent.ACTION_DOWN:
 					Timber.v("DOWN");
-					performClick();
 					action = ACTION_DRAG;
 					startY = motionEvent.getY();
 					cumulatedDy = 0;
@@ -90,6 +89,9 @@ public class TouchLayout extends FrameLayout {
 						} else {
 							moveAnimationY.cancel();
 						}
+					}
+					if (onThresholdListener != null) {
+						onThresholdListener.onTouchDown();
 					}
 					break;
 				case MotionEvent.ACTION_MOVE:
@@ -111,6 +113,7 @@ public class TouchLayout extends FrameLayout {
 					break;
 				case MotionEvent.ACTION_UP:
 					Timber.v("UP");
+					performClick();
 					moveAnimationY = new SpringAnimation(this, DynamicAnimation.TRANSLATION_Y, returnPositionY);
 					moveAnimationY.getSpring().setStiffness(SpringForce.STIFFNESS_LOW)
 							.setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
@@ -124,6 +127,9 @@ public class TouchLayout extends FrameLayout {
 						if (onThresholdListener != null) {
 							onThresholdListener.onBottomThreshold();
 						}
+					}
+					if (onThresholdListener != null) {
+						onThresholdListener.onTouchUp();
 					}
 					break;
 			}

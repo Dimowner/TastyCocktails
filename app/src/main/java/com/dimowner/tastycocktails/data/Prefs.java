@@ -9,8 +9,15 @@ public class Prefs {
 
 	private static final String PREF_KEY_IS_FIRST_RUN = "is_first_run";
 	private static final String PREF_KEY_IS_DRINKS_CACHED = "is_cached_drinks3";
+	private static final String PREF_KEY_IS_CACHE_FAILED = "is_cache_failed";
 	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
 	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
+	private static final String PREF_KEY_IS_SHOW_ADS = "is_show_ads";
+
+	private static final String PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS = "is_show_history_instructions";
+	private static final String PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS = "is_show_details_instructions";
+	private static final String PREF_KEY_IS_SHOW_FILTERS_PANEL_INSTRUCTIONS = "is_show_filters_panel_instructions";
+	private static final String PREF_KEY_IS_SHOW_IMAGE_PREVIEW_INSTRUCTIONS = "is_show_image_preview_instructions";
 
 	private static final String PREF_KEY_FILTER_CATEGORY = "filter_category";
 	private static final String PREF_KEY_FILTER_CATEGORY_POS = "filter_category_pos";
@@ -40,6 +47,56 @@ public class Prefs {
 		editor.apply();
 	}
 
+	public boolean isShowAds() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_ADS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_ADS, true);
+	}
+
+	public void setShowAds(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_ADS, b);
+		editor.apply();
+	}
+
+	public boolean isShowHistoryInstructions() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS, true);
+	}
+
+	public void setShowHistoryInstructions(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS, b);
+		editor.apply();
+	}
+
+	public boolean isShowDetailsInstructions() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS, true);
+	}
+
+	public void setShowDetailsInstructions(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS, b);
+		editor.apply();
+	}
+
+	public boolean isShowFiltersPanelInstructions() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_FILTERS_PANEL_INSTRUCTIONS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_FILTERS_PANEL_INSTRUCTIONS, true);
+	}
+
+	public void setShowFiltersPanelInstructions(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_FILTERS_PANEL_INSTRUCTIONS, b);
+		editor.apply();
+	}
+
+	public boolean isShowImagePreviewInstructions() {
+		return !sharedPreferences.contains(PREF_KEY_IS_SHOW_IMAGE_PREVIEW_INSTRUCTIONS) || sharedPreferences.getBoolean(PREF_KEY_IS_SHOW_IMAGE_PREVIEW_INSTRUCTIONS, true);
+	}
+
+	public void setShowImagePreviewInstructions(boolean b) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_SHOW_IMAGE_PREVIEW_INSTRUCTIONS, b);
+		editor.apply();
+	}
+
 	public boolean isDrinksCached() {
 		return sharedPreferences.contains(PREF_KEY_IS_DRINKS_CACHED) && sharedPreferences.getBoolean(PREF_KEY_IS_DRINKS_CACHED, false);
 	}
@@ -47,6 +104,16 @@ public class Prefs {
 	public void setDrinksCached() {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putBoolean(PREF_KEY_IS_DRINKS_CACHED, true);
+		editor.apply();
+	}
+
+	public boolean isCacheFailed() {
+		return sharedPreferences.contains(PREF_KEY_IS_CACHE_FAILED) && sharedPreferences.getBoolean(PREF_KEY_IS_CACHE_FAILED, false);
+	}
+
+	public void setCacheFailed() {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(PREF_KEY_IS_CACHE_FAILED, true);
 		editor.apply();
 	}
 

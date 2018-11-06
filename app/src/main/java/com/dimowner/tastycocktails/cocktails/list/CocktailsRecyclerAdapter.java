@@ -17,11 +17,8 @@
 package com.dimowner.tastycocktails.cocktails.list;
 
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.AbsSavedState;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,12 +36,13 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
-import com.dimowner.tastycocktails.data.Prefs;
+import com.dimowner.tastycocktails.util.TimeUtils;
+
+import static com.dimowner.tastycocktails.cocktails.CocktailsListFragment.TYPE_HISTORY;
 
 /**
  * Created on 26.07.2017.
@@ -54,6 +52,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private final static int VIEW_TYPE_NORMAL = 1;
 	private final static int VIEW_TYPE_PROGRESS = 2;
+	private final static int VIEW_TYPE_FOOTER = 3;
 
 	private boolean showFooter;
 
@@ -63,10 +62,6 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private List<ListItem> mShowingData;
 
-	private Prefs prefs;
-
-	private int searchFragmentType = CocktailsListFragment.TYPE_NORMAL;
-
 	private ItemClickListener itemClickListener;
 
 	private OnFavoriteClickListener onFavoriteClickListener;
@@ -75,14 +70,17 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	private int itemLayoutResId;
 
+	//In what type of list is adapter use: normal, fav, history;
+	private int type = CocktailsListFragment.TYPE_UNKNOWN;
+
 
 	public class ItemViewHolder extends RecyclerView.ViewHolder {
 		TextView name;
- 		TextView description;
+		TextView description;
 		ImageView image;
 		ImageView btnFev;
- 		View view;
- 		LinearLayout container;
+		View view;
+		LinearLayout container;
 
 		public ItemViewHolder(View itemView) {
 			super(itemView);
@@ -109,21 +107,29 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		}
 	}
 
-	public CocktailsRecyclerAdapter(int searchFragmentType, int layoutResId, Prefs prefs) {
+	public static class FooterViewHolder extends RecyclerView.ViewHolder {
+		final View view;
+
+		FooterViewHolder(View itemView){
+			super(itemView);
+			view = itemView;
+		}
+	}
+
+	public CocktailsRecyclerAdapter(int layoutResId) {
 		this.mShowingData = new ArrayList<>();
-		this.searchFragmentType = searchFragmentType;
-		this.prefs = prefs;
 		this.itemLayoutResId = layoutResId;
+	}
+
+	public CocktailsRecyclerAdapter(int type, int layoutResId) {
+		this.mShowingData = new ArrayList<>();
+		this.itemLayoutResId = layoutResId;
+		this.type = type;
 	}
 
 	public void showFooter(boolean show) {
 		if (showFooter == show) return;
 		showFooter = show;
-		if (showFooter) {
-			notifyItemInserted(mShowingData.size() + 1);
-		} else {
-			notifyItemRemoved(mShowingData.size() + 1);
-		}
 	}
 
 	@NonNull
@@ -136,6 +142,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 			View v = LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.list_item_progress, parent, false);
 			return new LoadingViewHolder(v);
+		} else if (viewType == VIEW_TYPE_FOOTER) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_footer, parent, false);
+			return new FooterViewHolder(v);
 		} else {
 			return null;
 		}
@@ -144,10 +154,15 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	@Override
 	public void onBindViewHolder(final RecyclerView.ViewHolder h, final int position1) {
 		if (h.getItemViewType() == VIEW_TYPE_NORMAL) {
-			int pos = h.getAdapterPosition();
+//			int pos = h.getAdapterPosition();
+			final int pos = position1;
 			ItemViewHolder holder = (ItemViewHolder) h;
 			holder.name.setText(mShowingData.get(pos).getName());
-			holder.description.setText(mShowingData.get(pos).getCategory());
+			if (type == TYPE_HISTORY) {
+				holder.description.setText(TimeUtils.formatTime(mShowingData.get(pos).getHistory()));
+			} else {
+				holder.description.setText(mShowingData.get(pos).getCategory());
+			}
 
 			if (mShowingData.get(pos).getAvatar_url() != null) {
 				Glide.with(holder.view.getContext())
@@ -172,14 +187,15 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 				holder.image.setImageResource(R.drawable.no_image);
 			}
 
+			final int id = (int) mShowingData.get(pos).getId();
 			holder.btnFev.setOnClickListener(v -> {
 				if (onFavoriteClickListener != null) {
 					onFavoriteClickListener.onFavoriteClick(
-							holder.btnFev, h.getAdapterPosition(), (int) mShowingData.get(h.getAdapterPosition()).getId(), -1);
+							holder.btnFev, findPositionForId(id), id, -1);
 				}
 			});
 
-			if (mShowingData.get(holder.getAdapterPosition()).isFavorite()) {
+			if (mShowingData.get(pos).isFavorite()) {
 				holder.btnFev.setImageResource(R.drawable.round_heart_grey);
 			} else {
 				holder.btnFev.setImageResource(R.drawable.round_heart_border_grey);
@@ -187,13 +203,13 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 			holder.view.setOnClickListener(v -> {
 				if (itemClickListener != null) {
-					itemClickListener.onItemClick(v, h.getAdapterPosition());
+					itemClickListener.onItemClick(v, findPositionForId(id));
 				}
 			});
 
 			holder.view.setOnLongClickListener(v -> {
 				if (itemLongClickListener != null) {
-					itemLongClickListener.onItemLongClick(v, mShowingData.get(h.getAdapterPosition()).getId(), h.getAdapterPosition());
+					itemLongClickListener.onItemLongClick(v, id, findPositionForId(id));
 				}
 				return true;
 			});
@@ -205,6 +221,15 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 //		ViewCompat.setTransitionName(holder.name, res.getString(R.string.list_item_label_transition));
 //		ViewCompat.setTransitionName(holder.description, res.getString(R.string.list_item_content_transition));
 //		ViewCompat.setTransitionName(holder.image, res.getString(R.string.list_item_image_transition));
+	}
+
+	private int findPositionForId(int id) {
+		for (int i = 0; i < mShowingData.size(); i++) {
+			if (id == mShowingData.get(i).getId()) {
+				return i;
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -219,7 +244,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	@Override
 	public int getItemViewType(int position) {
-		return position >= mShowingData.size() ? VIEW_TYPE_PROGRESS : VIEW_TYPE_NORMAL;
+		return position >= mShowingData.size() ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
 	}
 
 	public ListItem getItem(int pos) {
@@ -247,10 +272,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		return mShowingData;
 	}
 
-	public void addItems(List<ListItem> items) {
-		mShowingData.addAll(items);
-		notifyItemRangeInserted(mShowingData.size() - items.size() - 1, items.size());
-	}
+//	public void addItems(List<ListItem> items) {
+//		mShowingData.addAll(items);
+//		notifyItemRangeInserted(mShowingData.size() - items.size() - 1, items.size());
+//	}
 
 	/**
 	 * Update showing data by applying search filter.
@@ -300,63 +325,62 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		this.itemLongClickListener = itemLongClickListener;
 	}
 
-	/**
-	 * Save adapters state
-	 * @return adapter state.
-	 */
-	public Parcelable onSaveInstanceState() {
-//		TODO: fix save adapters state according to it's data
-		SavedState ss = new SavedState(AbsSavedState.EMPTY_STATE);
-		ss.items = mShowingData.toArray(new ListItem[0]);
-		return ss;
-	}
-
-	/**
-	 * Restore adapters state
-	 * @param state Adapter state.
-	 */
-	public void onRestoreInstanceState(Parcelable state) {
-		SavedState ss = (SavedState) state;
-		mShowingData = new ArrayList<>();
-		Collections.addAll(mShowingData, ss.items);
-		notifyDataSetChanged();
-	}
-
-
-	/**
-	 * Object state
-	 */
-	public static class SavedState extends View.BaseSavedState {
-		SavedState(Parcelable superState) {
-			super(superState);
-		}
-
-		private SavedState(Parcel in) {
-			super(in);
-			items = (ListItem[]) in.readParcelableArray(getClass().getClassLoader());
-		}
-
-		@Override
-		public void writeToParcel(Parcel out, int flags) {
-			super.writeToParcel(out, flags);
-			out.writeParcelableArray(items, flags);
-		}
-
-		ListItem[] items;
-
-		public static final Parcelable.Creator<SavedState> CREATOR =
-				new Parcelable.Creator<SavedState>() {
-					@Override
-					public SavedState createFromParcel(Parcel in) {
-						return new SavedState(in);
-					}
-
-					@Override
-					public SavedState[] newArray(int size) {
-						return new SavedState[size];
-					}
-				};
-	}
+//	/**
+////	 * Save adapters state
+////	 * @return adapter state.
+////	 */
+////	public Parcelable onSaveInstanceState() {
+////		SavedState ss = new SavedState(AbsSavedState.EMPTY_STATE);
+////		ss.items = mShowingData.toArray(new ListItem[0]);
+////		return ss;
+////	}
+////
+////	/**
+////	 * Restore adapters state
+////	 * @param state Adapter state.
+////	 */
+////	public void onRestoreInstanceState(Parcelable state) {
+////		SavedState ss = (SavedState) state;
+////		mShowingData = new ArrayList<>();
+////		Collections.addAll(mShowingData, ss.items);
+////		notifyDataSetChanged();
+////	}
+//
+//
+//	/**
+//	 * Object state
+//	 */
+//	public static class SavedState extends View.BaseSavedState {
+//		SavedState(Parcelable superState) {
+//			super(superState);
+//		}
+//
+//		private SavedState(Parcel in) {
+//			super(in);
+//			items = (ListItem[]) in.readParcelableArray(getClass().getClassLoader());
+//		}
+//
+//		@Override
+//		public void writeToParcel(Parcel out, int flags) {
+//			super.writeToParcel(out, flags);
+//			out.writeParcelableArray(items, flags);
+//		}
+//
+//		ListItem[] items;
+//
+//		public static final Parcelable.Creator<SavedState> CREATOR =
+//				new Parcelable.Creator<SavedState>() {
+//					@Override
+//					public SavedState createFromParcel(Parcel in) {
+//						return new SavedState(in);
+//					}
+//
+//					@Override
+//					public SavedState[] newArray(int size) {
+//						return new SavedState[size];
+//					}
+//				};
+//	}
 
 	public interface ItemClickListener{
 		void onItemClick(View view, int position);

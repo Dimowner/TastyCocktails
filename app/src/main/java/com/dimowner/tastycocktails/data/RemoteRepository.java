@@ -19,13 +19,17 @@ package com.dimowner.tastycocktails.data;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -35,6 +39,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import timber.log.Timber;
 
+import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
@@ -258,10 +263,26 @@ public class RemoteRepository implements RepositoryContract {
 
 	private CocktailApi getCocktailApi() {
 		if (retrofit == null) {
+
+			// Necessary because our servers don't have the right cipher suites.
+			// https://github.com/square/okhttp/issues/4053
+			// Error represents only on android 4.+
+			List<CipherSuite> cipherSuites = new ArrayList<>();
+			cipherSuites.addAll(ConnectionSpec.MODERN_TLS.cipherSuites());
+			cipherSuites.add(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA);
+			cipherSuites.add(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA);
+
+			ConnectionSpec legacyTls = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+					.cipherSuites(cipherSuites.toArray(new CipherSuite[0]))
+					.build();
+
 			HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 			interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 			OkHttpClient client = new OkHttpClient.Builder()
+					.connectionSpecs(Arrays.asList(legacyTls, ConnectionSpec.CLEARTEXT))
 					.addInterceptor(interceptor)
+					.connectTimeout(AppConstants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+					.readTimeout(AppConstants.READ_TIMEOUT, TimeUnit.SECONDS)
 					.build();
 
 			retrofit = new Retrofit.Builder()

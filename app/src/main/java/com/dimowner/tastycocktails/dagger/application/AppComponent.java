@@ -22,6 +22,7 @@ import dagger.Component;
 
 import com.dimowner.tastycocktails.NavigationActivity;
 import com.dimowner.tastycocktails.TCApplication;
+import com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsComponent;
 import com.dimowner.tastycocktails.dagger.cocktails.CocktailsModule;
 import com.dimowner.tastycocktails.dagger.details.DetailsComponent;
@@ -29,6 +30,7 @@ import com.dimowner.tastycocktails.dagger.details.DetailsModule;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailComponent;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
 import com.dimowner.tastycocktails.data.LocalRepository;
+import com.dimowner.tastycocktails.settings.SettingsActivity;
 
 /**
  * Created on 27.07.2017.
@@ -43,5 +45,7 @@ public interface AppComponent {
 	DetailsComponent plus(DetailsModule detailsModule);
 	void inject(LocalRepository repository);
 	void inject(NavigationActivity activity);
+	void inject(SettingsActivity activity);
+	void inject(ImagePreviewActivity activity);
 	void inject(TCApplication application);
 }

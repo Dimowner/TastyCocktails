@@ -38,14 +38,17 @@ import android.widget.ImageButton;
 
 import javax.inject.Inject;
 
+import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.cocktails.details.ImagePreviewActivity;
 import com.dimowner.tastycocktails.cocktails.details.IngredientsAdapter;
 import com.dimowner.tastycocktails.dagger.random.RandomCocktailModule;
+import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AnimationUtil;
+import com.google.android.gms.ads.AdView;
 
 /**
  * Created on 27.07.2017.
@@ -53,11 +56,14 @@ import com.dimowner.tastycocktails.util.AnimationUtil;
  */
 public class RandomFragment extends Fragment {
 
-	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
+//	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
 	public final static String TAG = "RandomFragment";
 
 	@Inject
 	RandomContract.UserActionsListener mPresenter;
+
+	@Inject
+	Prefs prefs;
 
 	private RecyclerView mRecyclerView;
 	private IngredientsAdapter mAdapter;
@@ -69,6 +75,7 @@ public class RandomFragment extends Fragment {
 	private ImageButton btnFavorite;
 	private FloatingActionButton fab;
 	private CoordinatorLayout mRoot;
+	private AdvHandler advHandler;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,18 +128,29 @@ public class RandomFragment extends Fragment {
 
 			mPresenter.bindView(mAdapter);
 		}
+
+		AdView adView = view.findViewById(R.id.adView);
+		advHandler = new AdvHandler(adView, prefs);
+
 		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RANDOM);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		advHandler.onResume();
 		if (!isCreated) {
 			mPresenter.loadRandomDrink();
 			fab.setVisibility(View.VISIBLE);
 			AnimationUtil.physBasedRevealAnimation(fab);
 			isCreated = true;
 		}
+	}
+
+	@Override
+	public void onPause() {
+		advHandler.onPause();
+		super.onPause();
 	}
 
 	@Override
@@ -147,14 +165,15 @@ public class RandomFragment extends Fragment {
 		outState.putBoolean("is_favorite", isFavorite);
 		outState.putBoolean("is_created", isCreated);
 		if (mAdapter != null) {
-			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
+//			outState.putParcelable(EXTRAS_KEY_ADAPTER_DATA, mAdapter.onSaveInstanceState());
+			mAdapter.onSaveAdapterState(outState);
 		}
 	}
 
 	@Override
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRAS_KEY_ADAPTER_DATA)) {
+		if (savedInstanceState != null) {
 			isFavorite = savedInstanceState.getBoolean("is_favorite");
 			isCreated = savedInstanceState.getBoolean("is_created");
 //			isCreated = false;
@@ -162,7 +181,8 @@ public class RandomFragment extends Fragment {
 			initAdapter();
 
 			mPresenter.bindView(mAdapter);
-			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+//			mAdapter.onRestoreInstanceState(savedInstanceState.getParcelable(EXTRAS_KEY_ADAPTER_DATA));
+			mAdapter.onRestoreAdapterSate(savedInstanceState);
 			fab.setVisibility(View.VISIBLE);
 		}
 	}
@@ -195,6 +215,7 @@ public class RandomFragment extends Fragment {
 
 	@Override
 	public void onDestroyView() {
+		advHandler.onDestroy();
 		super.onDestroyView();
 		mPresenter.unbindView();
 		mPresenter = null;

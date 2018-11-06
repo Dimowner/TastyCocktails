@@ -13,19 +13,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.dimowner.tastycocktails.AdvHandler;
+import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
-import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.dagger.details.DetailsModule;
+import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
+import com.dimowner.tastycocktails.util.AnimationUtil;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -33,27 +40,33 @@ import timber.log.Timber;
 
 public class PagerDetailsActivity  extends AppCompatActivity {
 
-	public static final int TYPE_SEARCH = 1;
-	public static final int TYPE_FILETERS= 2;
-	public static final int TYPE_FAVORITES= 3;
-	public static final int TYPE_HISTORY= 4;
-
-	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
-	public static final String EXTRAS_KEY_TYPE = "details_type";
-	public static final String EXTRAS_KEY_ACTIVE_FILTER = "active_filter";
-	public static final String EXTRAS_KEY_FILTER_VALUE = "filter_value";
+//	public static final int TYPE_SEARCH = 1;
+//	public static final int TYPE_FILETERS= 2;
+//	public static final int TYPE_FAVORITES= 3;
+//	public static final int TYPE_HISTORY= 4;
+//
+//	private final String EXTRAS_KEY_ADAPTER_DATA = "adapter_data";
+//	public static final String EXTRAS_KEY_TYPE = "details_type";
+//	public static final String EXTRAS_KEY_ACTIVE_FILTER = "active_filter";
+//	public static final String EXTRAS_KEY_FILTER_VALUE = "filter_value";
 	public static final String EXTRAS_KEY_IDS = "items_ids";
 	public static final String EXTRAS_KEY_ACTIVE_ITEM_POS = "active_item_pos";
-	public static final String EXTRAS_KEY_ID = "cocktail_id";
+//	public static final String EXTRAS_KEY_ID = "cocktail_id";
 
 	@Inject
 	DetailsViewModel viewModel;
+
+	@Inject
+	Prefs prefs;
 
 	private Stack<IngredientsAdapter2> adaptersPool;
 
 	private FrameLayout titleBar;
 	private ViewPager viewPager;
 	private ImageButton btnFav;
+	private TextView txtInstructions;
+
+	private AdvHandler advHandler;
 
 	private DetailsPagerAdapter pagerAdapter;
 
@@ -68,25 +81,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		Intent i = new Intent(context, PagerDetailsActivity.class);
 		i.putIntegerArrayListExtra(EXTRAS_KEY_IDS, ids);
 		i.putExtra(EXTRAS_KEY_ACTIVE_ITEM_POS, activeItemPosition);
-		return i;
-	}
-
-	public static Intent getStartIntent(Context context, int type) {
-		Intent i = new Intent(context, PagerDetailsActivity.class);
-		i.putExtra(EXTRAS_KEY_TYPE, type);
-		if (type == TYPE_FILETERS) {
-			throw new RuntimeException("Not appropriate method call. Please call another getStartIntent for this type with additional params");
-		}
-		return i;
-	}
-
-	public static Intent getStartIntent(Context context, int type, int activeFilter, String filterValue) {
-		Intent i = new Intent(context, PagerDetailsActivity.class);
-		i.putExtra(EXTRAS_KEY_TYPE, type);
-		if (type == TYPE_FILETERS) {
-			i.putExtra(EXTRAS_KEY_ACTIVE_FILTER, activeFilter);
-			i.putExtra(EXTRAS_KEY_FILTER_VALUE, filterValue);
-		}
 		return i;
 	}
 
@@ -119,14 +113,6 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 						.subscribe(() -> updateFavorite(viewModel.getCachedDrink(viewPager.getCurrentItem())), Timber::e))
 		);
 		viewPager = findViewById(R.id.pager);
-		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-			@Override public void onPageSelected(int position) {
-				updateFavorite(viewModel.getCachedDrink(position));
-				updateHistory(position);
-			}
-			@Override public void onPageScrollStateChanged(int state) {}
-		});
 
 		adaptersPool = new Stack<>();
 
@@ -179,6 +165,45 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		});
 		viewPager.setAdapter(pagerAdapter);
 		viewPager.setCurrentItem(activeItem, false);
+		updateHistory(activeItem);
+		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+			@Override public void onPageSelected(int position) {
+				updateFavorite(viewModel.getCachedDrink(position));
+				updateHistory(position);
+				if (txtInstructions != null && ids.size() > 2) {
+					AnimationUtil.verticalSpringAnimation(
+							txtInstructions,
+							txtInstructions.getHeight(),
+							(animation, canceled, value, velocity) -> {
+								txtInstructions.setVisibility(View.GONE);
+								prefs.setShowDetailsInstructions(false);
+							});
+				}
+			}
+			@Override public void onPageScrollStateChanged(int state) {}
+		});
+
+		if (prefs.isShowDetailsInstructions() && ids.size() > 2) {
+			txtInstructions = findViewById(R.id.txtInstructions);
+			compositeDisposable.add(Completable.complete().delay(AppConstants.SHOW_INSTRUCTIONS_DELAY_MILLS, TimeUnit.MILLISECONDS)
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(
+							() -> {
+								txtInstructions.setVisibility(View.VISIBLE);
+								txtInstructions.setTranslationY(500);// Here should be instructions panel height.
+								AnimationUtil.verticalSpringAnimation(txtInstructions, 0);
+								txtInstructions.setOnClickListener(v ->
+										AnimationUtil.verticalSpringAnimation(
+												txtInstructions,
+												txtInstructions.getHeight(),
+												(animation, canceled, value, velocity) -> {
+													txtInstructions.setVisibility(View.GONE);
+													prefs.setShowDetailsInstructions(false);
+												}));
+							}
+					));
+		}
 
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			// Set the padding to match the Status Bar height
@@ -188,6 +213,9 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		if (savedInstanceState == null) {
 			AndroidUtils.handleNavigationBarColor(this);
 		}
+
+		AdView adView = findViewById(R.id.adView);
+		advHandler = new AdvHandler(adView, prefs);
 	}
 
 	@Override
@@ -197,7 +225,20 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		advHandler.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		advHandler.onPause();
+		super.onPause();
+	}
+
+	@Override
 	protected void onDestroy() {
+		advHandler.onDestroy();
 		super.onDestroy();
 		compositeDisposable.dispose();
 	}
@@ -237,19 +278,11 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	}
 
 	private void updateFavorite(Drink d) {
-//		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			if (d != null && d.isFavorite()) {
-				btnFav.setImageResource(R.drawable.round_heart);
-			} else {
-				btnFav.setImageResource(R.drawable.round_heart_border);
-			}
-//		} else {
-//			if (d != null && d.isFavorite()) {
-//				btnFav.setImageResource(R.drawable.heart);
-//			} else {
-//				btnFav.setImageResource(R.drawable.heart_outline);
-//			}
-//		}
+		if (d != null && d.isFavorite()) {
+			btnFav.setImageResource(R.drawable.round_heart);
+		} else {
+			btnFav.setImageResource(R.drawable.round_heart_border);
+		}
 	}
 
 	private void updateHistory(int pos) {

@@ -13,4 +13,23 @@
 
 	<include layout="@layout/toolbar_transparent"/>
 
+
+	<TextView
+			android:id="@+id/txtInstructions"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/colorAccent"
+			android:drawableStart="@drawable/round_info_white"
+			android:drawableLeft="@drawable/round_info_white"
+			android:drawableEnd="@drawable/round_close"
+			android:drawableRight="@drawable/round_close"
+			android:gravity="center"
+			android:visibility="gone"
+			android:layout_gravity="bottom"
+			android:padding="@dimen/padding_big"
+			android:text="@string/pull_to_top_or_bottom_to_close"
+			android:textColor="@color/white"
+			android:textSize="@dimen/text_size_xmedium"
+			/>
+
 </FrameLayout>

@@ -27,6 +27,7 @@
 
 	<color name="text_primary_dark">#de000000</color> <!-- 87% -->
 	<color name="text_secondary_dark">#8a000000</color> <!-- 54% -->
+	<color name="text_secondary_dark2">#55000000</color>
 	<color name="text_primary_light">#ffffffff</color>
 
 	<color name="blue">#3f51b5</color>
@@ -37,5 +38,6 @@
 	<color name="circle_drawable">#47575757</color>
 
 	<color name="grey">#757575</color>
+	<color name="light_grey">#999999</color>
 
 </resources>
