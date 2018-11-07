@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "90210698393",
+    "firebase_url": "https://tastycocktails-database.firebaseio.com",
+    "project_id": "tastycocktails-database",
+    "storage_bucket": "tastycocktails-database.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90210698393:android:bc7af41dc5d8c2bf",
+        "android_client_info": {
+          "package_name": "com.dimowner.tastycocktails"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90210698393-tqj94bdoin7t7s435foh6b2s9ise20q0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dimowner.tastycocktails",
+            "certificate_hash": "9090623141cb40eb23ecae07eee58a7f3ae2c6d3"
+          }
+        },
+        {
+          "client_id": "90210698393-lnqdmvmm501qmfvkii25n4mrjjmpdln0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyWUWqvWr0kvyy8CghjYH8_0eq4M4rhl4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90210698393-lnqdmvmm501qmfvkii25n4mrjjmpdln0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90210698393:android:1df656f0f0e849b5",
+        "android_client_info": {
+          "package_name": "com.dimowner.tastycocktails.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90210698393-4qsbhc428gv6tcn42qru9in6rf969v18.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dimowner.tastycocktails.debug",
+            "certificate_hash": "914ec22317b880a05d6769de7a2a592992ba1258"
+          }
+        },
+        {
+          "client_id": "90210698393-lnqdmvmm501qmfvkii25n4mrjjmpdln0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyWUWqvWr0kvyy8CghjYH8_0eq4M4rhl4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90210698393-lnqdmvmm501qmfvkii25n4mrjjmpdln0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
