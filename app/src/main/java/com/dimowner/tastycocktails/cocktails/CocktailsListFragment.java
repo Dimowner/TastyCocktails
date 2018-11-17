@@ -914,7 +914,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 	private void applySearch(String query, boolean localSearch) {
 		Timber.v("startSearch local = " + localSearch);
 		prefs.setLastSearchString(query);
-		if (!query.isEmpty()) {
+		if (query != null && !query.isEmpty()) {
 			prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_SEARCH);
 		} else {
 			prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_FILTER);
