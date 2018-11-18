@@ -54,7 +54,7 @@ public interface CocktailsListContract {
 
 //		void loadBuildList(int filterType, String filterVal);
 
-		void loadFilteredList(String category, String ingredient, String glass, String alcoholic);
+		void loadFilteredList(String category, List<String> ingredient, String glass, String alcoholic);
 
 		void clearHistory();
 

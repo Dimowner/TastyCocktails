@@ -200,6 +200,89 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> loadFilteredDrinks2(String category, List<String> ingredients, String glass, String alcoholic) {
+		StringBuilder sb = new StringBuilder();
+		int argsCount = 0;
+		String[] args;
+
+		sb.append("SELECT * FROM drinks WHERE");
+
+		if (!TextUtils.isEmpty(category)) {
+			sb.append(" UPPER(strCategory) LIKE UPPER(?)");
+			argsCount++;
+		}
+		if (!TextUtils.isEmpty(glass)) {
+			if (!TextUtils.isEmpty(category)) {
+				sb.append(" AND");
+			}
+			sb.append(" UPPER(strGlass) LIKE UPPER(?)");
+			argsCount++;
+		}
+
+		if (!TextUtils.isEmpty(alcoholic)) {
+			if (!TextUtils.isEmpty(category) || !TextUtils.isEmpty(glass)) {
+				sb.append(" AND");
+			}
+			argsCount++;
+			sb.append(" UPPER(strAlcoholic) LIKE UPPER(?)");
+		}
+
+		sb.append(" ORDER BY strDrink");
+
+		args = new String[argsCount];
+		if (!TextUtils.isEmpty(category)) {
+			args[0] = category;
+			if (!TextUtils.isEmpty(glass)) {
+				args[1] = glass;
+				if (!TextUtils.isEmpty(alcoholic)) {
+					args[2] = alcoholic;
+				}
+			} else {
+				if (!TextUtils.isEmpty(alcoholic)) {
+					args[1] = alcoholic;
+				}
+			}
+		} else {
+			if (!TextUtils.isEmpty(glass)) {
+				args[0] = glass;
+				if (!TextUtils.isEmpty(alcoholic)) {
+					args[1] = alcoholic;
+				}
+			} else {
+				if (!TextUtils.isEmpty(alcoholic)) {
+					args[0] = alcoholic;
+				}
+			}
+		}
+
+		Timber.v("RAW QUERY : %s, args %s", sb.toString(), Arrays.toString(args));
+
+		SupportSQLiteQuery query;
+		if (argsCount > 0) {
+			query = new SimpleSQLiteQuery(sb.toString(), args);
+		} else {
+			query = new SimpleSQLiteQuery("SELECT * FROM drinks ORDER BY strDrink");
+		}
+
+		Timber.v("ingredients: " + ingredients.toString());
+		return getRepositoriesDao().getFiltered(query)
+				.map(drinks -> {
+					if (ingredients.size() > 0) {
+						for (int i = drinks.size() - 1; i >= 0; i--) {
+							Drink drink = drinks.get(i);
+							for (int j = 0; j < ingredients.size(); j++) {
+								if (!drink.hasIngredient(ingredients.get(j))) {
+									drinks.remove(i);
+									break;
+								}
+							}
+						}
+					}
+					return drinks;
+				});
+	}
+
+	@Override
 	public Single<Drink> getRandomCocktail() {
 		return getRepositoriesDao().getRandom();
 //		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {

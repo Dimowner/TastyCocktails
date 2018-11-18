@@ -37,6 +37,7 @@ public interface RepositoryContract {
 	Flowable<List<Drink>> getDrinksHistory(int page);
 //	Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value);
 	Flowable<List<Drink>> loadFilteredDrinks(String category, String  ingredient, String  glass, String alcoholic);
+	Flowable<List<Drink>> loadFilteredDrinks2(String category, List<String>  ingredients, String  glass, String alcoholic);
 	Single<Drink> getRandomCocktail();
 	Flowable<Drink> getCocktailRx(long id);
 	Single<Drink> getLocalCocktailRx(long id);
