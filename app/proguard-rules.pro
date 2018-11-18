@@ -75,6 +75,13 @@
 -dontwarn javax.annotation.concurrent.GuardedBy
 -dontwarn javax.annotation.ParametersAreNonnullByDefault
 
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic typeName information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.

@@ -57,7 +57,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 9
-def versionPatch = 92
+def versionPatch = 93
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -93,15 +93,17 @@ android {
 
 	buildTypes {
 		release {
-//			minifyEnabled true
-//			shrinkResources true
+			minifyEnabled true
+			shrinkResources true
+			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
-//		debug {
+		debug {
 //			minifyEnabled true
 //			shrinkResources true
+//			useProguard true
 //			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//		}
+		}
 	}
 	flavorDimensions "default"
 
