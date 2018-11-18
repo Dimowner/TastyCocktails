@@ -57,7 +57,7 @@ ext.versions = [
 
 def versionMajor = 0
 def versionMinor = 9
-def versionPatch = 93
+def versionPatch = 94
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -99,10 +99,10 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
 		debug {
-//			minifyEnabled true
-//			shrinkResources true
-//			useProguard true
-//			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+			minifyEnabled true
+			shrinkResources true
+			useProguard true
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
 	}
 	flavorDimensions "default"

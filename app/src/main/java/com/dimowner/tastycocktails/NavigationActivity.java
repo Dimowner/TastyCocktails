@@ -410,18 +410,6 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		ft.commit();
 	}
 
-//	private void showAboutDialog() {
-//		FragmentManager fm = getSupportFragmentManager();
-//		FragmentTransaction ft = fm.beginTransaction();
-//		Fragment prev = fm.findFragmentByTag("dialog_about");
-//		if (prev != null) {
-//			ft.remove(prev);
-//		}
-//		ft.addToBackStack(null);
-//		AboutDialog dialog = new AboutDialog();
-//		dialog.show(ft, "dialog_about");
-//	}
-
 	private void startSettings() {
 		startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
 	}

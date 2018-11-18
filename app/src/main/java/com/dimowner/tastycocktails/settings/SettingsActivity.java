@@ -2,21 +2,21 @@ package com.dimowner.tastycocktails.settings;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.dimowner.tastycocktails.AboutDialog;
 import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
@@ -28,6 +28,8 @@ import com.google.android.gms.ads.AdView;
 import javax.inject.Inject;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+
+	private static final String VERSION_UNAVAILABLE = "N/A";
 
 	@Inject Prefs prefs;
 
@@ -61,12 +63,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 		TextView btnLicences = findViewById(R.id.btnLicences);
 		TextView btnRate = findViewById(R.id.btnRate);
-		TextView btnAbout = findViewById(R.id.btnAbout);
+		TextView btnAbout = findViewById(R.id.txtAbout);
+		btnAbout.setText(getAboutContent());
 		btnLicences.setOnClickListener(this);
 		btnRate.setOnClickListener(this);
-		btnAbout.setOnClickListener(this);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
 			getWindow().setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
 		}
 
@@ -94,18 +96,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		super.onDestroy();
 	}
 
-	private void showAboutDialog() {
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		Fragment prev = fm.findFragmentByTag("dialog_about");
-		if (prev != null) {
-			ft.remove(prev);
-		}
-		ft.addToBackStack(null);
-		AboutDialog dialog = new AboutDialog();
-		dialog.show(ft, "dialog_about");
-	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -114,9 +104,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 				break;
 			case R.id.btnRate:
 				rateApp();
-				break;
-			case R.id.btnAbout:
-				showAboutDialog();
 				break;
 		}
 	}
@@ -142,5 +129,22 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		}
 		intent.addFlags(flags);
 		return intent;
+	}
+
+	public SpannableStringBuilder getAboutContent() {
+		// Get app version;
+		String packageName = getPackageName();
+		String versionName;
+		try {
+			PackageInfo info = getPackageManager().getPackageInfo(packageName, 0);
+			versionName = info.versionName;
+		} catch (PackageManager.NameNotFoundException e) {
+			versionName = VERSION_UNAVAILABLE;
+		}
+
+		// Build the about body view and append the link to see OSS licenses
+		SpannableStringBuilder aboutBody = new SpannableStringBuilder();
+		aboutBody.append(Html.fromHtml(getString(R.string.about_body, versionName)));
+		return aboutBody;
 	}
 }

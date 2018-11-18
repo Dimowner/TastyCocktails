@@ -1122,6 +1122,10 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					} else if (fragmentType == TYPE_HISTORY) {
 						filterMenu = toolbar.findViewById(R.id.action_clear_history);
 						if (filterMenu != null) {
+							AnimationUtil.viewBackRotationAnimation(filterMenu, ANIMATION_DURATION);
+						}
+
+						if (filterMenu != null) {
 							filterMenu.setOnClickListener(v1 -> {
 								if (mAdapter.getItemCount() > 0) {
 									UIUtil.showWarningDialog(
