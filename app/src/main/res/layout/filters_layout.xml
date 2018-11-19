@@ -14,14 +14,15 @@
 		android:id="@+id/filters_panel"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/padding_standard"
+		android:paddingStart="@dimen/padding_standard"
+		android:paddingEnd="@dimen/padding_standard"
 		android:orientation="vertical"
 		tools:visibility="visible">
 
 	<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingBottom="@dimen/padding_medium"
+			android:paddingTop="@dimen/padding_small"
 			android:orientation="horizontal">
 
 		<TextView
@@ -42,7 +43,7 @@
 	<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingBottom="@dimen/padding_medium"
+			android:paddingTop="@dimen/padding_small"
 			android:orientation="horizontal">
 
 		<TextView
@@ -63,6 +64,7 @@
 	<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/padding_small"
 			android:orientation="horizontal">
 
 		<TextView
@@ -81,12 +83,33 @@
 	</LinearLayout>
 
 	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/padding_small"
+			android:orientation="horizontal">
+
+		<TextView
+				android:layout_width="@dimen/filters_label_width"
+				android:layout_height="wrap_content"
+				android:fontFamily="@font/product_sans_regular"
+				android:textSize="@dimen/text_size_xmedium"
+				android:text="@string/ingredient"
+				/>
+
+		<Spinner
+				android:id="@+id/filter_ingredients"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				/>
+	</LinearLayout>
+
+	<LinearLayout
 			android:id="@+id/pnl_ingredient2"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/padding_medium"
+			android:paddingTop="@dimen/padding_small"
 			android:orientation="horizontal"
-			android:visibility="gone"
 			tools:visibility="visible"
 			>
 
@@ -109,9 +132,8 @@
 			android:id="@+id/pnl_ingredient3"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/padding_medium"
+			android:paddingTop="@dimen/padding_small"
 			android:orientation="horizontal"
-			android:visibility="gone"
 			tools:visibility="visible"
 			>
 
@@ -127,35 +149,6 @@
 				android:id="@+id/filter_ingredients3"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				/>
-	</LinearLayout>
-
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/padding_medium"
-			android:orientation="horizontal">
-
-		<TextView
-				android:layout_width="@dimen/filters_label_width"
-				android:layout_height="wrap_content"
-				android:fontFamily="@font/product_sans_regular"
-				android:textSize="@dimen/text_size_xmedium"
-				android:text="@string/ingredient"
-				/>
-
-		<Spinner
-				android:id="@+id/filter_ingredients"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				/>
-		<ImageButton
-				android:id="@+id/filter_add_ingredient"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/round_add"
-				android:background="?attr/selectableItemBackgroundBorderless"
 				/>
 	</LinearLayout>
 
