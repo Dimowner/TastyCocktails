@@ -143,6 +143,7 @@ repositories {
 	mavenCentral()
    maven { url 'https://maven.fabric.io/public' }
 	google()
+	jcenter()
 }
 
 // Remove not needed buildVariants.
@@ -169,6 +170,8 @@ dependencies {
 	implementation "com.android.support:support-annotations:$versions.support"
 	implementation "com.android.support:support-dynamic-animation:$versions.support"
 	implementation "com.android.support:cardview-v7:$versions.support"
+	implementation "com.android.support:customtabs:$versions.support"
+	implementation "com.android.support:animated-vector-drawable:$versions.support"
 
 	// Android: Components
 	implementation "com.android.support.constraint:constraint-layout:$versions.constraintlayout"
