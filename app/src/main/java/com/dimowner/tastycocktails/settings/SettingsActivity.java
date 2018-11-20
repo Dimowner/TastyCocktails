@@ -44,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 		ImageButton btnBack = findViewById(R.id.btn_back);
 		btnBack.setOnClickListener(v -> finish());
+		AdView adView = findViewById(R.id.adView);
 
 		SwitchCompat showAdsSwitch = findViewById(R.id.showAdsSwitch);
 		if (prefs.isShowAds()) {
@@ -56,8 +57,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 			prefs.setShowAds(isChecked);
 			if (isChecked) {
 				TCApplication.event(getApplicationContext(), MixPanel.EVENT_ENABLE_ADS);
+				adView.setVisibility(View.VISIBLE);
 			} else {
 				TCApplication.event(getApplicationContext(), MixPanel.EVENT_DISABLE_ADS);
+				adView.setVisibility(View.INVISIBLE);
 			}
 		});
 
@@ -72,7 +75,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 			getWindow().setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
 		}
 
-		AdView adView = findViewById(R.id.adView);
 		advHandler = new AdvHandler(adView, prefs);
 
 		TCApplication.event(getApplicationContext(), MixPanel.EVENT_SETTINGS);
