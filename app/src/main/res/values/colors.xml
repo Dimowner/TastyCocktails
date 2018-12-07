@@ -29,6 +29,7 @@
 	<color name="text_secondary_dark">#8a000000</color> <!-- 54% -->
 	<color name="text_secondary_dark2">#55000000</color>
 	<color name="text_primary_light">#ffffffff</color>
+	<color name="text_secondary_light">#deffffff</color>
 
 	<color name="blue">#3f51b5</color>
 	<color name="white">#ffffff</color>
@@ -39,5 +40,8 @@
 
 	<color name="grey">#757575</color>
 	<color name="light_grey">#999999</color>
+
+	<color name="transparent">#00000000</color>
+	<color name="grey40">#751e1e1e</color>
 
 </resources>

@@ -33,7 +33,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -41,14 +40,10 @@ import com.dimowner.tastycocktails.cocktails.CocktailsListFragment;
 
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.random.RandomFragment;
+import com.dimowner.tastycocktails.rating.RatingFragment;
 import com.dimowner.tastycocktails.settings.SettingsActivity;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.google.android.gms.ads.MobileAds;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 
@@ -63,6 +58,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 	// symbols for navdrawer items (indices must correspond to array below). This is
 	// not a list of items that are necessarily *present* in the Nav Drawer; rather,
 	// it's a list of all possible items.
+	protected static final int NAVDRAWER_ITEM_RATING      = R.id.nav_rating;
 	protected static final int NAVDRAWER_ITEM_FAVORITES   = R.id.nav_favorites;
 	protected static final int NAVDRAWER_ITEM_COCKTAILS	= R.id.nav_cocktails;
 	protected static final int NAVDRAWER_ITEM_RANDOM 		= R.id.nav_random;
@@ -245,6 +241,13 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 	private void goToNavDrawerItem(int itemID) {
 		switch (itemID) {
+			case NAVDRAWER_ITEM_RATING:
+				if (mActionBarToolbar.getVisibility() == View.GONE) {
+					mActionBarToolbar.setVisibility(View.VISIBLE);
+				}
+				startRating();
+				curActiveItem = NAVDRAWER_ITEM_RATING;
+				break;
 			case NAVDRAWER_ITEM_FAVORITES:
 				if (mActionBarToolbar.getVisibility() == View.GONE) {
 					mActionBarToolbar.setVisibility(View.VISIBLE);
@@ -332,10 +335,17 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 	public boolean isDirectionToLeft(int id) {
 		switch (id) {
-			case NAVDRAWER_ITEM_COCKTAILS:
+			case NAVDRAWER_ITEM_RATING:
 				return true;
+			case NAVDRAWER_ITEM_COCKTAILS:
+				if (curActiveItem == NAVDRAWER_ITEM_RATING) {
+					return false;
+				} else {
+					return true;
+				}
 			case NAVDRAWER_ITEM_FAVORITES:
-				if (curActiveItem == NAVDRAWER_ITEM_COCKTAILS) {
+				if ((curActiveItem == NAVDRAWER_ITEM_RATING)
+						|| (curActiveItem == NAVDRAWER_ITEM_COCKTAILS)) {
 					return false;
 				} else {
 					return true;
@@ -378,6 +388,20 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			ft.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_left_to_right);
 		}
 		ft.replace(R.id.fragment, fragment, "history_fragment");
+		ft.commit();
+	}
+
+	protected void startRating() {
+		Timber.d("startRating");
+		FragmentManager manager = getSupportFragmentManager();
+		RatingFragment fragment = RatingFragment.newInstance();
+		FragmentTransaction ft = manager.beginTransaction();
+		if (isDirectionToLeft(NAVDRAWER_ITEM_COCKTAILS)) {
+			ft.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+		} else {
+			ft.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_left_to_right);
+		}
+		ft.replace(R.id.fragment, fragment, "rating_fragment");
 		ft.commit();
 	}
 

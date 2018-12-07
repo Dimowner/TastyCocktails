@@ -21,17 +21,24 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 public class FirebaseHandler {
 
 	private static final String TABLE_TOP_DRINKS = "top_drinks";
 	private static final String LIKE_COUNT = "likeCount";
+	private static final int TOP_DINKS_COUNT = 30;
 
 	private FirebaseDatabase database;
 	private DatabaseReference topDrinksRef;
@@ -48,21 +55,25 @@ public class FirebaseHandler {
 	public void likeDrink(long id) {
 		if (!BuildConfig.DEBUG) {
 			Timber.d("likeDrink id: " + id);
-			final DatabaseReference ref = topDrinksRef.child(String.valueOf(id)).child(LIKE_COUNT);
-			ref.addListenerForSingleValueEvent(new ValueEventListener() {
-				@Override
-				public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-					Long d = dataSnapshot.getValue(Long.class);
-					if (d != null) {
-						ref.setValue(d + 1);
+			try {
+				final DatabaseReference ref = topDrinksRef.child(String.valueOf(id)).child(LIKE_COUNT);
+				ref.addListenerForSingleValueEvent(new ValueEventListener() {
+					@Override
+					public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+						Long d = dataSnapshot.getValue(Long.class);
+						if (d != null) {
+							ref.setValue(d + 1);
+						}
 					}
-				}
 
-				@Override
-				public void onCancelled(@NonNull DatabaseError databaseError) {
-					Timber.e(databaseError.toString());
-				}
-			});
+					@Override
+					public void onCancelled(@NonNull DatabaseError databaseError) {
+						Timber.e(databaseError.toString());
+					}
+				});
+			} catch (Exception e) {
+				Timber.e(e);
+			}
 		}
 	}
 
@@ -73,55 +84,81 @@ public class FirebaseHandler {
 	public void unlikeDrink(long id) {
 		if (!BuildConfig.DEBUG) {
 			Timber.d("unlikeDrink id: " + id);
-			final DatabaseReference ref = topDrinksRef.child(String.valueOf(id)).child(LIKE_COUNT);
-			ref.addListenerForSingleValueEvent(new ValueEventListener() {
-				@Override
-				public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-					Long d = dataSnapshot.getValue(Long.class);
-					if (d != null) {
-						ref.setValue(d - 1);
+			try {
+				final DatabaseReference ref = topDrinksRef.child(String.valueOf(id)).child(LIKE_COUNT);
+				ref.addListenerForSingleValueEvent(new ValueEventListener() {
+					@Override
+					public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+						Long d = dataSnapshot.getValue(Long.class);
+						if (d != null) {
+							ref.setValue(d - 1);
+						}
 					}
-				}
 
-				@Override
-				public void onCancelled(@NonNull DatabaseError databaseError) {
-					Timber.e(databaseError.toString());
-				}
-			});
+					@Override
+					public void onCancelled(@NonNull DatabaseError databaseError) {
+						Timber.e(databaseError.toString());
+					}
+				});
+			} catch (Exception e) {
+				Timber.e(e);
+			}
 		}
 	}
 
-	public void getTop20() {
-		topDrinksRef.orderByChild(LIKE_COUNT).limitToLast(20).addListenerForSingleValueEvent(new ValueEventListener() {
-			@Override
-			public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-				List<FirebaseDrink> list = new LinkedList<>();
-				for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-					FirebaseDrink d = postSnapshot.getValue(FirebaseDrink.class);
-					if (d != null) {
-						Timber.v("dirk: " + d.toString());
-						list.add(0, d);
-					}
-				}
-				Timber.v("list size: " + list.size());
-			}
-
-			@Override
-			public void onCancelled(@NonNull DatabaseError databaseError) {
-
-			}
-		});
+	public Single<List<FirebaseDrink>> getTopDrinks() {
+		try {
+			return Single.create(new SingleValueOnSubscribe(topDrinksRef.orderByChild(LIKE_COUNT).limitToLast(TOP_DINKS_COUNT)))
+					.map(dataSnapshot -> {
+						List<FirebaseDrink> list = new LinkedList<>();
+						for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+							FirebaseDrink d = postSnapshot.getValue(FirebaseDrink.class);
+							if (d != null) {
+//								Timber.v("dirk: " + d.getStrDrink() + " count: " + d.getLikeCount());
+								list.add(0, d);
+							}
+						}
+						return list;
+			});
+		} catch (Exception e) {
+			Timber.e(e);
+			return Single.just(new ArrayList<>());
+		}
 	}
 
-//	public void putDrink(Drink drink) {
-//		topDrinksRef.child(String.valueOf(drink.getIdDrink()))
-//				.setValue(ModelMapper.drinkToFirebaseDrink(drink), (databaseError, databaseReference) -> Timber.v("onComplete"));
-//	}
-//
-//	public void putDrinks(List<Drink> drinks) {
-//		Timber.v("putDrinks size: " + drinks.size());
-//		for (int i = 0; i < drinks.size(); i++) {
-//			putDrink(drinks.get(i));
-//		}
-//	}
+
+	public static class SingleValueOnSubscribe implements SingleOnSubscribe<DataSnapshot> {
+
+		private Query query;
+
+		public SingleValueOnSubscribe(Query query) {
+			this.query = query;
+		}
+
+		@Override
+		public void subscribe(@io.reactivex.annotations.NonNull SingleEmitter<DataSnapshot> e) throws Exception {
+			ValueEventListener listener = new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot dataSnapshot) {
+					if (!e.isDisposed()) e.onSuccess(dataSnapshot);
+				}
+
+				@Override
+				public void onCancelled(DatabaseError databaseError) {
+					if (!e.isDisposed()) e.onError(databaseError.toException());
+				}
+			};
+
+			e.setDisposable(Disposables.fromRunnable(() -> {
+				if (query != null) {
+					query.removeEventListener(listener);
+					query = null;
+				}
+			}));
+
+			if (query != null) {
+				query.addListenerForSingleValueEvent(listener);
+			}
+		}
+	}
 }

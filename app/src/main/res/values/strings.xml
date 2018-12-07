@@ -18,9 +18,11 @@
 	<string name="app_name">Tasty Cocktails</string>
 
 	<string name="title_warning">Warning</string>
+	<string name="title_rating">Top 30 Drinks</string>
 
 	<string name="nav_favorites">Favorites</string>
 	<string name="nav_cocktails">Cocktails</string>
+	<string name="nav_rating">Top 30</string>
 	<string name="nav_random">Random</string>
 	<string name="nav_history">History</string>
 	<string name="nav_about">About</string>

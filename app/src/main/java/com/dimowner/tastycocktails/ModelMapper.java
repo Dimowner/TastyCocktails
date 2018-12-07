@@ -69,6 +69,28 @@ public class ModelMapper {
 			);
 	}
 
+	public static List<ListItem> firebaseDrinksToListItems(List<FirebaseDrink> drinks) {
+		List<ListItem> list = new ArrayList<>(drinks.size());
+		for (int i = 0; i < drinks.size(); i++) {
+			list.add(firebaseDrinkToListItem(drinks.get(i)));
+		}
+		return list;
+	}
+
+	public static ListItem firebaseDrinkToListItem(FirebaseDrink drink) {
+		return new ListItem(
+				drink.getIdDrink(),
+				drink.getStrDrink(),
+				drink.getStrInstructions(),
+				drink.getStrCategory(),
+				drink.getStrAlcoholic(),
+				drink.getStrGlass(),
+				drink.getStrDrinkThumb(),
+				0,
+				false
+		);
+	}
+
 	public static List<IngredientItem> getIngredientsFromDrink(Drink drink) {
 		List<IngredientItem> list = new ArrayList<>();
 
