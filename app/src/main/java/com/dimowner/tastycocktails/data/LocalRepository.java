@@ -36,6 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 import com.dimowner.tastycocktails.data.room.AppDatabase;
 import com.dimowner.tastycocktails.data.room.CocktailsDao;
 import com.google.gson.Gson;
@@ -427,6 +428,20 @@ public class LocalRepository implements RepositoryContract {
 		return Single.just(items.getDrinks())
 				.doOnSuccess(data -> getRepositoriesDao().insertAllWithReplace(data))
 				.subscribeOn(Schedulers.io());
+	}
+
+	@Override
+	public Flowable<List<RatingDrink>> getRatingList() {
+		return getRepositoriesDao().getAllRatingDrinks();
+	}
+
+	@Override
+	public Completable replaceRating(final List<RatingDrink> list) {
+		Timber.v("replaceRating l = " + list.toString());
+		return Completable.fromAction(() -> {
+			getRepositoriesDao().deleteAllRatings();
+			getRepositoriesDao().insertRatingDrinks(list.toArray(new RatingDrink[list.size()]));
+		});
 	}
 
 	/**

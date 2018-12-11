@@ -29,6 +29,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import com.dimowner.tastycocktails.data.model.Drink;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 
 /**
  * Created on 27.07.2017.
@@ -127,6 +128,15 @@ public interface CocktailsDao {
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertAllWithReplace(Drink... items);
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertRatingDrinks(RatingDrink... items);
+
+	@Query("SELECT * FROM rating ORDER BY likeCount DESC")
+	Flowable<List<RatingDrink>> getAllRatingDrinks();
+
+	@Query("DELETE FROM rating")
+	void deleteAllRatings();
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertDrink(Drink item);

@@ -23,7 +23,7 @@
 
 		<item
 				android:id="@+id/nav_rating"
-				android:icon="@drawable/ic_round_stars_grey"
+				android:icon="@drawable/ic_round_bar_chart_24px"
 				android:title="@string/nav_rating"/>
 
 		<item

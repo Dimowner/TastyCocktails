@@ -53,6 +53,8 @@
 
 	<string name="add_to_favorites">Favorites</string>
 	<string name="no_favorite_drinks">Your favorite drinks list is empty.</string>
+	<string name="unable_to_load_rating">Unable to load top drinks.</string>
+	<string name="loading">Loading&#8230;</string>
 	<!--<string name="empty">Empty</string>-->
 	<string name="history_is_empty">Browsing history is empty.\n You didn\'t open any drink.</string>
 	<string name="clear_history">Clear history</string>

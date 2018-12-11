@@ -40,6 +40,9 @@ ext.versions = [
 		//Architecture components
 		archComp			  : "1.1.0",
 
+		//Room
+		room			  : "1.1.1-rc1",
+
 		//ButterKnife
 		butterKnife		  : "8.7.0",
 
@@ -201,9 +204,9 @@ dependencies {
 	annotationProcessor "android.arch.lifecycle:compiler:$versions.archComp"
 
 	//Room
-	implementation "android.arch.persistence.room:runtime:$versions.archComp"
-	implementation "android.arch.persistence.room:rxjava2:$versions.archComp"
-	annotationProcessor "android.arch.persistence.room:compiler:$versions.archComp"
+	implementation "android.arch.persistence.room:runtime:$versions.room"
+	implementation "android.arch.persistence.room:rxjava2:$versions.room"
+	annotationProcessor "android.arch.persistence.room:compiler:$versions.room"
 
 	// Firebase
 //	implementation 'com.google.firebase:firebase-analytics:16.0.1'

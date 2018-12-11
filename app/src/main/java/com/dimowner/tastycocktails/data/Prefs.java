@@ -13,6 +13,7 @@ public class Prefs {
 	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
 	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
 	private static final String PREF_KEY_IS_SHOW_ADS = "is_show_ads";
+	private static final String PREF_KEY_RATING_UPDATED_TIME = "rating_updated_time";
 
 	private static final String PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS = "is_show_history_instructions";
 	private static final String PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS = "is_show_details_instructions";
@@ -126,6 +127,16 @@ public class Prefs {
 		editor.putInt(PREF_KEY_SEARCH_TYPE, searchType);
 		editor.putString(PREF_KEY_FILTER_CATEGORY, value);
 		editor.putInt(PREF_KEY_FILTER_CATEGORY_POS, position);
+		editor.apply();
+	}
+
+	public long getRatingUpdatedTime() {
+		return sharedPreferences.getLong(PREF_KEY_RATING_UPDATED_TIME, 0);
+	}
+
+	public void setRatingUpdatedTime(long time) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putLong(PREF_KEY_RATING_UPDATED_TIME, time);
 		editor.apply();
 	}
 

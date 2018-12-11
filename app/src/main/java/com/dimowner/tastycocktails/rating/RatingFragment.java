@@ -39,6 +39,7 @@ import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.dagger.rating.RatingModule;
 import com.dimowner.tastycocktails.data.Prefs;
+import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
@@ -107,6 +108,7 @@ public class RatingFragment extends Fragment implements RatingContract.View {
 		advHandler = new AdvHandler(adView, prefs);
 
 		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RATING);
+		AndroidUtils.primaryColorNavigationBar(getActivity());
 	}
 
 	private void initAdapter() {
@@ -144,6 +146,7 @@ public class RatingFragment extends Fragment implements RatingContract.View {
 	@Override
 	public void showProgress() {
 		mTxtEmpty.setVisibility(View.VISIBLE);
+		mTxtEmpty.setText(R.string.loading);
 		progressBar.setVisibility(View.VISIBLE);
 	}
 
@@ -156,11 +159,16 @@ public class RatingFragment extends Fragment implements RatingContract.View {
 	@Override
 	public void showQueryError() {
 		mTxtEmpty.setVisibility(View.VISIBLE);
+		mTxtEmpty.setText(R.string.unable_to_load_rating);
+		mTxtEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_round_bar_chart_64px, 0, 0);
 		Snackbar.make(mRecyclerView, R.string.msg_error_on_query, Snackbar.LENGTH_LONG).show();
 	}
 
 	@Override
 	public void showNetworkError() {
+		mTxtEmpty.setVisibility(View.VISIBLE);
+		mTxtEmpty.setText(R.string.unable_to_load_rating);
+		mTxtEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_round_bar_chart_64px, 0, 0);
 		Snackbar.make(mRecyclerView, R.string.msg_error_no_internet, Snackbar.LENGTH_LONG).show();
 	}
 }

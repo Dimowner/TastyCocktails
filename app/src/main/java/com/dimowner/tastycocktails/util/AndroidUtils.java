@@ -84,6 +84,14 @@ public class AndroidUtils {
 		}
 	}
 
+	public static void primaryColorNavigationBar(Activity activity) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			activity.getWindow().setNavigationBarColor(ContextCompat.getColor(activity.getApplicationContext(), R.color.black));
+			activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+		}
+	}
+
 	public static void transparentNavigationBar(Activity activity) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
 			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);

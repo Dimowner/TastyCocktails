@@ -25,6 +25,7 @@ import com.dimowner.tastycocktails.cocktails.details.IngredientItem;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 
 /**
  * Created on 15.08.2017.
@@ -69,15 +70,15 @@ public class ModelMapper {
 			);
 	}
 
-	public static List<ListItem> firebaseDrinksToListItems(List<FirebaseDrink> drinks) {
+	public static List<ListItem> ratingDrinksToListItems(List<RatingDrink> drinks) {
 		List<ListItem> list = new ArrayList<>(drinks.size());
 		for (int i = 0; i < drinks.size(); i++) {
-			list.add(firebaseDrinkToListItem(drinks.get(i)));
+			list.add(ratingDrinkToListItem(drinks.get(i)));
 		}
 		return list;
 	}
 
-	public static ListItem firebaseDrinkToListItem(FirebaseDrink drink) {
+	public static ListItem ratingDrinkToListItem(RatingDrink drink) {
 		return new ListItem(
 				drink.getIdDrink(),
 				drink.getStrDrink(),
@@ -163,8 +164,8 @@ public class ModelMapper {
 		return AppConstants.BASE_INGREDIENT_PATH + ingredientName + ".png";
 	}
 
-	public static FirebaseDrink drinkToFirebaseDrink(Drink d) {
-		return new FirebaseDrink(
+	public static RatingDrink drinkToRatingDrink(Drink d) {
+		return new RatingDrink(
 				d.getIdDrink(),
 				0,
 				d.getStrDrink(),
@@ -206,7 +207,7 @@ public class ModelMapper {
 			);
 	}
 
-	public static Drink firebaseDrinkToDrink(FirebaseDrink d) {
+	public static Drink ratingDrinkToDrink(RatingDrink d) {
 		return new Drink(
 				d.getIdDrink(),
 				false,

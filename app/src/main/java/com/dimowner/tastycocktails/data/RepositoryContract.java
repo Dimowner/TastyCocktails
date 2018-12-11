@@ -25,6 +25,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 
 /**
  * Created on 27.07.2017.
@@ -54,4 +55,7 @@ public interface RepositoryContract {
 	void clearAll();
 	Completable removeFromHistory(long id);
 	Single<Drink[]> cacheIntoLocalDatabase(Drinks drinks);
+
+	Flowable<List<RatingDrink>> getRatingList();
+	Completable replaceRating(List<RatingDrink> list);
 }

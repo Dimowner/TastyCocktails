@@ -43,6 +43,7 @@ import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.ModelMapper;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 
 /**
  * Created on 27.07.2017.
@@ -263,6 +264,16 @@ public class RemoteRepository implements RepositoryContract {
 
 	@Override
 	public Single<Drink[]> cacheIntoLocalDatabase(Drinks drinks) {
+		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
+	@Override
+	public Flowable<List<RatingDrink>> getRatingList() {
+		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
+	}
+
+	@Override
+	public Completable replaceRating(List<RatingDrink> list) {
 		throw new UnsupportedOperationException("This method is supported only in LocalRepository");
 	}
 

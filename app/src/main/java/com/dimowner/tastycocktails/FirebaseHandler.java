@@ -17,6 +17,8 @@
 package com.dimowner.tastycocktails;
 
 import android.support.annotation.NonNull;
+
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -106,13 +108,13 @@ public class FirebaseHandler {
 		}
 	}
 
-	public Single<List<FirebaseDrink>> getTopDrinks() {
+	public Single<List<RatingDrink>> getTopDrinks() {
 		try {
 			return Single.create(new SingleValueOnSubscribe(topDrinksRef.orderByChild(LIKE_COUNT).limitToLast(TOP_DINKS_COUNT)))
 					.map(dataSnapshot -> {
-						List<FirebaseDrink> list = new LinkedList<>();
+						List<RatingDrink> list = new LinkedList<>();
 						for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-							FirebaseDrink d = postSnapshot.getValue(FirebaseDrink.class);
+							RatingDrink d = postSnapshot.getValue(RatingDrink.class);
 							if (d != null) {
 //								Timber.v("dirk: " + d.getStrDrink() + " count: " + d.getLikeCount());
 								list.add(0, d);

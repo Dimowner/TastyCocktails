@@ -23,7 +23,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -77,7 +76,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 	protected NavigationView mNavigationView;
 	protected ActionBarDrawerToggle mDrawerToggle;
 
-	private int curActiveItem = NAVDRAWER_ITEM_COCKTAILS;
+	private int curActiveItem = NAVDRAWER_ITEM_RATING;
 
 //	private AppStartTracker tracker;
 
@@ -103,15 +102,11 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 		if (savedInstanceState == null) {
 			FragmentManager manager = getSupportFragmentManager();
-			CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_NORMAL);
-			if (prefs.isFirstRun()) {
-				fragment.setOnFirstRunExecutedListener(this::enableMenu);
-			}
+			RatingFragment fragment = RatingFragment.newInstance();
 			manager
 					.beginTransaction()
-					.add(R.id.fragment, fragment, "cocktails_fragment")
+					.add(R.id.fragment, fragment, "rating_fragment")
 					.commit();
-
 			AndroidUtils.handleNavigationBarColor(this);
 		}
 		setupNavDrawer();

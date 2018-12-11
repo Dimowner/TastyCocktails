@@ -23,4 +23,7 @@ public class AppConstants {
 	public static final int TIME_FORMAT_12H = 12;
 
 	public static final int SHOW_INSTRUCTIONS_DELAY_MILLS = 800;
+
+	public static final long MIN_RATING_UPDATE_INTERVAL_MILLS = 1000 * 60 * 60; //1h
+
 }

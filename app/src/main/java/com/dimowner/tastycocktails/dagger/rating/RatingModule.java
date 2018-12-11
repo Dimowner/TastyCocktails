@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.dimowner.tastycocktails.FirebaseHandler;
+import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.data.Repository;
 import com.dimowner.tastycocktails.data.RepositoryContract;
 import com.dimowner.tastycocktails.rating.RatingContract;
@@ -42,24 +43,26 @@ public class RatingModule {
 
 	@Provides
 	@RatingScope
-	RatingContract.UserActionsListener provideRatingPresenter(Repository repository, FirebaseHandler firebaseHandler) {
-		return ViewModelProviders.of(fragment, new RatingViewModelFactory(repository, firebaseHandler)).get(RatingPresenter.class);
+	RatingContract.UserActionsListener provideRatingPresenter(Repository repository, FirebaseHandler firebaseHandler, Prefs prefs) {
+		return ViewModelProviders.of(fragment, new RatingViewModelFactory(repository, firebaseHandler, prefs)).get(RatingPresenter.class);
 	}
 
 	public static class RatingViewModelFactory implements ViewModelProvider.Factory {
 		private RepositoryContract repository;
 		private FirebaseHandler firebaseHandler;
+		private Prefs prefs;
 
 
-		public RatingViewModelFactory(RepositoryContract repository, FirebaseHandler firebaseHandler) {
+		public RatingViewModelFactory(RepositoryContract repository, FirebaseHandler firebaseHandler, Prefs prefs) {
 			this.repository = repository;
 			this.firebaseHandler = firebaseHandler;
+			this.prefs = prefs;
 		}
 
 		@NonNull
 		@Override
 		public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-			return (T) new RatingPresenter(repository, firebaseHandler);
+			return (T) new RatingPresenter(repository, firebaseHandler, prefs);
 		}
 	}
 }

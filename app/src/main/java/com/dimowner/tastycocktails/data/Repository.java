@@ -30,6 +30,7 @@ import timber.log.Timber;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 
 /**
  * Created on 27.07.2017.
@@ -186,5 +187,15 @@ public class Repository implements RepositoryContract {
 	@Override
 	public Single<Drink[]> cacheIntoLocalDatabase(Drinks drinks) {
 		return localRepository.cacheIntoLocalDatabase(drinks);
+	}
+
+	@Override
+	public Flowable<List<RatingDrink>> getRatingList() {
+		return localRepository.getRatingList();
+	}
+
+	@Override
+	public Completable replaceRating(List<RatingDrink> list) {
+		return localRepository.replaceRating(list);
 	}
 }
