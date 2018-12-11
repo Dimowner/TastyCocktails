@@ -129,13 +129,15 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			ft.commit();
 			AndroidUtils.primaryColorNavigationBar(this);
 		} else {
-			FragmentManager manager = getSupportFragmentManager();
-			RatingFragment fragment = RatingFragment.newInstance();
-			manager
-					.beginTransaction()
-					.add(R.id.fragment, fragment, "rating_fragment")
-					.commit();
-			AndroidUtils.blackNavigationBar(this);
+			if (savedInstanceState == null) {
+				FragmentManager manager = getSupportFragmentManager();
+				RatingFragment fragment = RatingFragment.newInstance();
+				manager
+						.beginTransaction()
+						.add(R.id.fragment, fragment, "rating_fragment")
+						.commit();
+				AndroidUtils.blackNavigationBar(this);
+			}
 		}
 		setupNavDrawer();
 		if (prefs.isFirstRun()) {

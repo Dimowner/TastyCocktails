@@ -60,7 +60,7 @@ public class RatingPresenter extends ViewModel implements RatingContract.UserAct
 		if (prefs.getRatingUpdatedTime() < new Date().getTime() - AppConstants.MIN_RATING_UPDATE_INTERVAL_MILLS) {
 			compositeDisposable.add(firebaseHandler.getTopDrinks().subscribeOn(Schedulers.io())
 					.flatMapCompletable(d -> repository.replaceRating(d).subscribeOn(Schedulers.io()))
-					.timeout(10, TimeUnit.SECONDS)
+					.timeout(AppConstants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(() -> {
 						prefs.setRatingUpdatedTime(new Date().getTime());
