@@ -259,9 +259,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mRecyclerView.setVisibility(View.GONE);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-			}
+			AndroidUtils.primaryColorNavigationBar(parentActivity);
 		}
 
 		if (!prefs.isDrinksCached() && !prefs.isCacheFailed()) {
@@ -433,9 +431,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					ingredients,
 					prefs.getFilterGlass(),
 					prefs.getFilterAlcoholic());
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-			}
+			AndroidUtils.primaryColorNavigationBar(parentActivity);
 		} else {
 			loadData();
 		}
@@ -1120,9 +1116,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mAdapter.setData(data);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && getContext() != null){
-				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-			}
+			AndroidUtils.primaryColorNavigationBar(parentActivity);
 		} else if (data.size() == 0) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.GONE);

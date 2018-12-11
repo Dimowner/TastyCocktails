@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/welcome_panel"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:fillViewport="true"
+		>
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/colorPrimary"
+			android:orientation="vertical">
+
+		<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_margin="@dimen/padding_double"
+				android:contentDescription="@string/app_name"
+				android:src="@drawable/loadscreen_new"/>
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal"
+				android:text="@string/welcome"
+				android:textColor="@color/text_primary_light"
+				android:textSize="@dimen/text_size_xlarge"
+				android:textStyle="bold"/>
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal"
+				android:text="@string/find_something_for_you"
+				android:textColor="@color/text_primary_light"
+				android:textSize="@dimen/text_size_large"/>
+
+		<Button
+				android:id="@+id/get_started"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/padding_standard"
+				android:background="?android:selectableItemBackground"
+				android:text="@string/btn_get_started"
+				android:textColor="@color/colorAccent"
+				android:textSize="@dimen/text_size_large"/>
+	</LinearLayout>
+
+</ScrollView>

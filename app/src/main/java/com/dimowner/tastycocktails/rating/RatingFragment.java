@@ -26,6 +26,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -39,7 +42,6 @@ import com.dimowner.tastycocktails.cocktails.details.PagerDetailsActivity;
 import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.dagger.rating.RatingModule;
 import com.dimowner.tastycocktails.data.Prefs;
-import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
@@ -62,7 +64,6 @@ public class RatingFragment extends Fragment implements RatingContract.View {
 	private AdvHandler advHandler;
 
 	private ArrayList<Integer> ids;
-
 
 
 	public static RatingFragment newInstance() {
@@ -108,7 +109,41 @@ public class RatingFragment extends Fragment implements RatingContract.View {
 		advHandler = new AdvHandler(adView, prefs);
 
 		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RATING);
-		AndroidUtils.primaryColorNavigationBar(getActivity());
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (advHandler != null) { advHandler.onResume(); }
+	}
+
+	@Override
+	public void onPause() {
+		if (advHandler != null) { advHandler.onPause(); }
+		super.onPause();
+	}
+
+	@Override
+	public void onDestroyView() {
+		if (advHandler != null) { advHandler.onDestroy(); }
+		super.onDestroyView();
+		mPresenter.unbindView();
+		mPresenter = null;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_rating, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean ok = super.onOptionsItemSelected(item);
+		if (item.getItemId() == R.id.action_info) {
+			Snackbar.make(mRecyclerView, R.string.rating_based_on_user_preferences, 4000).show();
+		}
+		return ok;
 	}
 
 	private void initAdapter() {

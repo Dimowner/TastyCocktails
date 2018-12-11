@@ -75,7 +75,7 @@ public class AndroidUtils {
 			if (isPortraitOrientation(activity.getApplicationContext())) {
 //				getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 				activity.getWindow().setNavigationBarColor(ContextCompat.getColor(activity.getApplicationContext(), R.color.background));
-//				getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+				activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
 			} else {
 				activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 				activity.getWindow().setNavigationBarColor(ContextCompat.getColor(activity.getApplicationContext(), R.color.black));
@@ -85,6 +85,12 @@ public class AndroidUtils {
 	}
 
 	public static void primaryColorNavigationBar(Activity activity) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+			activity.getWindow().setNavigationBarColor(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorPrimary));
+		}
+	}
+
+	public static void blackNavigationBar(Activity activity) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
 			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 			activity.getWindow().setNavigationBarColor(ContextCompat.getColor(activity.getApplicationContext(), R.color.black));

@@ -23,6 +23,7 @@ import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.licences.LicenceActivity;
+import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.google.android.gms.ads.AdView;
 
 import javax.inject.Inject;
@@ -71,9 +72,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		btnLicences.setOnClickListener(this);
 		btnRate.setOnClickListener(this);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-			getWindow().setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-		}
+		AndroidUtils.primaryColorNavigationBar(this);
 
 		advHandler = new AdvHandler(adView, prefs);
 

@@ -66,11 +66,4 @@
 			app:adSize="SMART_BANNER"
 			app:adUnitId="@string/bottom_banner_id"/>
 
-	<View
-			android:layout_width="match_parent"
-			android:layout_height="1px"
-			android:layout_gravity="bottom"
-			android:background="@color/grey"
-			/>
-
 </LinearLayout>

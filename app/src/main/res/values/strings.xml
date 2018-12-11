@@ -17,6 +17,7 @@
 <resources>
 	<string name="app_name">Tasty Cocktails</string>
 
+	<string name="title_info">Info</string>
 	<string name="title_warning">Warning</string>
 	<string name="title_rating">Top 30 Drinks</string>
 
@@ -45,7 +46,7 @@
 	<string name="ingredients">Ingredients:</string>
 
 	<string name="welcome">Welcome to the Tasty Cocktails!</string>
-	<string name="find_something_for_you">Find something for you</string>
+	<string name="find_something_for_you">Find the best drink for you</string>
 	<string name="removed_from_favorites">%s removed from favorites</string>
 	<string name="removed_from_history">%s removed from history</string>
 	<string name="added_to_favorites">%s added to favorites</string>
@@ -54,6 +55,7 @@
 	<string name="add_to_favorites">Favorites</string>
 	<string name="no_favorite_drinks">Your favorite drinks list is empty.</string>
 	<string name="unable_to_load_rating">Unable to load top drinks.</string>
+	<string name="rating_based_on_user_preferences">Rating based on drinks which most often added to favorites.</string>
 	<string name="loading">Loading&#8230;</string>
 	<!--<string name="empty">Empty</string>-->
 	<string name="history_is_empty">Browsing history is empty.\n You didn\'t open any drink.</string>
