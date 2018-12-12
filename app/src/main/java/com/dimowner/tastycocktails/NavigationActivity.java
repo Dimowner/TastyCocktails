@@ -89,7 +89,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 	protected NavigationView mNavigationView;
 	protected ActionBarDrawerToggle mDrawerToggle;
 
-	private int curActiveItem = NAVDRAWER_ITEM_RATING;
+	private int curActiveItem = NAVDRAWER_ITEM_COCKTAILS;
 
 	private Disposable disposable = null;
 
@@ -122,7 +122,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 			WelcomeFragment fragment = WelcomeFragment.newInstance();
 			fragment.setOnFirstRunExecutedListener(() -> {
 				enableMenu();
-				startRating();
+				startCocktails();
 			});
 			FragmentTransaction ft = manager.beginTransaction();
 			ft.add(R.id.fragment, fragment, "welcome_fragment");
@@ -131,12 +131,16 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		} else {
 			if (savedInstanceState == null) {
 				FragmentManager manager = getSupportFragmentManager();
-				RatingFragment fragment = RatingFragment.newInstance();
+				CocktailsListFragment fragment = CocktailsListFragment.newInstance(CocktailsListFragment.TYPE_NORMAL);
+				if (prefs.isFirstRun()) {
+					fragment.setOnFirstRunExecutedListener(this::enableMenu);
+				}
 				manager
 						.beginTransaction()
-						.add(R.id.fragment, fragment, "rating_fragment")
+						.add(R.id.fragment, fragment, "cocktails_fragment")
 						.commit();
-				AndroidUtils.blackNavigationBar(this);
+
+				AndroidUtils.handleNavigationBarColor(this);
 			}
 		}
 		setupNavDrawer();

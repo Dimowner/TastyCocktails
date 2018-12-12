@@ -22,14 +22,15 @@
 			android:checkableBehavior="single">
 
 		<item
+				android:id="@+id/nav_cocktails"
+				android:icon="@drawable/round_local_bar"
+				android:title="@string/nav_cocktails"/>
+
+		<item
 				android:id="@+id/nav_rating"
 				android:icon="@drawable/ic_round_bar_chart_24px"
 				android:title="@string/nav_rating"/>
 
-		<item
-				android:id="@+id/nav_cocktails"
-				android:icon="@drawable/round_local_bar"
-				android:title="@string/nav_cocktails"/>
 		<item
 				android:id="@+id/nav_favorites"
 				android:icon="@drawable/round_heart_grey"
