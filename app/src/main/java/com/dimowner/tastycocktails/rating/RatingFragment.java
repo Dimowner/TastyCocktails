@@ -131,20 +131,20 @@ public class RatingFragment extends Fragment implements RatingContract.View {
 		mPresenter = null;
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_rating, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		boolean ok = super.onOptionsItemSelected(item);
-		if (item.getItemId() == R.id.action_info) {
-			Snackbar.make(mRecyclerView, R.string.rating_based_on_user_preferences, 4000).show();
-		}
-		return ok;
-	}
+//	@Override
+//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//		super.onCreateOptionsMenu(menu, inflater);
+//		inflater.inflate(R.menu.menu_rating, menu);
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		boolean ok = super.onOptionsItemSelected(item);
+//		if (item.getItemId() == R.id.action_info) {
+//			Snackbar.make(mRecyclerView, R.string.rating_based_on_user_preferences, 4000).show();
+//		}
+//		return ok;
+//	}
 
 	private void initAdapter() {
 		if (mAdapter == null) {
