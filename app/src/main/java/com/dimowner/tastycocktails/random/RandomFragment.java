@@ -40,6 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
@@ -95,6 +96,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 	private Button btnFilters;
 	private Button btnClear;
 	private Button btnClose;
+	private TextView txtFiltersSelected;
 
 	private Spinner ingredientSpinner;
 	private Spinner ingredientSpinner2;
@@ -125,6 +127,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 		mRoot = view.findViewById(R.id.coordinator);
 		btnFavorite = view.findViewById(R.id.btn_favorite);
 		btnMenu = view.findViewById(R.id.btn_menu);
+		txtFiltersSelected = view.findViewById(R.id.txtFilters);
 		btnFilters = view.findViewById(R.id.btn_filters);
 		btnClear = view.findViewById(R.id.btn_clear);
 		btnClose = view.findViewById(R.id.btn_close);
@@ -420,6 +423,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 						ing1 = ing.toString();
 					}
 				}
+				updateSelectedFilters();
 			}
 			@Override public void onNothingSelected(AdapterView<?> adapterView) { }
 		});
@@ -434,8 +438,23 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 						ing2 = ing.toString();
 					}
 				}
+				updateSelectedFilters();
 			}
 			@Override public void onNothingSelected(AdapterView<?> adapterView) { }
 		});
+	}
+
+	private void updateSelectedFilters() {
+		StringBuilder sb = new StringBuilder();
+		if (ing1 != null && !ing1.isEmpty()) {
+			sb.append(ing1);
+		}
+		if (ing2 != null && !ing2.isEmpty()) {
+			if (ing1 != null && !ing1.isEmpty()) {
+				sb.append(", ");
+			}
+			sb.append(ing2);
+		}
+		txtFiltersSelected.setText(sb.toString());
 	}
 }

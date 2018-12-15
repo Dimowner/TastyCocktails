@@ -139,17 +139,13 @@
 									android:text="@string/btn_clear"/>
 
 							<TextView
-									android:id="@+id/txtFiltersInstructions"
+									android:id="@+id/txtFilters"
 									android:layout_width="0dp"
 									android:layout_height="wrap_content"
 									android:layout_weight="1"
-									android:drawableStart="@drawable/round_info_light_grey"
-									android:drawableLeft="@drawable/round_info_light_grey"
 									android:drawablePadding="@dimen/padding_small"
 									android:layout_gravity="start|center"
-									android:visibility="gone"
 									android:padding="@dimen/padding_small"
-									android:text="@string/pull_to_close"
 									android:textColor="@color/light_grey"
 									android:textSize="@dimen/text_size_medium"
 									/>
