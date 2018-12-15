@@ -18,6 +18,8 @@ package com.dimowner.tastycocktails.random;
 
 import com.dimowner.tastycocktails.cocktails.details.DetailsContract;
 
+import java.util.List;
+
 /**
  * Created on 27.07.2017.
  * @author Dimowner
@@ -26,6 +28,6 @@ public interface RandomContract {
 
 	interface UserActionsListener extends DetailsContract.UserActionsListener {
 
-		void loadRandomDrink();
+		void loadRandomDrink(List<String> ingredients);
 	}
 }

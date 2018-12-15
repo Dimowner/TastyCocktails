@@ -116,13 +116,21 @@ public class RandomPresenter extends AndroidViewModel implements RandomContract.
 	}
 
 	@Override
-	public void loadRandomDrink() {
+	public void loadRandomDrink(List<String> ingredients) {
 		view.showProgress();
 		compositeDisposable.add(
-				repository.getRandomCocktail()
+//				repository.getRandomCocktail()
+				repository.getRandomCocktail(ingredients)
 						.subscribeOn(Schedulers.io())
 						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(this::displayData, this::handleError));
+						.subscribe(d -> {
+							if (d.isEmpty()) {
+								view.showEmptyDrink();
+								view.hideProgress();
+							} else {
+								displayData(d);
+							}
+						}, this::handleError));
 	}
 
 	private void displayData(Drink model) {

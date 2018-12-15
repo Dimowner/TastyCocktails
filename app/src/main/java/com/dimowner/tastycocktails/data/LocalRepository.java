@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -295,6 +296,31 @@ public class LocalRepository implements RepositoryContract {
 //				return Single.fromCallable(Drink::emptyDrink);
 //			}
 //		});
+	}
+
+	@Override
+	public Single<Drink> getRandomCocktail(List<String> ingredients) {
+		if (ingredients.size() == 1) {
+			return getRepositoriesDao().getRandomFiltered(ingredients.get(0));
+		} else if (ingredients.size() == 2) {
+			return getRepositoriesDao().getFiltered(ingredients.get(0))
+					.map(drinks -> {
+						for (int i = drinks.size()-1; i >= 0; i--) {
+							if (!drinks.get(i).hasIngredient(ingredients.get(1))) {
+								drinks.remove(i);
+							}
+						}
+
+						if (drinks.size() > 0) {
+							return drinks.get(new Random().nextInt(drinks.size()));
+						} else {
+							return Drink.getEmptyDrink();
+						}
+					});
+		} else if (ingredients.size() == 3){
+			return getRepositoriesDao().getRandomFiltered(ingredients.get(0));
+		}
+		return getRandomCocktail();
 	}
 
 	@Override

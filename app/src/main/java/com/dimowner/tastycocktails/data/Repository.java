@@ -96,17 +96,27 @@ public class Repository implements RepositoryContract {
 
 	@Override
 	public Single<Drink> getRandomCocktail() {
-		if (TCApplication.isConnected()) {
-			return remoteRepository.getRandomCocktail()
-					.doOnSuccess(drink -> localRepository.cacheIntoLocalDatabase(drink));
-		} else {
+//		if (TCApplication.isConnected()) {
+//			return remoteRepository.getRandomCocktail()
+//					.doOnSuccess(drink -> localRepository.cacheIntoLocalDatabase(drink));
+//		} else {
 			return localRepository.getRandomCocktail()
 					.doOnSuccess(drink -> {
 						localRepository.updateDrinkHistory(drink.getIdDrink(), new Date().getTime())
 								.subscribeOn(Schedulers.io())
 								.subscribe(()-> {}, Timber::e);
 					});
-		}
+//		}
+	}
+
+	@Override
+	public Single<Drink> getRandomCocktail(List<String> ingredients) {
+		return localRepository.getRandomCocktail(ingredients)
+				.doOnSuccess(drink -> {
+					localRepository.updateDrinkHistory(drink.getIdDrink(), new Date().getTime())
+							.subscribeOn(Schedulers.io())
+							.subscribe(()-> {}, Timber::e);
+				});
 	}
 
 	@Override

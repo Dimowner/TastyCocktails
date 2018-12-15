@@ -36,6 +36,7 @@
 	<string name="btn_ok">OK</string>
 	<string name="btn_cancel">Cancel</string>
 	<string name="btn_clear">Clear</string>
+	<string name="btn_filters">Filters</string>
 	<string name="btn_search">Search</string>
 	<string name="btn_close">Close</string>
 	<string name="btn_get_started">Get started</string>
@@ -55,7 +56,8 @@
 	<string name="add_to_favorites">Favorites</string>
 	<string name="no_favorite_drinks">Your favorite drinks list is empty.</string>
 	<string name="unable_to_load_rating">Unable to load top drinks.</string>
-	<string name="rating_based_on_user_preferences">Rating based on drinks which most often added to favorites.</string>
+	<string name="cant_find_drink_with_ingredient">Can\'t find a drink with selected ingredients</string>
+	<string name="rating_based_on_user_preferences">Rating based on users preferences.</string>
 	<string name="loading">Loading&#8230;</string>
 	<!--<string name="empty">Empty</string>-->
 	<string name="history_is_empty">Browsing history is empty.\n You didn\'t open any drink.</string>

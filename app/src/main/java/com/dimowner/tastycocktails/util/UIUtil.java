@@ -128,4 +128,22 @@ public class UIUtil {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+
+	/**
+	 * Show information dialog with OK and Cancel buttons.
+	 *
+	 * @param activity Application context.
+	 * @param mesRes   Resource id of message to show in dialog.
+	 */
+	public static void showInfoDialog(Activity activity, int mesRes) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setTitle(R.string.title_info)
+				.setMessage(mesRes)
+				.setIcon(R.drawable.round_info)
+				.setCancelable(true)
+				.setPositiveButton(R.string.btn_ok, null);
+
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
 }

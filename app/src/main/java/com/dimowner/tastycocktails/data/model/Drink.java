@@ -446,4 +446,21 @@ public class Drink {
 				", strMeasure15='" + strMeasure15 + '\'' +
 				'}';
 	}
+
+	public boolean isEmpty() {
+		return idDrink == -1 && !cached
+				&& strDrink.isEmpty()
+				&& strCategory.isEmpty()
+				&& strAlcoholic.isEmpty()
+				&& strGlass.isEmpty()
+				&& strInstructions.isEmpty()
+//				&& strDrinkThumb.isEmpty()
+				&& !isFavorite
+				&& history == 0;
+	}
+
+	public static Drink getEmptyDrink() {
+		return new Drink(-1, false, "", "", "", "", "", "", false, 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+				"", "", "", "", "", "", "", "", "", "", "", "", "");
+	}
 }

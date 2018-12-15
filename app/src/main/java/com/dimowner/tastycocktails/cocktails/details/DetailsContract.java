@@ -35,6 +35,8 @@ public interface DetailsContract  {
 		void displayIngredientsList(List<IngredientItem> items);
 
 		void showSnackBar(String message);
+
+		void showEmptyDrink();
 	}
 
 	interface UserActionsListener extends Contract.UserActionsListener<DetailsContract.View> {

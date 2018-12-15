@@ -121,10 +121,12 @@ public class TouchLayout extends FrameLayout {
 
 					if (cumulatedDy < -TOP_THRESHOLD) {
 						if (onThresholdListener != null) {
+							moveAnimationY.cancel();
 							onThresholdListener.onTopThreshold();
 						}
 					} else if (cumulatedDy > BOTTOM_THRESHOLD) {
 						if (onThresholdListener != null) {
+							moveAnimationY.cancel();
 							onThresholdListener.onBottomThreshold();
 						}
 					}
@@ -139,6 +141,10 @@ public class TouchLayout extends FrameLayout {
 
 	public void setReturnPositionY(float returnPositionY) {
 		this.returnPositionY = returnPositionY;
+	}
+
+	public float getReturnPositionY() {
+		return returnPositionY;
 	}
 
 	public void setOnThresholdListener(ThresholdListener onThresholdListener) {
