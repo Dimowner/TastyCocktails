@@ -5,6 +5,7 @@
 
 Features:
 - Search cocktail recipes in library
+- Feature Top 30 drinks
 - Feature random cocktail
 - Favorites drinks
 - Watched drinks history
