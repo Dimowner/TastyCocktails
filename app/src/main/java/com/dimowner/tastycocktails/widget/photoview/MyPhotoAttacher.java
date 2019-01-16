@@ -123,10 +123,12 @@ public class MyPhotoAttacher extends PhotoViewAttacher implements View.OnLongCli
 
 					if (cumulatedDy < -TOP_THRESHOLD) {
 						if (onThresholdListener != null) {
+							moveAnimationY.cancel();
 							onThresholdListener.onTopThreshold();
 						}
 					} else if (cumulatedDy > BOTTOM_THRESHOLD) {
 						if (onThresholdListener != null) {
+							moveAnimationY.cancel();
 							onThresholdListener.onBottomThreshold();
 						}
 					}

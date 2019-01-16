@@ -17,6 +17,7 @@ import timber.log.Timber;
 
 public class MixPanel implements Application.ActivityLifecycleCallbacks {
 
+	public static final String EVENT_RATING = "rating_screen";
 	public static final String EVENT_HOME = "home_sceen";
 	public static final String EVENT_COCKTAIL_DETAILS = "cocktails_details";
 	public static final String EVENT_FAVORITES = "favorites_screen";

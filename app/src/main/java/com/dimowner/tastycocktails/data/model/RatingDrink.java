@@ -14,70 +14,118 @@
  * limitations under the License.
  */
 
-package com.dimowner.tastycocktails;
+package com.dimowner.tastycocktails.data.model;
 
-public class FirebaseDrink {
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 
+@Entity(tableName = "rating")
+public class RatingDrink {
+
+	public static  String HTTPS = "https://";
+
+	@PrimaryKey
 	private long idDrink;
 
+	@ColumnInfo(name = "likeCount")
 	private long likeCount;
 
+	@ColumnInfo(name = "strDrink")
 	private String strDrink;
 
+	@ColumnInfo(name = "strCategory")
 	private String strCategory;
 
+	@ColumnInfo(name = "strAlcoholic")
 	private String strAlcoholic;
 
+	@ColumnInfo(name = "strGlass")
 	private String strGlass;
 
+	@ColumnInfo(name = "strInstructions")
 	private String strInstructions;
 
+	@ColumnInfo(name = "strDrinkThumb")
 	private String strDrinkThumb;
 
+	@ColumnInfo(name = "strIngredient1")
 	private String strIngredient1;
+	@ColumnInfo(name = "strIngredient2")
 	private String strIngredient2;
+	@ColumnInfo(name = "strIngredient3")
 	private String strIngredient3;
+	@ColumnInfo(name = "strIngredient4")
 	private String strIngredient4;
+	@ColumnInfo(name = "strIngredient5")
 	private String strIngredient5;
+	@ColumnInfo(name = "strIngredient6")
 	private String strIngredient6;
+	@ColumnInfo(name = "strIngredient7")
 	private String strIngredient7;
+	@ColumnInfo(name = "strIngredient8")
 	private String strIngredient8;
+	@ColumnInfo(name = "strIngredient9")
 	private String strIngredient9;
+	@ColumnInfo(name = "strIngredient10")
 	private String strIngredient10;
+	@ColumnInfo(name = "strIngredient11")
 	private String strIngredient11;
+	@ColumnInfo(name = "strIngredient12")
 	private String strIngredient12;
+	@ColumnInfo(name = "strIngredient13")
 	private String strIngredient13;
+	@ColumnInfo(name = "strIngredient14")
 	private String strIngredient14;
+	@ColumnInfo(name = "strIngredient15")
 	private String strIngredient15;
 
+	@ColumnInfo(name = "strMeasure1")
 	private String strMeasure1;
+	@ColumnInfo(name = "strMeasure2")
 	private String strMeasure2;
+	@ColumnInfo(name = "strMeasure3")
 	private String strMeasure3;
+	@ColumnInfo(name = "strMeasure4")
 	private String strMeasure4;
+	@ColumnInfo(name = "strMeasure5")
 	private String strMeasure5;
+	@ColumnInfo(name = "strMeasure6")
 	private String strMeasure6;
+	@ColumnInfo(name = "strMeasure7")
 	private String strMeasure7;
+	@ColumnInfo(name = "strMeasure8")
 	private String strMeasure8;
+	@ColumnInfo(name = "strMeasure9")
 	private String strMeasure9;
+	@ColumnInfo(name = "strMeasure10")
 	private String strMeasure10;
+	@ColumnInfo(name = "strMeasure11")
 	private String strMeasure11;
+	@ColumnInfo(name = "strMeasure12")
 	private String strMeasure12;
+	@ColumnInfo(name = "strMeasure13")
 	private String strMeasure13;
+	@ColumnInfo(name = "strMeasure14")
 	private String strMeasure14;
+	@ColumnInfo(name = "strMeasure15")
 	private String strMeasure15;
 
-	public FirebaseDrink() {
+	public RatingDrink() {
 	}
 
-	public FirebaseDrink(long idDrink, long likeCount, String strDrink, String strCategory,
-								String strAlcoholic, String strGlass, String strInstructions, String strDrinkThumb,
-								String strIngredient1, String strIngredient2, String strIngredient3, String strIngredient4,
-								String strIngredient5, String strIngredient6, String strIngredient7, String strIngredient8,
-								String strIngredient9, String strIngredient10, String strIngredient11, String strIngredient12,
-								String strIngredient13, String strIngredient14, String strIngredient15, String strMeasure1,
-								String strMeasure2, String strMeasure3, String strMeasure4, String strMeasure5, String strMeasure6,
-								String strMeasure7, String strMeasure8, String strMeasure9, String strMeasure10, String strMeasure11,
-								String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15) {
+	@Ignore
+	public RatingDrink(long idDrink, long likeCount, String strDrink, String strCategory, String strAlcoholic, String strGlass,
+							 String strInstructions, String strDrinkThumb, String strIngredient1,
+							 String strIngredient2, String strIngredient3, String strIngredient4, String strIngredient5,
+							 String strIngredient6, String strIngredient7, String strIngredient8, String strIngredient9,
+							 String strIngredient10, String strIngredient11, String strIngredient12, String strIngredient13,
+							 String strIngredient14, String strIngredient15, String strMeasure1, String strMeasure2,
+							 String strMeasure3, String strMeasure4, String strMeasure5, String strMeasure6,
+							 String strMeasure7, String strMeasure8, String strMeasure9, String strMeasure10,
+							 String strMeasure11, String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15) {
+
 		this.idDrink = idDrink;
 		this.likeCount = likeCount;
 		this.strDrink = strDrink;
@@ -85,7 +133,11 @@ public class FirebaseDrink {
 		this.strAlcoholic = strAlcoholic;
 		this.strGlass = strGlass;
 		this.strInstructions = strInstructions;
-		this.strDrinkThumb = strDrinkThumb;
+		if (!strDrinkThumb.contains(HTTPS)) {
+			this.strDrinkThumb = HTTPS + strDrinkThumb;
+		} else {
+			this.strDrinkThumb = strDrinkThumb;
+		}
 		this.strIngredient1 = strIngredient1;
 		this.strIngredient2 = strIngredient2;
 		this.strIngredient3 = strIngredient3;
@@ -118,16 +170,20 @@ public class FirebaseDrink {
 		this.strMeasure15 = strMeasure15;
 	}
 
-	public void likeDrink() {
-		this.likeCount++;
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof RatingDrink)) {
+			return false;
+		}
+		RatingDrink d = (RatingDrink) obj;
+		return   d.idDrink == idDrink
+				&& d.likeCount == likeCount
+				&& d.strDrink != null && d.strDrink.equals(strDrink);
 	}
 
-	public void unlikeDrink() {
-		if (likeCount > 0) {
-			likeCount--;
-		} else {
-			likeCount = 0;
-		}
+	@Override
+	public int hashCode() {
+		return (int) idDrink;
 	}
 
 	public long getIdDrink() {
@@ -146,12 +202,24 @@ public class FirebaseDrink {
 		return strCategory;
 	}
 
+	public void setStrCategory(String strCategory) {
+		this.strCategory = strCategory;
+	}
+
 	public String getStrAlcoholic() {
 		return strAlcoholic;
 	}
 
+	public void setStrAlcoholic(String strAlcoholic) {
+		this.strAlcoholic = strAlcoholic;
+	}
+
 	public String getStrGlass() {
 		return strGlass;
+	}
+
+	public void setStrGlass(String strGlass) {
+		this.strGlass = strGlass;
 	}
 
 	public String getStrInstructions() {
@@ -160,6 +228,10 @@ public class FirebaseDrink {
 
 	public String getStrDrinkThumb() {
 		return strDrinkThumb;
+	}
+
+	public void setStrIngredient1(String strIngredient1) {
+		this.strIngredient1 = strIngredient1;
 	}
 
 	public String getStrIngredient1() {
@@ -294,28 +366,12 @@ public class FirebaseDrink {
 		this.strDrink = strDrink;
 	}
 
-	public void setStrCategory(String strCategory) {
-		this.strCategory = strCategory;
-	}
-
-	public void setStrAlcoholic(String strAlcoholic) {
-		this.strAlcoholic = strAlcoholic;
-	}
-
-	public void setStrGlass(String strGlass) {
-		this.strGlass = strGlass;
-	}
-
 	public void setStrInstructions(String strInstructions) {
 		this.strInstructions = strInstructions;
 	}
 
 	public void setStrDrinkThumb(String strDrinkThumb) {
 		this.strDrinkThumb = strDrinkThumb;
-	}
-
-	public void setStrIngredient1(String strIngredient1) {
-		this.strIngredient1 = strIngredient1;
 	}
 
 	public void setStrIngredient2(String strIngredient2) {
@@ -434,11 +490,29 @@ public class FirebaseDrink {
 		this.strMeasure15 = strMeasure15;
 	}
 
+	public boolean hasIngredient(String ingredient) {
+		return (ingredient.equalsIgnoreCase(strIngredient1)
+				|| ingredient.equalsIgnoreCase(strIngredient2)
+				|| ingredient.equalsIgnoreCase(strIngredient3)
+				|| ingredient.equalsIgnoreCase(strIngredient4)
+				|| ingredient.equalsIgnoreCase(strIngredient5)
+				|| ingredient.equalsIgnoreCase(strIngredient6)
+				|| ingredient.equalsIgnoreCase(strIngredient7)
+				|| ingredient.equalsIgnoreCase(strIngredient8)
+				|| ingredient.equalsIgnoreCase(strIngredient9)
+				|| ingredient.equalsIgnoreCase(strIngredient10)
+				|| ingredient.equalsIgnoreCase(strIngredient11)
+				|| ingredient.equalsIgnoreCase(strIngredient12)
+				|| ingredient.equalsIgnoreCase(strIngredient13)
+				|| ingredient.equalsIgnoreCase(strIngredient14)
+				|| ingredient.equalsIgnoreCase(strIngredient15)
+		);
+	}
+
 	@Override
 	public String toString() {
-		return "FirebaseDrink{" +
+		return "Drink{" +
 				"idDrink=" + idDrink +
-				", likeCount=" + likeCount +
 				", strDrink='" + strDrink + '\'' +
 				", strCategory='" + strCategory + '\'' +
 				", strAlcoholic='" + strAlcoholic + '\'' +

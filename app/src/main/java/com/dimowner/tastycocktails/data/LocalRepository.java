@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 import com.dimowner.tastycocktails.data.room.AppDatabase;
 import com.dimowner.tastycocktails.data.room.CocktailsDao;
 import com.google.gson.Gson;
@@ -200,6 +202,89 @@ public class LocalRepository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> loadFilteredDrinks2(String category, List<String> ingredients, String glass, String alcoholic) {
+		StringBuilder sb = new StringBuilder();
+		int argsCount = 0;
+		String[] args;
+
+		sb.append("SELECT * FROM drinks WHERE");
+
+		if (!TextUtils.isEmpty(category)) {
+			sb.append(" UPPER(strCategory) LIKE UPPER(?)");
+			argsCount++;
+		}
+		if (!TextUtils.isEmpty(glass)) {
+			if (!TextUtils.isEmpty(category)) {
+				sb.append(" AND");
+			}
+			sb.append(" UPPER(strGlass) LIKE UPPER(?)");
+			argsCount++;
+		}
+
+		if (!TextUtils.isEmpty(alcoholic)) {
+			if (!TextUtils.isEmpty(category) || !TextUtils.isEmpty(glass)) {
+				sb.append(" AND");
+			}
+			argsCount++;
+			sb.append(" UPPER(strAlcoholic) LIKE UPPER(?)");
+		}
+
+		sb.append(" ORDER BY strDrink");
+
+		args = new String[argsCount];
+		if (!TextUtils.isEmpty(category)) {
+			args[0] = category;
+			if (!TextUtils.isEmpty(glass)) {
+				args[1] = glass;
+				if (!TextUtils.isEmpty(alcoholic)) {
+					args[2] = alcoholic;
+				}
+			} else {
+				if (!TextUtils.isEmpty(alcoholic)) {
+					args[1] = alcoholic;
+				}
+			}
+		} else {
+			if (!TextUtils.isEmpty(glass)) {
+				args[0] = glass;
+				if (!TextUtils.isEmpty(alcoholic)) {
+					args[1] = alcoholic;
+				}
+			} else {
+				if (!TextUtils.isEmpty(alcoholic)) {
+					args[0] = alcoholic;
+				}
+			}
+		}
+
+		Timber.v("RAW QUERY : %s, args %s", sb.toString(), Arrays.toString(args));
+
+		SupportSQLiteQuery query;
+		if (argsCount > 0) {
+			query = new SimpleSQLiteQuery(sb.toString(), args);
+		} else {
+			query = new SimpleSQLiteQuery("SELECT * FROM drinks ORDER BY strDrink");
+		}
+
+		Timber.v("ingredients: " + ingredients.toString());
+		return getRepositoriesDao().getFiltered(query)
+				.map(drinks -> {
+					if (ingredients.size() > 0) {
+						for (int i = drinks.size() - 1; i >= 0; i--) {
+							Drink drink = drinks.get(i);
+							for (int j = 0; j < ingredients.size(); j++) {
+								if (!drink.hasIngredient(ingredients.get(j))) {
+									drinks.remove(i);
+									break;
+								}
+							}
+						}
+					}
+					return drinks;
+				});
+	}
+
+	@Override
 	public Single<Drink> getRandomCocktail() {
 		return getRepositoriesDao().getRandom();
 //		return getRepositoriesDao().getLastSearchRowCount().subscribeOn(Schedulers.io()).flatMap(count -> {
@@ -211,6 +296,31 @@ public class LocalRepository implements RepositoryContract {
 //				return Single.fromCallable(Drink::emptyDrink);
 //			}
 //		});
+	}
+
+	@Override
+	public Single<Drink> getRandomCocktail(List<String> ingredients) {
+		if (ingredients.size() == 1) {
+			return getRepositoriesDao().getRandomFiltered(ingredients.get(0));
+		} else if (ingredients.size() == 2) {
+			return getRepositoriesDao().getFiltered(ingredients.get(0))
+					.map(drinks -> {
+						for (int i = drinks.size()-1; i >= 0; i--) {
+							if (!drinks.get(i).hasIngredient(ingredients.get(1))) {
+								drinks.remove(i);
+							}
+						}
+
+						if (drinks.size() > 0) {
+							return drinks.get(new Random().nextInt(drinks.size()));
+						} else {
+							return Drink.getEmptyDrink();
+						}
+					});
+		} else if (ingredients.size() == 3){
+			return getRepositoriesDao().getRandomFiltered(ingredients.get(0));
+		}
+		return getRandomCocktail();
 	}
 
 	@Override
@@ -344,6 +454,20 @@ public class LocalRepository implements RepositoryContract {
 		return Single.just(items.getDrinks())
 				.doOnSuccess(data -> getRepositoriesDao().insertAllWithReplace(data))
 				.subscribeOn(Schedulers.io());
+	}
+
+	@Override
+	public Flowable<List<RatingDrink>> getRatingList() {
+		return getRepositoriesDao().getAllRatingDrinks();
+	}
+
+	@Override
+	public Completable replaceRating(final List<RatingDrink> list) {
+		Timber.v("replaceRating l = " + list.toString());
+		return Completable.fromAction(() -> {
+			getRepositoriesDao().deleteAllRatings();
+			getRepositoriesDao().insertRatingDrinks(list.toArray(new RatingDrink[list.size()]));
+		});
 	}
 
 	/**

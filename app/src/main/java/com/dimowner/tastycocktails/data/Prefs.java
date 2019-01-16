@@ -13,6 +13,7 @@ public class Prefs {
 	private static final String PREF_KEY_LAST_SEARCH_STR = "last_search_str";
 	private static final String PREF_KEY_SEARCH_TYPE = "search_type";
 	private static final String PREF_KEY_IS_SHOW_ADS = "is_show_ads";
+	private static final String PREF_KEY_RATING_UPDATED_TIME = "rating_updated_time";
 
 	private static final String PREF_KEY_IS_SHOW_HISTORY_INSTRUCTIONS = "is_show_history_instructions";
 	private static final String PREF_KEY_IS_SHOW_DETAILS_INSTRUCTIONS = "is_show_details_instructions";
@@ -22,7 +23,11 @@ public class Prefs {
 	private static final String PREF_KEY_FILTER_CATEGORY = "filter_category";
 	private static final String PREF_KEY_FILTER_CATEGORY_POS = "filter_category_pos";
 	private static final String PREF_KEY_FILTER_INGREDIENT = "filter_ingredient";
+	private static final String PREF_KEY_FILTER_INGREDIENT2 = "filter_ingredient2";
+	private static final String PREF_KEY_FILTER_INGREDIENT3 = "filter_ingredient3";
 	private static final String PREF_KEY_FILTER_INGREDIENT_POS = "filter_ingredient_pos";
+	private static final String PREF_KEY_FILTER_INGREDIENT2_POS = "filter_ingredient2_pos";
+	private static final String PREF_KEY_FILTER_INGREDIENT3_POS = "filter_ingredient3_pos";
 	private static final String PREF_KEY_FILTER_GLASS = "filter_glass";
 	private static final String PREF_KEY_FILTER_GLASS_POS = "filter_glass_pos";
 	private static final String PREF_KEY_FILTER_ALCOHOLIC = "filter_alcoholic";
@@ -125,6 +130,16 @@ public class Prefs {
 		editor.apply();
 	}
 
+	public long getRatingUpdatedTime() {
+		return sharedPreferences.getLong(PREF_KEY_RATING_UPDATED_TIME, 0);
+	}
+
+	public void setRatingUpdatedTime(long time) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putLong(PREF_KEY_RATING_UPDATED_TIME, time);
+		editor.apply();
+	}
+
 	public String getLastSearchString() {
 		return sharedPreferences.getString(PREF_KEY_LAST_SEARCH_STR, null);
 	}
@@ -153,6 +168,18 @@ public class Prefs {
 		editor.apply();
 	}
 
+	public void saveSelectedIngredient2Pos(int pos) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putInt(PREF_KEY_FILTER_INGREDIENT2_POS, pos);
+		editor.apply();
+	}
+
+	public void saveSelectedIngredient3Pos(int pos) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putInt(PREF_KEY_FILTER_INGREDIENT3_POS, pos);
+		editor.apply();
+	}
+
 	public void saveSelectedGlassPos(int pos) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putInt(PREF_KEY_FILTER_GLASS_POS, pos);
@@ -177,6 +204,18 @@ public class Prefs {
 		editor.apply();
 	}
 
+	public void saveFilterIngredient2(String ingredient) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(PREF_KEY_FILTER_INGREDIENT3, ingredient);
+		editor.apply();
+	}
+
+	public void saveFilterIngredient3(String ingredient) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(PREF_KEY_FILTER_INGREDIENT3, ingredient);
+		editor.apply();
+	}
+
 	public void saveFilterGlass(String glass) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(PREF_KEY_FILTER_GLASS, glass);
@@ -195,6 +234,14 @@ public class Prefs {
 
 	public String getFilterIngredient() {
 		return sharedPreferences.getString(PREF_KEY_FILTER_INGREDIENT, "");
+	}
+
+	public String getFilterIngredient2() {
+		return sharedPreferences.getString(PREF_KEY_FILTER_INGREDIENT2, "");
+	}
+
+	public String getFilterIngredient3() {
+		return sharedPreferences.getString(PREF_KEY_FILTER_INGREDIENT3, "");
 	}
 
 	public String getFilterGlass() {
@@ -217,6 +264,14 @@ public class Prefs {
 		return sharedPreferences.getInt(PREF_KEY_FILTER_INGREDIENT_POS, 0);
 	}
 
+	public int getSelectedIngredient2Pos() {
+		return sharedPreferences.getInt(PREF_KEY_FILTER_INGREDIENT2_POS, 0);
+	}
+
+	public int getSelectedIngredient3Pos() {
+		return sharedPreferences.getInt(PREF_KEY_FILTER_INGREDIENT3_POS, 0);
+	}
+
 	public int getSelectedGlassPos() {
 		return sharedPreferences.getInt(PREF_KEY_FILTER_GLASS_POS, 0);
 	}
@@ -229,10 +284,14 @@ public class Prefs {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(PREF_KEY_FILTER_CATEGORY, null);
 		editor.putString(PREF_KEY_FILTER_INGREDIENT, null);
+		editor.putString(PREF_KEY_FILTER_INGREDIENT2, null);
+		editor.putString(PREF_KEY_FILTER_INGREDIENT3, null);
 		editor.putString(PREF_KEY_FILTER_GLASS, null);
 		editor.putString(PREF_KEY_FILTER_ALCOHOLIC, null);
 		editor.putInt(PREF_KEY_FILTER_CATEGORY_POS, 0);
 		editor.putInt(PREF_KEY_FILTER_INGREDIENT_POS, 0);
+		editor.putInt(PREF_KEY_FILTER_INGREDIENT2_POS, 0);
+		editor.putInt(PREF_KEY_FILTER_INGREDIENT3_POS, 0);
 		editor.putInt(PREF_KEY_FILTER_GLASS_POS, 0);
 		editor.putInt(PREF_KEY_FILTER_ALCOHOLIC_POS, 0);
 		editor.apply();

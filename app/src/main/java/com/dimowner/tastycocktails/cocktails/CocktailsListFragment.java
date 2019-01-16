@@ -125,6 +125,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private Spinner categorySpinner;
 	private Spinner ingredientSpinner;
+	private Spinner ingredientSpinner2;
+	private Spinner ingredientSpinner3;
 	private Spinner glassSpinner;
 	private Spinner alcoholicSpinner;
 
@@ -257,9 +259,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mRecyclerView.setVisibility(View.GONE);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-			}
+			AndroidUtils.primaryColorNavigationBar(parentActivity);
 		}
 
 		if (!prefs.isDrinksCached() && !prefs.isCacheFailed()) {
@@ -412,15 +412,26 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			String values[] = getResources().getStringArray(R.array.filter_categories);
 			prefs.setFirstRunDefaultValues(Prefs.SEARCH_TYPE_FILTER, 1, values[1]);
 			categorySpinner.setSelection(1);
+			List<String> ingredients = new ArrayList<>();
+			String ing = prefs.getFilterIngredient();
+			if (ing != null) {
+				ingredients.add(ing);
+			}
+			ing = prefs.getFilterIngredient2();
+			if (ing != null) {
+				ingredients.add(ing);
+			}
+			ing = prefs.getFilterIngredient3();
+			if (ing != null) {
+				ingredients.add(ing);
+			}
 
 			mPresenter.loadFilteredList(
 					prefs.getFilterCategory(),
-					prefs.getFilterIngredient(),
+					ingredients,
 					prefs.getFilterGlass(),
 					prefs.getFilterAlcoholic());
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-			}
+			AndroidUtils.primaryColorNavigationBar(parentActivity);
 		} else {
 			loadData();
 		}
@@ -459,9 +470,22 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				mPresenter.loadLastSearch(lastSearch);
 				updateToolbarTitle(getString(R.string.search, lastSearch));
 			} else {
+				List<String> ingredients = new ArrayList<>();
+				String ing = prefs.getFilterIngredient();
+				if (ing != null) {
+					ingredients.add(ing);
+				}
+				ing = prefs.getFilterIngredient2();
+				if (ing != null) {
+					ingredients.add(ing);
+				}
+				ing = prefs.getFilterIngredient3();
+				if (ing != null) {
+					ingredients.add(ing);
+				}
 				mPresenter.loadFilteredList(
 						prefs.getFilterCategory(),
-						prefs.getFilterIngredient(),
+						ingredients,
 						prefs.getFilterGlass(),
 						prefs.getFilterAlcoholic());
 				updateToolbarTitle(getString(R.string.app_name));
@@ -496,14 +520,30 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 		//Init INGREDIENTS filter
 		ingredientSpinner = view.findViewById(R.id.filter_ingredients);
+		ingredientSpinner2 = view.findViewById(R.id.filter_ingredients2);
+		ingredientSpinner3 = view.findViewById(R.id.filter_ingredients3);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> ingredientAdapter = ArrayAdapter.createFromResource(getContext(),
 				R.array.filter_ingredients_alphabetical, R.layout.spinner_item);
-
 		// Specify the layout to use when the list of choices appears
 		ingredientAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> ingredientAdapter2 = ArrayAdapter.createFromResource(getContext(),
+				R.array.filter_ingredients_alphabetical, R.layout.spinner_item);
+		// Specify the layout to use when the list of choices appears
+		ingredientAdapter2.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> ingredientAdapter3 = ArrayAdapter.createFromResource(getContext(),
+				R.array.filter_ingredients_alphabetical, R.layout.spinner_item);
+		// Specify the layout to use when the list of choices appears
+		ingredientAdapter3.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
 		// Apply the adapter to the spinner
 		ingredientSpinner.setAdapter(ingredientAdapter);
+		ingredientSpinner2.setAdapter(ingredientAdapter2);
+		ingredientSpinner3.setAdapter(ingredientAdapter3);
 
 		//Init GLASS filter
 		glassSpinner = view.findViewById(R.id.filter_glass);
@@ -528,6 +568,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		prefs = new Prefs(getContext());
 		categorySpinner.setSelection(prefs.getSelectedCategoryPos());
 		ingredientSpinner.setSelection(prefs.getSelectedIngredientPos());
+		ingredientSpinner2.setSelection(prefs.getSelectedIngredient2Pos());
+		ingredientSpinner3.setSelection(prefs.getSelectedIngredient3Pos());
 		glassSpinner.setSelection(prefs.getSelectedGlassPos());
 		alcoholicSpinner.setSelection(prefs.getSelectedAlcoholicPos());
 
@@ -537,11 +579,15 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			return false;
 		});
 
-		ingredientSpinner.setOnTouchListener((view13, motionEvent) -> {
+		View.OnTouchListener listener = (v, event) -> {
 			selectedFilter = FILTER_TYPE_INGREDIENT;
-			view13.performClick();
+			v.performClick();
 			return false;
-		});
+		};
+
+		ingredientSpinner.setOnTouchListener(listener);
+		ingredientSpinner2.setOnTouchListener(listener);
+		ingredientSpinner3.setOnTouchListener(listener);
 
 		glassSpinner.setOnTouchListener((view12, motionEvent) -> {
 			selectedFilter = FILTER_TYPE_GLASS;
@@ -601,12 +647,52 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					onFilterSelected();
 				}
 			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> adapterView) {
-			}
+			@Override public void onNothingSelected(AdapterView<?> adapterView) { }
 		});
-
+		ingredientSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+				if (selectedFilter == FILTER_TYPE_INGREDIENT) {
+					if (pos == 0) {
+						prefs.saveFilterIngredient2(null);
+						prefs.saveSelectedIngredient2Pos(0);
+					} else {
+						CharSequence ing = ingredientAdapter.getItem(pos);
+						if (ing != null) {
+							prefs.saveFilterIngredient2(ing.toString());
+							prefs.saveSelectedIngredient2Pos(pos);
+						}
+					}
+					prefs.setLastSearchString(null);
+					prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_FILTER);
+					isChangedFilter = true;
+					onFilterSelected();
+				}
+			}
+			@Override public void onNothingSelected(AdapterView<?> adapterView) { }
+		});
+		ingredientSpinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+				if (selectedFilter == FILTER_TYPE_INGREDIENT) {
+					if (pos == 0) {
+						prefs.saveFilterIngredient3(null);
+						prefs.saveSelectedIngredient3Pos(0);
+					} else {
+						CharSequence ing = ingredientAdapter.getItem(pos);
+						if (ing != null) {
+							prefs.saveFilterIngredient3(ing.toString());
+							prefs.saveSelectedIngredient3Pos(pos);
+						}
+					}
+					prefs.setLastSearchString(null);
+					prefs.saveCurrentSearchType(Prefs.SEARCH_TYPE_FILTER);
+					isChangedFilter = true;
+					onFilterSelected();
+				}
+			}
+			@Override public void onNothingSelected(AdapterView<?> adapterView) { }
+		});
 
 		glassSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
@@ -628,10 +714,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					onFilterSelected();
 				}
 			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> adapterView) {
-			}
+			@Override public void onNothingSelected(AdapterView<?> adapterView) { }
 		});
 
 		alcoholicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -654,10 +737,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 					onFilterSelected();
 				}
 			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> adapterView) {
-			}
+			@Override public void onNothingSelected(AdapterView<?> adapterView) { }
 		});
 
 		Button btnClear = view.findViewById(R.id.btn_clear);
@@ -665,6 +745,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		btnClear.setOnClickListener(v -> {
 			categorySpinner.setSelection(0);
 			ingredientSpinner.setSelection(0);
+			ingredientSpinner2.setSelection(0);
+			ingredientSpinner3.setSelection(0);
 			glassSpinner.setSelection(0);
 			alcoholicSpinner.setSelection(0);
 			prefs.clearFilters();
@@ -841,7 +923,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 		searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
-				Timber.v("onMenuItemActionExpand");
 				isSearchOpen = true;
 				openSearchClicked = true;
 				searchView.setQuery(prefs.getLastSearchString(), false);
@@ -853,7 +934,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item) {
-				Timber.v("onMenuItemActionCollapse");
 				isSearchOpen = false;
 				return true;
 			}
@@ -867,9 +947,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				if (fragmentType == TYPE_NORMAL) {
-//					TODO: should move this logic into presenter
 					//Save search query string
-//					if (TCApplication.isConnected()) {
 					applySearch(query, false);
 
 				}
@@ -923,6 +1001,8 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 		categorySpinner.setSelection(0);
 		ingredientSpinner.setSelection(0);
+		ingredientSpinner2.setSelection(0);
+		ingredientSpinner3.setSelection(0);
 		glassSpinner.setSelection(0);
 		alcoholicSpinner.setSelection(0);
 
@@ -958,7 +1038,6 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			}
 		} else if (item.getItemId() == R.id.action_search) {
 			Timber.v("ActionSearch click");
-
 		} else if (item.getItemId() == android.R.id.home) {
 			Timber.v("onHomeBtnClick");
 		}
@@ -1037,9 +1116,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 			mWelcomePanel.setVisibility(View.VISIBLE);
 			mTxtEmpty.setVisibility(View.GONE);
 			mAdapter.setData(data);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && getContext() != null){
-				parentActivity.getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-			}
+			AndroidUtils.primaryColorNavigationBar(parentActivity);
 		} else if (data.size() == 0) {
 			mRecyclerView.setVisibility(View.GONE);
 			mWelcomePanel.setVisibility(View.GONE);

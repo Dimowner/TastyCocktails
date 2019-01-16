@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Dmitriy Ponomarenko
+ * Copyright 2018 Dmitriy Ponomarenko
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.dimowner.tastycocktails.random;
-
-import com.dimowner.tastycocktails.cocktails.details.DetailsContract;
+package com.dimowner.tastycocktails.rating;
 
 import java.util.List;
+import com.dimowner.tastycocktails.Contract;
+import com.dimowner.tastycocktails.cocktails.list.ListItem;
 
-/**
- * Created on 27.07.2017.
- * @author Dimowner
- */
-public interface RandomContract {
+public interface RatingContract {
 
-	interface UserActionsListener extends DetailsContract.UserActionsListener {
+	interface View extends Contract.View {
 
-		void loadRandomDrink(List<String> ingredients);
+		void displayData(List<ListItem> data);
+	}
+
+	interface UserActionsListener extends Contract.UserActionsListener<RatingContract.View> {
+
+		void loadRating();
 	}
 }

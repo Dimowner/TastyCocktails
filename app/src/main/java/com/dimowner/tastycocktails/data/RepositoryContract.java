@@ -25,6 +25,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 
 /**
  * Created on 27.07.2017.
@@ -37,7 +38,9 @@ public interface RepositoryContract {
 	Flowable<List<Drink>> getDrinksHistory(int page);
 //	Flowable<List<Drink>> loadDrinksWithFilter(int filterType, String value);
 	Flowable<List<Drink>> loadFilteredDrinks(String category, String  ingredient, String  glass, String alcoholic);
+	Flowable<List<Drink>> loadFilteredDrinks2(String category, List<String>  ingredients, String  glass, String alcoholic);
 	Single<Drink> getRandomCocktail();
+	Single<Drink> getRandomCocktail(List<String> ingredients);
 	Flowable<Drink> getCocktailRx(long id);
 	Single<Drink> getLocalCocktailRx(long id);
 	Flowable<List<Drink>> getLastSearch(String query);
@@ -53,4 +56,7 @@ public interface RepositoryContract {
 	void clearAll();
 	Completable removeFromHistory(long id);
 	Single<Drink[]> cacheIntoLocalDatabase(Drinks drinks);
+
+	Flowable<List<RatingDrink>> getRatingList();
+	Completable replaceRating(List<RatingDrink> list);
 }

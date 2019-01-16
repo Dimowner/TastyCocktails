@@ -30,6 +30,7 @@ import timber.log.Timber;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.data.model.Drinks;
+import com.dimowner.tastycocktails.data.model.RatingDrink;
 
 /**
  * Created on 27.07.2017.
@@ -89,18 +90,33 @@ public class Repository implements RepositoryContract {
 	}
 
 	@Override
+	public Flowable<List<Drink>> loadFilteredDrinks2(String category, List<String> ingredients, String glass, String alcoholic) {
+		return localRepository.loadFilteredDrinks2(category, ingredients, glass, alcoholic);
+	}
+
+	@Override
 	public Single<Drink> getRandomCocktail() {
-		if (TCApplication.isConnected()) {
-			return remoteRepository.getRandomCocktail()
-					.doOnSuccess(drink -> localRepository.cacheIntoLocalDatabase(drink));
-		} else {
+//		if (TCApplication.isConnected()) {
+//			return remoteRepository.getRandomCocktail()
+//					.doOnSuccess(drink -> localRepository.cacheIntoLocalDatabase(drink));
+//		} else {
 			return localRepository.getRandomCocktail()
 					.doOnSuccess(drink -> {
 						localRepository.updateDrinkHistory(drink.getIdDrink(), new Date().getTime())
 								.subscribeOn(Schedulers.io())
 								.subscribe(()-> {}, Timber::e);
 					});
-		}
+//		}
+	}
+
+	@Override
+	public Single<Drink> getRandomCocktail(List<String> ingredients) {
+		return localRepository.getRandomCocktail(ingredients)
+				.doOnSuccess(drink -> {
+					localRepository.updateDrinkHistory(drink.getIdDrink(), new Date().getTime())
+							.subscribeOn(Schedulers.io())
+							.subscribe(()-> {}, Timber::e);
+				});
 	}
 
 	@Override
@@ -181,5 +197,15 @@ public class Repository implements RepositoryContract {
 	@Override
 	public Single<Drink[]> cacheIntoLocalDatabase(Drinks drinks) {
 		return localRepository.cacheIntoLocalDatabase(drinks);
+	}
+
+	@Override
+	public Flowable<List<RatingDrink>> getRatingList() {
+		return localRepository.getRatingList();
+	}
+
+	@Override
+	public Completable replaceRating(List<RatingDrink> list) {
+		return localRepository.replaceRating(list);
 	}
 }

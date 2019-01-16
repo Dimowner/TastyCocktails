@@ -382,6 +382,25 @@ public class Drink {
 		return strMeasure15;
 	}
 
+	public boolean hasIngredient(String ingredient) {
+		return (ingredient.equalsIgnoreCase(strIngredient1)
+			|| ingredient.equalsIgnoreCase(strIngredient2)
+			|| ingredient.equalsIgnoreCase(strIngredient3)
+			|| ingredient.equalsIgnoreCase(strIngredient4)
+			|| ingredient.equalsIgnoreCase(strIngredient5)
+			|| ingredient.equalsIgnoreCase(strIngredient6)
+			|| ingredient.equalsIgnoreCase(strIngredient7)
+			|| ingredient.equalsIgnoreCase(strIngredient8)
+			|| ingredient.equalsIgnoreCase(strIngredient9)
+			|| ingredient.equalsIgnoreCase(strIngredient10)
+			|| ingredient.equalsIgnoreCase(strIngredient11)
+			|| ingredient.equalsIgnoreCase(strIngredient12)
+			|| ingredient.equalsIgnoreCase(strIngredient13)
+			|| ingredient.equalsIgnoreCase(strIngredient14)
+			|| ingredient.equalsIgnoreCase(strIngredient15)
+		);
+	}
+
 	@Override
 	public String toString() {
 		return "Drink{" +
@@ -426,5 +445,22 @@ public class Drink {
 				", strMeasure14='" + strMeasure14 + '\'' +
 				", strMeasure15='" + strMeasure15 + '\'' +
 				'}';
+	}
+
+	public boolean isEmpty() {
+		return idDrink == -1 && !cached
+				&& strDrink.isEmpty()
+				&& strCategory.isEmpty()
+				&& strAlcoholic.isEmpty()
+				&& strGlass.isEmpty()
+				&& strInstructions.isEmpty()
+//				&& strDrinkThumb.isEmpty()
+				&& !isFavorite
+				&& history == 0;
+	}
+
+	public static Drink getEmptyDrink() {
+		return new Drink(-1, false, "", "", "", "", "", "", false, 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+				"", "", "", "", "", "", "", "", "", "", "", "", "");
 	}
 }
