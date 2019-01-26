@@ -1,4 +1,7 @@
 /build
 /release
 /releaseConfig
+/debug
+/debugConfig
 /misc
+/fabric.properties
