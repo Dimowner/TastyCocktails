@@ -8,6 +8,8 @@ package com.dimowner.tastycocktails;
 public class AppConstants {
 	private AppConstants() {}
 
+	public static final String REQUESTS_RECEIVER = "dimmony@gmail.com";
+
 	public static final String BASE_INGREDIENT_PATH = "http://www.thecocktaildb.com/images/ingredients/";
 
 	public static final String FEEDBACK_EMAIL = "dimmony@gmail.com";

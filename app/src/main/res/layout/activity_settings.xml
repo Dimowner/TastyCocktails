@@ -120,6 +120,20 @@
 			/>
 
 	<TextView
+			android:id="@+id/btnRequest"
+			style="@style/Text.NormalLabel"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/request"
+			android:drawableStart="@drawable/ic_chat_bubble"
+			android:drawableLeft="@drawable/ic_chat_bubble"
+			android:background="?android:selectableItemBackground"
+			android:padding="@dimen/padding_standard"
+			android:drawablePadding="@dimen/padding_double"
+			app:layout_constraintTop_toBottomOf="@+id/btnRate"
+			/>
+
+	<TextView
 			android:id="@+id/txtAbout"
 			style="@style/Text.NormalLabel"
 			android:layout_width="match_parent"
@@ -134,7 +148,7 @@
 			android:focusable="true"
 			tools:text="About"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/btnRate"
+			app:layout_constraintTop_toBottomOf="@+id/btnRequest"
 			/>
 
 	<com.google.android.gms.ads.AdView

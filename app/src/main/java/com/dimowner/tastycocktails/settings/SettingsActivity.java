@@ -16,8 +16,10 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dimowner.tastycocktails.AdvHandler;
+import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
@@ -68,9 +70,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		TextView btnLicences = findViewById(R.id.btnLicences);
 		TextView btnRate = findViewById(R.id.btnRate);
 		TextView btnAbout = findViewById(R.id.txtAbout);
+		TextView btnRequest = findViewById(R.id.btnRequest);
 		btnAbout.setText(getAboutContent());
 		btnLicences.setOnClickListener(this);
 		btnRate.setOnClickListener(this);
+		btnRequest.setOnClickListener(this);
 
 		AndroidUtils.primaryColorNavigationBar(this);
 
@@ -106,6 +110,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 			case R.id.btnRate:
 				rateApp();
 				break;
+			case R.id.btnRequest:
+				requestFeature();
+				break;
 		}
 	}
 
@@ -117,6 +124,20 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		} catch (ActivityNotFoundException e) {
 			Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details");
 			startActivity(rateIntent);
+		}
+	}
+
+	private void requestFeature() {
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.setType("message/rfc822");
+		i.putExtra(Intent.EXTRA_EMAIL, new String[]{AppConstants.REQUESTS_RECEIVER});
+		i.putExtra(Intent.EXTRA_SUBJECT,
+				"[" + getResources().getString(R.string.app_name) + "] - " + getResources().getString(R.string.request)
+		);
+		try {
+			startActivity(Intent.createChooser(i, getResources().getString(R.string.send_email)));
+		} catch (android.content.ActivityNotFoundException ex) {
+			Toast.makeText(getApplicationContext(), R.string.email_clients_not_found, Toast.LENGTH_LONG).show();
 		}
 	}
 
