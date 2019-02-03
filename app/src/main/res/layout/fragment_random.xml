@@ -38,13 +38,6 @@
 				android:background="@color/background"
 				>
 
-			<View
-					android:layout_width="match_parent"
-					android:layout_height="1px"
-					android:layout_gravity="bottom"
-					android:background="@color/grey"
-					/>
-
 			<android.support.v7.widget.RecyclerView
 					android:id="@+id/recycler_view"
 					android:layout_width="match_parent"
@@ -62,7 +55,7 @@
 						android:layout_width="@dimen/circle_button_size"
 						android:layout_height="@dimen/circle_button_size"
 						android:layout_gravity="top|start"
-						android:layout_margin="@dimen/padding_medium"
+						android:layout_margin="@dimen/padding_small"
 						android:background="@drawable/circle_drawable"
 						android:contentDescription="@null"
 						android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -74,7 +67,7 @@
 						android:layout_width="@dimen/circle_button_size"
 						android:layout_height="@dimen/circle_button_size"
 						android:layout_gravity="top|end"
-						android:layout_margin="@dimen/padding_medium"
+						android:layout_margin="@dimen/padding_small"
 						android:background="@drawable/circle_drawable"
 						android:contentDescription="@null"
 						android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -204,6 +197,13 @@
 
 			</com.dimowner.tastycocktails.widget.TouchLayout>
 
+			<View
+					android:id="@+id/divider"
+					android:layout_width="match_parent"
+					android:layout_height="1px"
+					android:layout_gravity="bottom"
+					android:background="@color/grey"
+					/>
 		</FrameLayout>
 
 		<android.support.design.widget.FloatingActionButton
