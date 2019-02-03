@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
@@ -26,7 +25,6 @@ import com.dimowner.tastycocktails.analytics.MixPanel;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.licences.LicenceActivity;
 import com.dimowner.tastycocktails.util.AndroidUtils;
-import com.google.android.gms.ads.AdView;
 
 import javax.inject.Inject;
 
@@ -36,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 	@Inject Prefs prefs;
 
-	private AdvHandler advHandler;
+//	private AdvHandler advHandler;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 		ImageButton btnBack = findViewById(R.id.btn_back);
 		btnBack.setOnClickListener(v -> finish());
-		AdView adView = findViewById(R.id.adView);
+//		AdView adView = findViewById(R.id.adView);
 
 		SwitchCompat showAdsSwitch = findViewById(R.id.showAdsSwitch);
 		if (prefs.isShowAds()) {
@@ -60,10 +58,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 			prefs.setShowAds(isChecked);
 			if (isChecked) {
 				TCApplication.event(getApplicationContext(), MixPanel.EVENT_ENABLE_ADS);
-				adView.setVisibility(View.VISIBLE);
+//				adView.setVisibility(View.VISIBLE);
 			} else {
 				TCApplication.event(getApplicationContext(), MixPanel.EVENT_DISABLE_ADS);
-				adView.setVisibility(View.INVISIBLE);
+//				adView.setVisibility(View.INVISIBLE);
 			}
 		});
 
@@ -71,35 +69,39 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		TextView btnRate = findViewById(R.id.btnRate);
 		TextView btnAbout = findViewById(R.id.txtAbout);
 		TextView btnRequest = findViewById(R.id.btnRequest);
+		TextView btnAudioRecorder = findViewById(R.id.btnAudioRecorder);
+		TextView btnAiryCompass = findViewById(R.id.btnAiryCompass);
 		btnAbout.setText(getAboutContent());
 		btnLicences.setOnClickListener(this);
 		btnRate.setOnClickListener(this);
 		btnRequest.setOnClickListener(this);
+		btnAudioRecorder.setOnClickListener(this);
+		btnAiryCompass.setOnClickListener(this);
 
 		AndroidUtils.primaryColorNavigationBar(this);
 
-		advHandler = new AdvHandler(adView, prefs);
+//		advHandler = new AdvHandler(adView, prefs);
 
 		TCApplication.event(getApplicationContext(), MixPanel.EVENT_SETTINGS);
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		advHandler.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		advHandler.onResume();
-		super.onPause();
-	}
-
-	@Override
-	protected void onDestroy() {
-		advHandler.onDestroy();
-		super.onDestroy();
-	}
+//	@Override
+//	public void onResume() {
+//		super.onResume();
+//		advHandler.onResume();
+//	}
+//
+//	@Override
+//	public void onPause() {
+//		advHandler.onResume();
+//		super.onPause();
+//	}
+//
+//	@Override
+//	protected void onDestroy() {
+//		advHandler.onDestroy();
+//		super.onDestroy();
+//	}
 
 	@Override
 	public void onClick(View v) {
@@ -108,21 +110,40 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 				startActivity(new Intent(getApplicationContext(), LicenceActivity.class));
 				break;
 			case R.id.btnRate:
-				rateApp();
+//				rateApp();
+				openApp(getApplicationContext().getPackageName());
 				break;
 			case R.id.btnRequest:
 				requestFeature();
 				break;
+			case R.id.btnAudioRecorder:
+				openApp("com.dimowner.audiorecorder");
+				break;
+			case R.id.btnAiryCompass:
+				openApp("com.dimowner.airycompass");
+				break;
 		}
 	}
 
-	public void rateApp() {
+//	public void rateApp() {
+//		TCApplication.event(getApplicationContext(), MixPanel.EVENT_RATE_APP);
+//		try {
+//			Intent rateIntent = rateIntentForUrl("market://details", getApplicationContext().getPackageName());
+//			startActivity(rateIntent);
+//		} catch (ActivityNotFoundException e) {
+//			Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details", getApplicationContext().getPackageName());
+//			startActivity(rateIntent);
+//		}
+//	}
+
+	public void openApp(String appPackage) {
 		TCApplication.event(getApplicationContext(), MixPanel.EVENT_RATE_APP);
+//		https://play.google.com/store/apps/details?id=com.dimowner.audiorecorder
 		try {
-			Intent rateIntent = rateIntentForUrl("market://details");
+			Intent rateIntent = rateIntentForUrl("market://details", appPackage);
 			startActivity(rateIntent);
 		} catch (ActivityNotFoundException e) {
-			Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details");
+			Intent rateIntent = rateIntentForUrl("https://play.google.com/store/apps/details", appPackage);
 			startActivity(rateIntent);
 		}
 	}
@@ -141,8 +162,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		}
 	}
 
-	private Intent rateIntentForUrl(String url) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, getApplicationContext().getPackageName())));
+	private Intent rateIntentForUrl(String url, String pack) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, pack)));
 		int flags = Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
 		if (Build.VERSION.SDK_INT >= 21) {
 			flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;

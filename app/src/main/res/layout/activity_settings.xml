@@ -151,14 +151,71 @@
 			app:layout_constraintTop_toBottomOf="@+id/btnRequest"
 			/>
 
-	<com.google.android.gms.ads.AdView
-			android:id="@+id/adView"
+	<!--<com.google.android.gms.ads.AdView-->
+			<!--android:id="@+id/adView"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:layout_gravity="center_horizontal"-->
+			<!--android:visibility="gone"-->
+			<!--app:adSize="SMART_BANNER"-->
+			<!--app:adUnitId="@string/bottom_banner_id"-->
+			<!--app:layout_constraintBottom_toBottomOf="parent" />-->
+
+	<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:visibility="gone"
-			app:adSize="SMART_BANNER"
-			app:adUnitId="@string/bottom_banner_id"
-			app:layout_constraintBottom_toBottomOf="parent" />
+			app:layout_constraintHorizontal_weight="1"
+			android:text="@string/checkout_apps"
+			android:textColor="@color/text_secondary_light"
+			android:textSize="@dimen/text_size_xmedium"
+			android:textStyle="bold"
+			android:background="@color/colorPrimaryDark"
+			android:paddingStart="@dimen/padding_standard"
+			android:paddingEnd="@dimen/padding_standard"
+			android:paddingTop="@dimen/padding_small"
+			android:paddingBottom="@dimen/padding_tiny"
+			android:gravity="start"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toTopOf="@+id/btnAudioRecorder"
+			/>
+
+	<TextView
+			android:id="@+id/btnAudioRecorder"
+			style="@style/Text.NormalLabel"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			app:layout_constraintHorizontal_weight="1"
+			android:text="@string/app_audio_recorder"
+			android:drawableLeft="@drawable/audio_recorder_logo"
+			android:drawableStart="@drawable/audio_recorder_logo"
+			android:background="@color/colorPrimaryDark"
+			android:clickable="true"
+			android:focusable="true"
+			android:padding="@dimen/padding_standard"
+			android:drawablePadding="@dimen/padding_standard"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/btnAiryCompass"
+			app:layout_constraintBottom_toBottomOf="parent"
+			/>
+
+	<TextView
+			android:id="@+id/btnAiryCompass"
+			style="@style/Text.NormalLabel"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			app:layout_constraintHorizontal_weight="1"
+			android:text="@string/app_airy_compass"
+			android:drawableLeft="@drawable/ic_launcher3"
+			android:drawableStart="@drawable/ic_launcher3"
+			android:background="@color/colorPrimaryDark"
+			android:clickable="true"
+			android:focusable="true"
+			android:padding="@dimen/padding_standard"
+			android:drawablePadding="@dimen/padding_standard"
+			app:layout_constraintStart_toEndOf="@id/btnAudioRecorder"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			/>
 
 </android.support.constraint.ConstraintLayout>
