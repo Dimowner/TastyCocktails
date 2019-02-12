@@ -78,7 +78,7 @@
 
 	    <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="a911efb38fc3ed01944c7ea4410acde51d847864" />
+            android:value="@string/fabric_api_key" />
 
 		<meta-data
 				android:name="com.google.android.gms.ads.AD_MANAGER_APP"
