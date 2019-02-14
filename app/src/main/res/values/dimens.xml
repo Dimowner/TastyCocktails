@@ -25,6 +25,7 @@
 	<dimen name="padding_medium">12dp</dimen>
 	<dimen name="padding_small">8dp</dimen>
 	<dimen name="padding_tiny">4dp</dimen>
+	<dimen name="padding_zero">0dp</dimen>
 
 	<dimen name="circle_button_size">40dp</dimen>
 
@@ -45,5 +46,7 @@
 	<dimen name="ingredient_footer_height">62dp</dimen>
 
 	<dimen name="collapsed_panel_height">68dp</dimen>
+
+	<dimen name="image_height">320dp</dimen>
 
 </resources>

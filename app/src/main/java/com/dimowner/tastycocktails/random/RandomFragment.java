@@ -139,7 +139,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 		touchLayout.setOnThresholdListener(new ThresholdListener() {
 			@Override
 			public void onTopThreshold() {
-				if (touchLayout.getReturnPositionY() == 0) {
+				if (touchLayout.getReturnPositionY() == touchLayout.getHeight()/2) {
 					hideFilters();
 				} else {
 					showFilters();
@@ -148,7 +148,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 
 			@Override
 			public void onBottomThreshold() {
-				if (touchLayout.getReturnPositionY() == 0) {
+				if (touchLayout.getReturnPositionY() == touchLayout.getHeight()/2) {
 					hideFilters();
 				} else {
 					showFilters();
@@ -202,21 +202,21 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 	}
 
 	private void showFilters() {
-		touchLayout.setReturnPositionY(0);
-		mAdapter.showBottomPanelMargin(true);
-		AnimationUtil.verticalSpringAnimation(touchLayout, 0,
+		touchLayout.setReturnPositionY(touchLayout.getHeight()/2);
+//		mAdapter.showBottomPanelMargin(true);
+		AnimationUtil.verticalSpringAnimation(touchLayout, touchLayout.getHeight()/2,
 				(animation, canceled, value, velocity) -> {
 					btnFilters.setVisibility(View.GONE);
 					btnClear.setVisibility(View.VISIBLE);
 					btnClose.setVisibility(View.VISIBLE);
 					mRecyclerView.smoothScrollBy(0, touchLayout.getHeight());
 				});
-		AnimationUtil.verticalSpringAnimation(fab, -touchLayout.getHeight() + fab.getHeight()/2 + (int)getResources().getDimension(R.dimen.padding_xdouble));
+		AnimationUtil.verticalSpringAnimation(fab, -touchLayout.getHeight()/2 + fab.getHeight()/2 + (int)getResources().getDimension(R.dimen.padding_xdouble));
 	}
 
 	private void hideFilters() {
 		touchLayout.setReturnPositionY(defaultBtnUpY);
-		mAdapter.showBottomPanelMargin(false);
+//		mAdapter.showBottomPanelMargin(false);
 		AnimationUtil.verticalSpringAnimation(touchLayout, defaultBtnUpY,
 				(animation, canceled, value, velocity) -> {
 					btnFilters.setVisibility(View.VISIBLE);

@@ -28,6 +28,7 @@
 
 		<item name="actionBarInsetStart">@dimen/padding_huge</item>
 
+		<item name="android:windowBackground">@color/background</item>
 	</style>
 
 	<style name="AppTheme.BrandedLaunch" parent="AppTheme">

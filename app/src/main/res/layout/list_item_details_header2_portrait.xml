@@ -31,7 +31,7 @@
 		<ImageView
 				android:id="@+id/details_image"
 				android:layout_width="match_parent"
-				android:layout_height="250dp"
+				android:layout_height="@dimen/image_height"
 				android:contentDescription="@string/content_description_cocktail_image"
 				android:scaleType="center"
 				tools:src="@drawable/loadscreen_new"

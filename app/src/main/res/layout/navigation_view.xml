@@ -23,6 +23,7 @@
 		android:layout_width="wrap_content"
 		android:layout_gravity="start"
 		android:fitsSystemWindows="true"
+		android:background="#fafafa"
 		app:itemIconTint="@drawable/nav_item_state_list"
 		app:itemTextColor="@drawable/nav_item_state_list"
 		app:headerLayout="@layout/navigation_drawer_header"

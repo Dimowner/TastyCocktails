@@ -60,7 +60,7 @@ ext.versions = [
 
 def versionMajor = 1
 def versionMinor = 0
-def versionPatch = 5
+def versionPatch = 6
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -146,7 +146,6 @@ repositories {
 	mavenCentral()
    maven { url 'https://maven.fabric.io/public' }
 	google()
-	jcenter()
 }
 
 // Remove not needed buildVariants.

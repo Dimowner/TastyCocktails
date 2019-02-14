@@ -28,7 +28,7 @@
 	<ImageView
 			android:id="@+id/list_item_image"
 			android:layout_width="match_parent"
-			android:layout_height="180dp"
+			android:layout_height="240dp"
 			android:src="@drawable/no_image"
 			android:scaleType="centerCrop"
 			android:contentDescription="@string/content_description_cocktail_image"/>

@@ -35,7 +35,6 @@
 				android:id="@+id/root"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:background="@color/background"
 				>
 
 			<android.support.v7.widget.RecyclerView
@@ -85,15 +84,16 @@
 					>
 
 				<android.support.v7.widget.CardView
-						xmlns:android="http://schemas.android.com/apk/res/android"
-						xmlns:tools="http://schemas.android.com/tools"
-						xmlns:app="http://schemas.android.com/apk/res-auto"
 						android:background="@color/white"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_margin="@dimen/padding_small"
-						android:elevation="@dimen/under_toolbar_elevation"
-						app:cardCornerRadius="16dp">
+						android:layout_height="400dp"
+						android:layout_marginTop="@dimen/padding_small"
+						android:layout_marginBottom="@dimen/padding_tiny"
+						android:layout_marginStart="@dimen/padding_zero"
+						android:layout_marginEnd="@dimen/padding_zero"
+						android:elevation="8dp"
+						app:cardBackgroundColor="@color/white"
+						app:cardCornerRadius="24dp">
 
 					<LinearLayout
 							android:id="@+id/filters_panel"
@@ -197,13 +197,6 @@
 
 			</com.dimowner.tastycocktails.widget.TouchLayout>
 
-			<View
-					android:id="@+id/divider"
-					android:layout_width="match_parent"
-					android:layout_height="1px"
-					android:layout_gravity="bottom"
-					android:background="@color/grey"
-					/>
 		</FrameLayout>
 
 		<android.support.design.widget.FloatingActionButton
