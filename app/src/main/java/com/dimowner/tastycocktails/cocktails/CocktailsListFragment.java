@@ -391,6 +391,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				public void onTopThreshold() {
 					if (touchLayout.getReturnPositionY() == panelPadding) {
 						hideFilters();
+						hideFiltersPanelInstructions();
 					} else {
 						showFilters();
 					}
@@ -400,6 +401,7 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 				public void onBottomThreshold() {
 					if (touchLayout.getReturnPositionY() == panelPadding) {
 						hideFilters();
+						hideFiltersPanelInstructions();
 					} else {
 						showFilters();
 					}
@@ -1182,15 +1184,19 @@ public class CocktailsListFragment extends Fragment implements CocktailsListCont
 
 	private void showFilters() {
 		touchLayout.setReturnPositionY(panelPadding);
+		mAdapter.showBottomPanelMargin(true);
 		AnimationUtil.verticalSpringAnimation(touchLayout, panelPadding,
-				(animation, canceled, value, velocity) -> { });
+				(animation, canceled, value, velocity) -> {
+					mRecyclerView.smoothScrollBy(0, touchLayout.getHeight());
+				});
 		AnimationUtil.verticalSpringAnimation(fab, -touchLayout.getHeight() + panelPadding + fab.getHeight()/2 + (int)getResources().getDimension(R.dimen.padding_standard));
 	}
 
 	private void hideFilters() {
 		touchLayout.setReturnPositionY(defaultBtnUpY);
+		mAdapter.showBottomPanelMargin(false);
 		AnimationUtil.verticalSpringAnimation(touchLayout, defaultBtnUpY,
-				(animation, canceled, value, velocity) -> hideFiltersPanelInstructions());
+				(animation, canceled, value, velocity) -> {});
 		AnimationUtil.verticalSpringAnimation(fab, 0);
 	}
 

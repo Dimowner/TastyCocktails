@@ -53,6 +53,7 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	private final static int VIEW_TYPE_NORMAL = 1;
 	private final static int VIEW_TYPE_PROGRESS = 2;
 	private final static int VIEW_TYPE_FOOTER = 3;
+	private static final int VIEW_TYPE_FOOTER2 = 4;
 
 	private boolean showFooter;
 
@@ -69,6 +70,8 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 	private ItemLongClickListener itemLongClickListener;
 
 	private int itemLayoutResId;
+
+	private boolean showFooter2 = false;
 
 	//In what type of list is adapter use: normal, fav, history;
 	private int type = CocktailsListFragment.TYPE_UNKNOWN;
@@ -145,6 +148,10 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 		} else if (viewType == VIEW_TYPE_FOOTER) {
 			View v = LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.list_footer, parent, false);
+			return new FooterViewHolder(v);
+		} else if (viewType == VIEW_TYPE_FOOTER2) {
+			View v = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item_footer3, parent, false);
 			return new FooterViewHolder(v);
 		} else {
 			return null;
@@ -239,12 +246,40 @@ public class CocktailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	@Override
 	public int getItemCount() {
-		return mShowingData.size() + (showFooter ? 1 : 0);
+		return mShowingData.size() + (showFooter ? 1 : 0) + (showFooter2 ? 1 : 0);
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		return position >= mShowingData.size() ? VIEW_TYPE_FOOTER : VIEW_TYPE_NORMAL;
+		if (showFooter) {
+			if (position == mShowingData.size()) {
+				return VIEW_TYPE_FOOTER;
+			} else if (position == mShowingData.size()+1) {
+				return VIEW_TYPE_FOOTER2;
+			}
+		} else {
+			if (position == mShowingData.size()) {
+				return VIEW_TYPE_FOOTER2;
+			}
+		}
+		return VIEW_TYPE_NORMAL;
+	}
+
+	public void showBottomPanelMargin(boolean b) {
+		showFooter2 = b;
+		if (showFooter) {
+			if (b) {
+				notifyItemInserted(mShowingData.size() + 1);
+			} else {
+				notifyItemRemoved(mShowingData.size() + 1);
+			}
+		} else {
+			if (b) {
+				notifyItemInserted(mShowingData.size());
+			} else {
+				notifyItemRemoved(mShowingData.size());
+			}
+		}
 	}
 
 	public ListItem getItem(int pos) {

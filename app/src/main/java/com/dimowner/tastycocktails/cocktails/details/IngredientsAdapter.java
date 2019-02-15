@@ -45,8 +45,6 @@ import java.util.List;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 
-import timber.log.Timber;
-
 /**
  * Created on 14.08.2017.
  * @author Dimowner
