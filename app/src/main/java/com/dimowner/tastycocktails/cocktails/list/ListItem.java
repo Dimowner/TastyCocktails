@@ -34,6 +34,7 @@ public class ListItem implements Parcelable {
 	/** Time stamp when last time user opened this cocktail details. */
 	private final long history;
 	private final boolean isFavorite;
+	private int position = 0;
 
 	public ListItem(long id, String name, String description, String category, String alcoholic,
 						 String glass, String avatar_url, long history, boolean isFavorite) {
@@ -84,6 +85,14 @@ public class ListItem implements Parcelable {
 		return isFavorite;
 	}
 
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
 	//----- START Parcelable implementation ----------
 	private ListItem(Parcel in) {
 		long[] longs = new long[2];
@@ -101,6 +110,7 @@ public class ListItem implements Parcelable {
 		boolean[] bools = new boolean[1];
 		in.readBooleanArray(bools);
 		isFavorite = bools[0];
+		position = in.readInt();
 	}
 
 	public int describeContents() {
@@ -111,6 +121,7 @@ public class ListItem implements Parcelable {
 		out.writeLongArray(new long[] {id, history});
 		out.writeStringArray(new String[] {name, description, category, alcoholic, glass, avatar_url});
 		out.writeBooleanArray(new boolean[] {isFavorite});
+		out.writeInt(position);
 	}
 
 	public static final Parcelable.Creator<ListItem> CREATOR

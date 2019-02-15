@@ -141,6 +141,9 @@ public class RatingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 	}
 
 	public void setData(List<ListItem> data) {
+		for (int i = 0; i < data.size(); i++) {
+			data.get(i).setPosition(i);
+		}
 		CocktailsDiffUtilCallback productDiffUtilCallback = new CocktailsDiffUtilCallback(mShowingData, data);
 		DiffUtil.DiffResult productDiffResult = DiffUtil.calculateDiff(productDiffUtilCallback);
 		this.mShowingData.clear();

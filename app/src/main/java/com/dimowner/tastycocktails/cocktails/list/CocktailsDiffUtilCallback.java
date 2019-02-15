@@ -40,6 +40,7 @@ public class CocktailsDiffUtilCallback extends DiffUtil.Callback {
 //				&& oldProduct.getCategory().equals(newProduct.getCategory())
 //				&& oldProduct.getAlcoholic().equals(newProduct.getAlcoholic())
 //				&& oldProduct.getGlass().equals(newProduct.getGlass())
+				&& oldProduct.getPosition() == newProduct.getPosition()
 				&& oldProduct.getHistory() == newProduct.getHistory()
 				&& oldProduct.isFavorite() == newProduct.isFavorite();
 	}
