@@ -51,6 +51,6 @@
 
 	<dimen name="panel_corner_radius">24dp</dimen>
 	<dimen name="panel_elevation">6dp</dimen>
-	<dimen name="panel_padding">32dp</dimen>
+	<dimen name="panel_padding">40dp</dimen>
 
 </resources>

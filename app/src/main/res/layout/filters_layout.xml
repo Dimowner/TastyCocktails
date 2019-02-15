@@ -7,9 +7,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/padding_tiny"
-		android:layout_marginBottom="@dimen/padding_big"
+		android:layout_marginBottom="@dimen/padding_double"
 		android:layout_marginStart="@dimen/padding_zero"
 		android:layout_marginEnd="@dimen/padding_zero"
+		android:paddingBottom="@dimen/padding_small"
 		app:cardElevation="@dimen/panel_elevation"
 		app:cardCornerRadius="@dimen/panel_corner_radius">
 
@@ -174,7 +175,6 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingTop="@dimen/padding_tiny"
-			android:paddingBottom="@dimen/padding_big"
 			android:orientation="horizontal"
 			android:visibility="gone"
 			tools:visibility="visible"
