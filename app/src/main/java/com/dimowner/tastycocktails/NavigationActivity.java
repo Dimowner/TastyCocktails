@@ -93,20 +93,14 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 
 	@Inject Repository repository;
 
-//	private AppStartTracker tracker;
-
 	@Inject Prefs prefs;
 
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
-//		tracker = TCApplication.getAppStartTracker(getApplicationContext());
-//		tracker.activityOnCreate();
 		setTheme(R.style.AppTheme_TransparentStatusBar);
 		super.onCreate(savedInstanceState);
-//		tracker.activityContentViewBefore();
 		setContentView(R.layout.base_nav_activity);
-//		tracker.activityContentViewAfter();
 
 		TCApplication.get(getApplicationContext()).applicationComponent().inject(this);
 
@@ -159,7 +153,6 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		}
 
 		MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_id));
-//		tracker.activityOnCreateEnd();
 	}
 
 	public Single<Drink[]> firstRunInitialization() {
@@ -200,21 +193,12 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 		}
 	}
 
-//	@Override
-//	protected void onStart() {
-//		super.onStart();
-//		tracker.activityOnStart();
-//	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		tracker.activityOnResume();
-//		Timber.v(tracker.getResults());
 		if (getSelfNavDrawerItem() > NAVDRAWER_ITEM_INVALID) {
 			mNavigationView.getMenu().findItem(getSelfNavDrawerItem()).setChecked(true);
 		}
-//		Toast.makeText(getApplicationContext(), tracker.getStartTime(), Toast.LENGTH_LONG).show();
 	}
 
 	@Override

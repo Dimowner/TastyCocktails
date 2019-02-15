@@ -16,7 +16,6 @@
 
 package com.dimowner.tastycocktails;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +28,6 @@ import com.dimowner.tastycocktails.dagger.application.AppComponent;
 import com.dimowner.tastycocktails.dagger.application.AppModule;
 import com.dimowner.tastycocktails.dagger.application.DaggerAppComponent;
 import com.dimowner.tastycocktails.util.AndroidUtils;
-import com.dimowner.tastycocktails.util.AppStartTracker;
 
 import javax.inject.Inject;
 
@@ -48,18 +46,8 @@ public class TCApplication extends android.support.multidex.MultiDexApplication 
 	@Inject
 	MixPanel mixPanel;
 
-	private AppStartTracker startTracker = new AppStartTracker();
-
-	public static AppStartTracker getAppStartTracker(Context context) {
-		return ((TCApplication) context).getStartTracker();
-	}
-
 	public static void event(Context context, String event) {
 		((TCApplication) context).getMixPanel().trackData(event);
-	}
-
-	private AppStartTracker getStartTracker() {
-		return startTracker;
 	}
 
 	private MixPanel getMixPanel() {
@@ -86,7 +74,6 @@ public class TCApplication extends android.support.multidex.MultiDexApplication 
 				}
 			});
 		}
-		startTracker.appOnCreate();
 		super.onCreate();
 		Fabric.with(this, new Crashlytics());
 		appComponent = prepareAppComponent().build();

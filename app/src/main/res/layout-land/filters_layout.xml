@@ -6,12 +6,12 @@
 		android:background="@color/white"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/padding_small"
-		android:layout_marginBottom="@dimen/padding_small"
+		android:layout_marginTop="@dimen/padding_tiny"
 		android:layout_marginStart="@dimen/padding_huge"
 		android:layout_marginEnd="@dimen/padding_huge"
-		android:elevation="@dimen/under_toolbar_elevation"
-		app:cardCornerRadius="8dp">
+		android:layout_marginBottom="@dimen/padding_big"
+		app:cardElevation="@dimen/panel_elevation"
+		app:cardCornerRadius="@dimen/panel_corner_radius">
 
 <LinearLayout
 		android:id="@+id/filters_panel"
@@ -46,7 +46,7 @@
 	<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/padding_small"
+			android:paddingTop="@dimen/padding_tiny"
 			android:orientation="horizontal">
 
 		<TextView
@@ -67,7 +67,7 @@
 	<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/padding_small"
+			android:paddingTop="@dimen/padding_tiny"
 			android:orientation="horizontal">
 
 		<TextView
@@ -88,7 +88,7 @@
 	<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/padding_small"
+			android:paddingTop="@dimen/padding_tiny"
 			android:orientation="horizontal">
 
 		<TextView
@@ -111,7 +111,7 @@
 			android:id="@+id/pnl_ingredient2"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/padding_small"
+			android:paddingTop="@dimen/padding_tiny"
 			android:orientation="horizontal"
 			tools:visibility="visible"
 			>
@@ -135,7 +135,8 @@
 			android:id="@+id/pnl_ingredient3"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/padding_small"
+			android:paddingTop="@dimen/padding_tiny"
+			android:visibility="gone"
 			android:orientation="horizontal"
 			tools:visibility="visible"
 			>
@@ -159,6 +160,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="end"
+			android:paddingBottom="@dimen/padding_standard"
+			android:visibility="gone"
 			android:orientation="horizontal">
 
 		<TextView
@@ -182,6 +185,7 @@
 				android:id="@+id/btn_close"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:visibility="gone"
 				android:text="@string/btn_close"/>
 		<Button
 				style="?android:attr/buttonBarButtonStyle"
@@ -191,5 +195,8 @@
 				android:text="@string/btn_clear"/>
 	</LinearLayout>
 
+	<View
+			android:layout_width="wrap_content"
+			android:layout_height="@dimen/panel_padding" />
 </LinearLayout>
 </android.support.v7.widget.CardView>

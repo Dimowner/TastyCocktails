@@ -81,6 +81,7 @@
 	<string name="request">Request or feedback</string>
 	<string name="email_clients_not_found">Not found any Email client</string>
 	<string name="send_email">Send by email&#8230;</string>
+	<string name="btn_up">Scroll list to the top</string>
 
 	<string name="checkout_apps">Check out this cool apps:</string>
 	<string name="app_audio_recorder">Audio\nRecorder</string>

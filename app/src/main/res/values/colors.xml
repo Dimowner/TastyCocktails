@@ -35,7 +35,7 @@
 	<color name="black">#000000</color>
 	<color name="background">#f5f5f5</color>
 
-	<color name="circle_drawable">#47575757</color>
+	<color name="circle_drawable">#57575757</color>
 
 	<color name="grey">#757575</color>
 	<color name="light_grey">#999999</color>

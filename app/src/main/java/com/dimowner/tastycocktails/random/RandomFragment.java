@@ -101,6 +101,8 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 	private Spinner ingredientSpinner;
 	private Spinner ingredientSpinner2;
 
+	private int panelPadding = 0;
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -124,6 +126,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+		panelPadding = (int) getResources().getDimension(R.dimen.panel_padding) + (int) getResources().getDimension(R.dimen.padding_standard);
 		mRoot = view.findViewById(R.id.coordinator);
 		btnFavorite = view.findViewById(R.id.btn_favorite);
 		btnMenu = view.findViewById(R.id.btn_menu);
@@ -139,7 +142,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 		touchLayout.setOnThresholdListener(new ThresholdListener() {
 			@Override
 			public void onTopThreshold() {
-				if (touchLayout.getReturnPositionY() == touchLayout.getHeight()/2) {
+				if (touchLayout.getReturnPositionY() == panelPadding) {
 					hideFilters();
 				} else {
 					showFilters();
@@ -148,7 +151,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 
 			@Override
 			public void onBottomThreshold() {
-				if (touchLayout.getReturnPositionY() == touchLayout.getHeight()/2) {
+				if (touchLayout.getReturnPositionY() == panelPadding) {
 					hideFilters();
 				} else {
 					showFilters();
@@ -202,21 +205,21 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 	}
 
 	private void showFilters() {
-		touchLayout.setReturnPositionY(touchLayout.getHeight()/2);
-//		mAdapter.showBottomPanelMargin(true);
-		AnimationUtil.verticalSpringAnimation(touchLayout, touchLayout.getHeight()/2,
+		touchLayout.setReturnPositionY(panelPadding);
+		mAdapter.showBottomPanelMargin(true);
+		AnimationUtil.verticalSpringAnimation(touchLayout, panelPadding,
 				(animation, canceled, value, velocity) -> {
 					btnFilters.setVisibility(View.GONE);
 					btnClear.setVisibility(View.VISIBLE);
 					btnClose.setVisibility(View.VISIBLE);
 					mRecyclerView.smoothScrollBy(0, touchLayout.getHeight());
 				});
-		AnimationUtil.verticalSpringAnimation(fab, -touchLayout.getHeight()/2 + fab.getHeight()/2 + (int)getResources().getDimension(R.dimen.padding_xdouble));
+		AnimationUtil.verticalSpringAnimation(fab, -touchLayout.getHeight() + panelPadding + fab.getHeight()/2 + (int)getResources().getDimension(R.dimen.padding_xdouble));
 	}
 
 	private void hideFilters() {
 		touchLayout.setReturnPositionY(defaultBtnUpY);
-//		mAdapter.showBottomPanelMargin(false);
+		mAdapter.showBottomPanelMargin(false);
 		AnimationUtil.verticalSpringAnimation(touchLayout, defaultBtnUpY,
 				(animation, canceled, value, velocity) -> {
 					btnFilters.setVisibility(View.VISIBLE);
