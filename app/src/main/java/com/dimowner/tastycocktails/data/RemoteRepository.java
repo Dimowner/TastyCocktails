@@ -51,7 +51,7 @@ import com.dimowner.tastycocktails.data.model.RatingDrink;
  */
 public class RemoteRepository implements RepositoryContract {
 
-	private static final String API_KEY = "8362";
+	private static final String API_KEY = "1";
 	private static final String API_URL = "http://www.thecocktaildb.com/api/json/v1/" + API_KEY + "/";
 
 	private Retrofit retrofit;

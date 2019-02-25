@@ -16,6 +16,7 @@
 
 package com.dimowner.tastycocktails;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +39,8 @@ import timber.log.Timber;
  * Created on 25.07.2017.
  * @author Dimowner
  */
-public class TCApplication extends android.support.multidex.MultiDexApplication {
+public class TCApplication extends Application {
+//		android.support.multidex.MultiDexApplication {
 
 	final static String CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
 	private NetworkStateChangeReceiver networkStateChangeReceiver;

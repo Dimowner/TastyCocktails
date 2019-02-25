@@ -44,7 +44,7 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
-import com.dimowner.tastycocktails.AdvHandler;
+//import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
@@ -57,7 +57,7 @@ import com.dimowner.tastycocktails.util.AnimationUtil;
 import com.dimowner.tastycocktails.util.UIUtil;
 import com.dimowner.tastycocktails.widget.ThresholdListener;
 import com.dimowner.tastycocktails.widget.TouchLayout;
-import com.google.android.gms.ads.AdView;
+//import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +91,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 	private ImageButton btnFavorite;
 	private FloatingActionButton fab;
 	private CoordinatorLayout mRoot;
-	private AdvHandler advHandler;
+//	private AdvHandler advHandler;
 	private TouchLayout touchLayout;
 	private Button btnFilters;
 	private Button btnClear;
@@ -198,8 +198,8 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 			mPresenter.bindView(mAdapter);
 		}
 
-		AdView adView = view.findViewById(R.id.adView);
-		advHandler = new AdvHandler(adView, prefs);
+//		AdView adView = view.findViewById(R.id.adView);
+//		advHandler = new AdvHandler(adView, prefs);
 
 		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RANDOM);
 	}
@@ -232,7 +232,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		advHandler.onResume();
+//		advHandler.onResume();
 		if (!isCreated) {
 			List<String> list = new ArrayList<>();
 			if (ing1 != null) {
@@ -249,11 +249,11 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 		}
 	}
 
-	@Override
-	public void onPause() {
-		advHandler.onPause();
-		super.onPause();
-	}
+//	@Override
+//	public void onPause() {
+//		advHandler.onPause();
+//		super.onPause();
+//	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -327,7 +327,7 @@ public class RandomFragment extends Fragment implements View.OnClickListener {
 
 	@Override
 	public void onDestroyView() {
-		advHandler.onDestroy();
+//		advHandler.onDestroy();
 		super.onDestroyView();
 		mPresenter.unbindView();
 		mPresenter = null;

@@ -24,7 +24,7 @@ import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.data.model.Drink;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.util.AnimationUtil;
-import com.google.android.gms.ads.AdView;
+//import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -66,7 +66,7 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 	private ImageButton btnFav;
 	private TextView txtInstructions;
 
-	private AdvHandler advHandler;
+//	private AdvHandler advHandler;
 
 	private DetailsPagerAdapter pagerAdapter;
 
@@ -214,8 +214,8 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 			AndroidUtils.handleNavigationBarColor(this);
 		}
 
-		AdView adView = findViewById(R.id.adView);
-		advHandler = new AdvHandler(adView, prefs);
+//		AdView adView = findViewById(R.id.adView);
+//		advHandler = new AdvHandler(adView, prefs);
 	}
 
 	@Override
@@ -224,21 +224,21 @@ public class PagerDetailsActivity  extends AppCompatActivity {
 		compositeDisposable.clear();
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		advHandler.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		advHandler.onPause();
-		super.onPause();
-	}
+//	@Override
+//	public void onResume() {
+//		super.onResume();
+//		advHandler.onResume();
+//	}
+//
+//	@Override
+//	public void onPause() {
+//		advHandler.onPause();
+//		super.onPause();
+//	}
 
 	@Override
 	protected void onDestroy() {
-		advHandler.onDestroy();
+//		advHandler.onDestroy();
 		super.onDestroy();
 		compositeDisposable.dispose();
 	}

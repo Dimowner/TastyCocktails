@@ -55,33 +55,33 @@
 
 	</LinearLayout>
 
-	<TextView
-			android:id="@+id/showAdsLabel"
-			style="@style/Text.NormalLabel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/show_ads"
-			android:drawableLeft="@drawable/ic_round_stars_24px"
-			android:drawableStart="@drawable/ic_round_stars_24px"
-			android:layout_margin="@dimen/padding_standard"
-			android:drawablePadding="@dimen/padding_double"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintBaseline_toBaselineOf="@id/showAdsSwitch"
-			/>
+	<!--<TextView-->
+			<!--android:id="@+id/showAdsLabel"-->
+			<!--style="@style/Text.NormalLabel"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:text="@string/show_ads"-->
+			<!--android:drawableLeft="@drawable/ic_round_stars_24px"-->
+			<!--android:drawableStart="@drawable/ic_round_stars_24px"-->
+			<!--android:layout_margin="@dimen/padding_standard"-->
+			<!--android:drawablePadding="@dimen/padding_double"-->
+			<!--app:layout_constraintStart_toStartOf="parent"-->
+			<!--app:layout_constraintBaseline_toBaselineOf="@id/showAdsSwitch"-->
+			<!--/>-->
 
-	<android.support.v7.widget.SwitchCompat
-			android:id="@+id/showAdsSwitch"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/padding_standard"
-			android:layout_marginEnd="@dimen/padding_standard"
-			android:layout_marginLeft="@dimen/padding_standard"
-			android:layout_marginRight="@dimen/padding_standard"
-			android:paddingTop="@dimen/padding_standard"
-			android:paddingBottom="@dimen/padding_standard"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/toolbar"
-			/>
+	<!--<android.support.v7.widget.SwitchCompat-->
+			<!--android:id="@+id/showAdsSwitch"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:layout_marginStart="@dimen/padding_standard"-->
+			<!--android:layout_marginEnd="@dimen/padding_standard"-->
+			<!--android:layout_marginLeft="@dimen/padding_standard"-->
+			<!--android:layout_marginRight="@dimen/padding_standard"-->
+			<!--android:paddingTop="@dimen/padding_standard"-->
+			<!--android:paddingBottom="@dimen/padding_standard"-->
+			<!--app:layout_constraintEnd_toEndOf="parent"-->
+			<!--app:layout_constraintTop_toBottomOf="@+id/toolbar"-->
+			<!--/>-->
 
 	<TextView
 			android:id="@+id/btnLicences"
@@ -98,7 +98,7 @@
 			android:layout_margin="@dimen/padding_small"
 			android:drawablePadding="@dimen/padding_double"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/showAdsSwitch"
+			app:layout_constraintTop_toBottomOf="@+id/toolbar"
 			/>
 
 	<TextView

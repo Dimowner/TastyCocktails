@@ -34,7 +34,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.dimowner.tastycocktails.AdvHandler;
+//import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
 import com.dimowner.tastycocktails.analytics.MixPanel;
@@ -43,7 +43,7 @@ import com.dimowner.tastycocktails.cocktails.list.ListItem;
 import com.dimowner.tastycocktails.dagger.rating.RatingModule;
 import com.dimowner.tastycocktails.data.Prefs;
 import com.dimowner.tastycocktails.util.UIUtil;
-import com.google.android.gms.ads.AdView;
+//import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class RatingFragment extends Fragment implements RatingContract.View {
 
 	private TextView mTxtEmpty;
 	private ProgressBar progressBar;
-	private AdvHandler advHandler;
+//	private AdvHandler advHandler;
 
 	private ArrayList<Integer> ids;
 
@@ -106,27 +106,27 @@ public class RatingFragment extends Fragment implements RatingContract.View {
 		mPresenter.bindView(this);
 		mPresenter.loadRating();
 
-		AdView adView = view.findViewById(R.id.adView);
-		advHandler = new AdvHandler(adView, prefs);
+//		AdView adView = view.findViewById(R.id.adView);
+//		advHandler = new AdvHandler(adView, prefs);
 
 		TCApplication.event(getActivity().getApplicationContext(), MixPanel.EVENT_RATING);
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (advHandler != null) { advHandler.onResume(); }
-	}
-
-	@Override
-	public void onPause() {
-		if (advHandler != null) { advHandler.onPause(); }
-		super.onPause();
-	}
+//	@Override
+//	public void onResume() {
+//		super.onResume();
+//		if (advHandler != null) { advHandler.onResume(); }
+//	}
+//
+//	@Override
+//	public void onPause() {
+//		if (advHandler != null) { advHandler.onPause(); }
+//		super.onPause();
+//	}
 
 	@Override
 	public void onDestroyView() {
-		if (advHandler != null) { advHandler.onDestroy(); }
+//		if (advHandler != null) { advHandler.onDestroy(); }
 		super.onDestroyView();
 		mPresenter.unbindView();
 		mPresenter = null;

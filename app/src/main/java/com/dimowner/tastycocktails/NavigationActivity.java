@@ -44,7 +44,7 @@ import com.dimowner.tastycocktails.rating.RatingFragment;
 import com.dimowner.tastycocktails.settings.SettingsActivity;
 import com.dimowner.tastycocktails.util.AndroidUtils;
 import com.dimowner.tastycocktails.welcome.WelcomeFragment;
-import com.google.android.gms.ads.MobileAds;
+//import com.google.android.gms.ads.MobileAds;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -152,7 +152,7 @@ public class NavigationActivity extends AppCompatActivity implements DialogInter
 					}, Timber::e);
 		}
 
-		MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_id));
+//		MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_id));
 	}
 
 	public Single<Drink[]> firstRunInitialization() {

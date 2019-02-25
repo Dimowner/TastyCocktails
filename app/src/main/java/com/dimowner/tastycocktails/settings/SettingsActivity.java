@@ -9,7 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
+//import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.view.View;
@@ -17,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dimowner.tastycocktails.AdvHandler;
+//import com.dimowner.tastycocktails.AdvHandler;
 import com.dimowner.tastycocktails.AppConstants;
 import com.dimowner.tastycocktails.R;
 import com.dimowner.tastycocktails.TCApplication;
@@ -47,23 +47,23 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 		btnBack.setOnClickListener(v -> finish());
 //		AdView adView = findViewById(R.id.adView);
 
-		SwitchCompat showAdsSwitch = findViewById(R.id.showAdsSwitch);
-		if (prefs.isShowAds()) {
-			showAdsSwitch.setChecked(true);
-		} else {
-			showAdsSwitch.setChecked(false);
-		}
-
-		showAdsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-			prefs.setShowAds(isChecked);
-			if (isChecked) {
-				TCApplication.event(getApplicationContext(), MixPanel.EVENT_ENABLE_ADS);
-//				adView.setVisibility(View.VISIBLE);
-			} else {
-				TCApplication.event(getApplicationContext(), MixPanel.EVENT_DISABLE_ADS);
-//				adView.setVisibility(View.INVISIBLE);
-			}
-		});
+//		SwitchCompat showAdsSwitch = findViewById(R.id.showAdsSwitch);
+//		if (prefs.isShowAds()) {
+//			showAdsSwitch.setChecked(true);
+//		} else {
+//			showAdsSwitch.setChecked(false);
+//		}
+//
+//		showAdsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//			prefs.setShowAds(isChecked);
+//			if (isChecked) {
+//				TCApplication.event(getApplicationContext(), MixPanel.EVENT_ENABLE_ADS);
+////				adView.setVisibility(View.VISIBLE);
+//			} else {
+//				TCApplication.event(getApplicationContext(), MixPanel.EVENT_DISABLE_ADS);
+////				adView.setVisibility(View.INVISIBLE);
+//			}
+//		});
 
 		TextView btnLicences = findViewById(R.id.btnLicences);
 		TextView btnRate = findViewById(R.id.btnRate);

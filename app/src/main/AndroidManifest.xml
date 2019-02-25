@@ -78,15 +78,15 @@
 
 	    <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="@string/fabric_api_key" />
+            android:value="a911efb38fc3ed01944c7ea4410acde51d847864" />
 
-		<meta-data
-				android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-				android:value="true"/>
+		<!--<meta-data-->
+				<!--android:name="com.google.android.gms.ads.AD_MANAGER_APP"-->
+				<!--android:value="true"/>-->
 		<!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
-		<meta-data
-				android:name="com.google.android.gms.ads.APPLICATION_ID"
-				android:value="@string/ad_mob_id"/>
+		<!--<meta-data-->
+				<!--android:name="com.google.android.gms.ads.APPLICATION_ID"-->
+				<!--android:value="@string/ad_mob_id"/>-->
     </application>
 
 </manifest>
