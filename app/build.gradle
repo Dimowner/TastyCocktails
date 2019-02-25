@@ -60,7 +60,7 @@ ext.versions = [
 
 def versionMajor = 1
 def versionMinor = 1
-def versionPatch = 3
+def versionPatch = 4
 
 android {
 	compileSdkVersion versions.targetSdkVersion
@@ -162,7 +162,7 @@ android.variantFilter { variant ->
 
 dependencies {
 
-	implementation "com.mixpanel.android:mixpanel-android:5.+"
+//	implementation "com.mixpanel.android:mixpanel-android:5.+"
 	implementation "com.google.android.gms:play-services-gcm:16.0.0"
 
 	// Android

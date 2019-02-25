@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-import com.dimowner.tastycocktails.BuildConfig;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-
-import com.dimowner.tastycocktails.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import timber.log.Timber;
+//import com.dimowner.tastycocktails.BuildConfig;
+//import com.mixpanel.android.mpmetrics.MixpanelAPI;
+//
+//import com.dimowner.tastycocktails.R;
+//
+//import org.json.JSONException;
+//import org.json.JSONObject;
+//
+//import timber.log.Timber;
 
 
 public class MixPanel implements Application.ActivityLifecycleCallbacks {
@@ -40,12 +40,12 @@ public class MixPanel implements Application.ActivityLifecycleCallbacks {
 	public static final String EVENT_DISABLE_ADS = "disable_ads";
 	public static final String EVENT_ENABLE_ADS = "enable_ads";
 
-	private MixpanelAPI mixpanel;
+//	private MixpanelAPI mixpanel;
 
 
 	@Override
 	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-		mixpanel = MixpanelAPI.getInstance(activity.getApplicationContext(), activity.getApplicationContext().getString(R.string.mixpanel_token));
+//		mixpanel = MixpanelAPI.getInstance(activity.getApplicationContext(), activity.getApplicationContext().getString(R.string.mixpanel_token));
 	}
 
 	@Override public void onActivityStarted(Activity activity) {}
@@ -56,23 +56,23 @@ public class MixPanel implements Application.ActivityLifecycleCallbacks {
 
 	@Override
 	public void onActivityDestroyed(Activity activity) {
-		mixpanel.flush();
+//		mixpanel.flush();
 	}
 
 	public void trackData(String event, Bundle params) {
-		//TODO: find way to send events only in release build
-		if (!BuildConfig.DEBUG) {
-			JSONObject props = new JSONObject();
-
-			for (String key : params.keySet()) {
-				try {
-					props.put(key, params.get(key));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-			mixpanel.track(event, props);
-		}
+		//TODO: send events only in release build
+//		if (!BuildConfig.DEBUG) {
+//			JSONObject props = new JSONObject();
+//
+//			for (String key : params.keySet()) {
+//				try {
+//					props.put(key, params.get(key));
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			mixpanel.track(event, props);
+//		}
 	}
 
 	public void trackData(String event) {
